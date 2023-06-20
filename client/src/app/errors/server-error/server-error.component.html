@@ -1,0 +1,13 @@
+<h4>Internal server error - refreshing the page will make error disappear</h4>
+<ng-container *ngIf="error">
+  <h5 class="text-danger">Error: {{error.message}}</h5>
+  <p class="font-weight-bold">Note: If you are seeing this, then angular is prob not to blame (since 500 is server error, which is our .net API server having an error)</p>
+  <p>What to try doing next?</p>
+  <ol>
+    <li>Open chrome dev tools, Then check the failing request in the NETWEORK tab (where requests to our API will show).</li>
+    <li>Examine the request URL - what API endpoint is being requested? and is it the one we need?</li>
+    <li>Want to ensure its API, so we want to exempt Angular from it completely. Hence we want to REPRODUCE the problem in POSTMAN! (if it can be reproduced in postman, then angular is NOT the problem)</li> 
+  </ol>
+  <p style="font-weight: bold;"> Following is the stack trace -> the first few lines tells us where the issue is at</p>
+  <code class="empty-5" style="background-color:rgb(142, 174, 177);">{{error.details}}</code>
+</ng-container>
