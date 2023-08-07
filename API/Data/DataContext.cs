@@ -11,7 +11,8 @@ namespace API.Data
     }
 
     public DbSet<AppUser> Users { get; set; } // table name will be users
-
+    
+    public DbSet<Photo> Photos { get; set; } 
     
   }
 }
