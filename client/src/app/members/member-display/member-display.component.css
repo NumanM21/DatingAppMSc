@@ -1,0 +1,40 @@
+.custom-bold {
+  font-weight: 550;
+}
+
+.card:hover img {
+  transform: scale(1.1, 1.1);
+  transition-duration: 600ms;
+  transition-timing-function: ease-out;
+  opacity: 1.1;
+
+}
+
+.card img {
+  transform: scale(1.0, 1.0);
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+}
+
+.card-img-wrapper{
+  position: relative;
+}
+
+.member-icon{
+  position: absolute;
+  bottom: -30%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0%;
+}
+
+.card-img-wrapper:hover .member-icon{
+  bottom: -20px;
+  opacity: 1;
+}
+
+.animate{
+  transition: all 0.5s ease-in-out;
+}

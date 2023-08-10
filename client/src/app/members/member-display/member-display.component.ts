@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Member } from 'src/app/_models/Member';
 
 @Component({
@@ -7,7 +7,7 @@ import { Member } from 'src/app/_models/Member';
   styleUrls: ['./member-display.component.css']
 })
 export class MemberDisplayComponent implements OnInit {
-  @Input() member: Member
+  @Input() member: Member | undefined;
 
   constructor() { }
 

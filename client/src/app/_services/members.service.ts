@@ -13,32 +13,14 @@ export class MembersService {
 
   getMembers()
   {
-    return this.httpClient.get<Member[]>(this.baseUrl + 'users', this.getHttpAuthOptions())
+    return this.httpClient.get<Member[]>(this.baseUrl + 'users')
 
   }
 
   getMember(username: string)
   {
-    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username, this.getHttpAuthOptions())
+    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username)
   }
 
-  // Getting our token to pass with user request
-  getHttpAuthOptions()
-  {
-    const userStr = localStorage.getItem('user'); // user is the key
-
-    if (!userStr) return; // Shouldn't be possible, since MemberService requires user to already be authenticated (for typescript 'checking')
-
-    const user = JSON.parse(userStr);
-
-    return {
-      headers: new HttpHeaders({
-        Authorization: 'Bearer ' + user.token // need space after bearer to separate token
-      })
-    }
-
-  }
-
-  
 
 }
