@@ -9,17 +9,19 @@ import { AuthGuard } from './_guards/auth.guard';
 import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberEditprofileComponent } from './members/member-editprofile/member-editprofile.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],   
-    children: [
+    children: [ // Protected routes (user has to be Authenticated to have access to these!)
       {path: 'members', component: MemberListComponent,},
       {path: 'members/:username', component: MemberDetailComponent},
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
+      {path: 'member/editprofile', component: MemberEditprofileComponent}
     ]
   },
   {path: 'errors', component: TestErrorComponent},

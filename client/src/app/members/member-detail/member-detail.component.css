@@ -16,3 +16,8 @@
   background-color: #fff ;
   border-top: none;
 }
+
+/* .photo-gallery{
+  margin-bottom: 20px;
+}  Edited in the style.css (global css) -> Can remove at the end if we don't need to make more changes here FIXME:*/
+

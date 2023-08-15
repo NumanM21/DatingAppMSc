@@ -20,6 +20,7 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberDisplayComponent } from './members/member-display/member-display.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { MemberEditprofileComponent } from './members/member-editprofile/member-editprofile.component';
 
 
 
@@ -39,6 +40,7 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     NotFoundComponent,
     ServerErrorComponent,
     MemberDisplayComponent,
+    MemberEditprofileComponent,
   ],
   imports: [
     BrowserAnimationsModule,
