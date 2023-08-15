@@ -4,6 +4,7 @@
 
 /* FIXME: Change this up (need to change css style 
   - Also have the tabs border show up briefly when I click on another tab (error which shouldn't be happening)
+  - Can also ask GPT to refactor this code slightly (help me come up with better variable names if needed (might help with good coding practice?)
 */
 
 .tab-panel {
@@ -50,4 +51,10 @@
   border: 0;
   border-top: 1px solid #eee;
   padding: 15px 0;
+}
+
+/* TODO: NG-Gallery -> Gallery - scroll down -> Gallery API (shows different styles -> Can make it look nice once we have more built */
+.photo-gallery{
+  height: 650px;
+  padding: 5px ;
 }
