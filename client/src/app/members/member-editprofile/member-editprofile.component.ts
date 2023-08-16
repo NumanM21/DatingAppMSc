@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { take } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { concatWith, take } from 'rxjs';
 import { Member } from 'src/app/_models/Member';
 import { User } from 'src/app/_models/User';
 import { AccountService } from 'src/app/_services/account.service';
@@ -11,11 +13,12 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-editprofile.component.css']
 })
 export class MemberEditprofileComponent implements OnInit {
+  @ViewChild('formEdit') formEdit: NgForm | undefined
   member: Member | undefined;
   user: User | null = null;
 
 
-  constructor(private serviceAccount: AccountService, private serviceMember: MembersService) {
+  constructor(private toastrService: ToastrService, private serviceAccount: AccountService, private serviceMember: MembersService) {
     this.serviceAccount.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
       // user retrieved from the currentUser observable ($), we take the first instance (user) then subscribe so we can assign our user field to user we get back from account service
@@ -33,6 +36,12 @@ export class MemberEditprofileComponent implements OnInit {
         next: member => this.member = member
       })
     else return;
+  }
+
+  memberUpdate() {
+    console.log(this.member);
+    this.toastrService.success('Profile Update was Successful')
+    this.formEdit?.reset(this.member);
   }
 
 
