@@ -14,8 +14,8 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberEditprofileComponent implements OnInit {
   @ViewChild('formEdit') formEdit: NgForm | undefined
-  @HostListener('window:beforeunload', ['$event']) beforeUnloadNotification($event: any){
-    if (this.formEdit?.dirty){
+  @HostListener('window:beforeunload', ['$event']) beforeUnloadNotification($event: any) {
+    if (this.formEdit?.dirty) {
       $event.returnValue = true;
     }
   }
@@ -44,9 +44,14 @@ export class MemberEditprofileComponent implements OnInit {
   }
 
   memberUpdate() {
-    console.log(this.member);
-    this.toastrService.success('Profile Update was Successful')
-    this.formEdit?.reset(this.member);
+    this.serviceMember.updateMember(this.formEdit?.value).subscribe({
+      // Get nothing from API, but still have to subscribe since we get an observable returned
+      next: () => {
+        this.toastrService.success('Profile Update was Successful')
+        this.formEdit?.reset(this.member);
+      }
+    })
+
   }
 
 

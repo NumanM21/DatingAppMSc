@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -41,8 +42,27 @@ namespace API.Controllers
     public async Task<ActionResult<MemberDto>> GetUser(string username) // get individual user
     {
       return await _userRepository.AsyncGetMember(username);
+    }
 
-     
+    [HttpPut]
+    public async Task<ActionResult> UserUpdate(UpdateMemberDto updateMemberDto)
+    {
+      // User also authenticated, so can get their username from their token
+      var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; 
+
+      var user = await _userRepository.AsyncGetUserByUsername(username);
+
+      // For safety measure
+      if (user == null) return NotFound();
+
+      // Updates all properties passed from updateMemberDto, and over-writes these properties in the user (EF tracks all changes to user automatically here)
+      _autoMapper.Map(updateMemberDto, user);
+
+      // Now we have to SAVE the changes to the data for THAT user
+      if (await _userRepository.AsyncSaveAll()) return NoContent();
+
+      // Nothing saved to DB (No changes)
+      return BadRequest("User not updated");
     }
 
   }
