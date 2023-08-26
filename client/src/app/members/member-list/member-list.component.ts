@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Member } from 'src/app/_models/Member';
 import { MembersService } from 'src/app/_services/members.service';
 
@@ -8,21 +9,14 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
-  members: Member[] = []; // stores our members as array 
+  members$: Observable<Member[]> | undefined;
 
   constructor(private memberService: MembersService) { }
 
   ngOnInit(): void {
-    this.memberLoad();
+    this.members$ = this.memberService.getMembers();
   }
 
-  memberLoad()
-  {
-    //.getMembers returns observal so we .subscribe, Then we use {} to access the observable object we subscribed to
-    this.memberService.getMembers().subscribe({
-      next: members => this.members = members
-    })
-
-  }
+  
 
 }

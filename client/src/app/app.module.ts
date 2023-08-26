@@ -21,6 +21,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MemberDisplayComponent } from './members/member-display/member-display.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { MemberEditprofileComponent } from './members/member-editprofile/member-editprofile.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+
 
 
 
@@ -52,8 +54,8 @@ import { MemberEditprofileComponent } from './members/member-editprofile/member-
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
-
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
     ],
   bootstrap: [AppComponent]
 })
