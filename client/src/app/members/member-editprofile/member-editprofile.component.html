@@ -69,7 +69,8 @@
         </form>
       </tab>
       <tab heading="Edit Photos">
-        <p>Photo edit inserted here</p>
+        <!-- Inserting our child component (photo edit) into parent [] -> Member passed down as an input property-->
+        <app-photo-edit [member]="member"></app-photo-edit>
       </tab>
     </tabset>
   </div>
