@@ -37,7 +37,7 @@ namespace API.Controllers
     {
       var users = await _userRepository.AsyncGetMembers();
 
-      return Ok(users);
+      return Ok(users); // HTTP 200 
 
     }
 
@@ -62,47 +62,55 @@ namespace API.Controllers
       _autoMapper.Map(updateMemberDto, user);
 
       // Now we have to SAVE the changes to the data for THAT user
-      if (await _userRepository.AsyncSaveAll()) return NoContent();
+      if (await _userRepository.AsyncSaveAll()) return NoContent(); // HTTP 204
 
       // Nothing saved to DB (No changes)
       return BadRequest("User not updated");
     }
 
-    [HttpPost("add-photo")] 
+    [HttpPost("add-photo")]
     // adding a route parameter to our HttpPost we already have (This will allow users to upload picture)
-    // Should get a HTTP 201 response 
+    // Should get a HTTP 201 created response
 
-    public async Task<ActionResult<PhotoDto>> photoAdd (IFormFile file)
+    //TODO: 1. Separate this larger method into smaller methods -> can have logic of setting main Photo as a service layer or domain logic. 2. More specific error handling, have console logs for specific issues (easier to debug). 
+    public async Task<ActionResult<PhotoDto>> photoAdd(IFormFile file)
     {
       var username = User.GetUsername();
       // Since we use our repo here, EF auto tracks the user
       var user = await _userRepository.AsyncGetUserByUsername(username);
 
-      if (user == null) return NotFound(); // check in-case we don't have user 
-      
-        var imgUpload = await _servicePhoto.AsyncAddPhoto(file);
-        // Can absolute uri is stored in our DB (we use this to track the image in cloudinary)
-        
-        // Check if we  have error with imgUpload
-        if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); 
+      if (user == null) return NotFound("User not found in photoAdd method!"); // check in-case we don't have user (HTTP 404 Err)
 
-        var img = new Photo
-        {
-          Url = imgUpload.SecureUrl.AbsoluteUri,
-          PublicId = imgUpload.PublicId
-        };
+      var imgUpload = await _servicePhoto.AsyncAddPhoto(file);
+      // Can absolute uri is stored in our DB (we use this to track the image in cloudinary)
 
-        // If first photo, have to set this to main 
-        if (user.Photos.Count == 0) img.IsMainPhoto = true;
-        
-        //Now the EF will track this user in memory
-        user.Photos.Add(img);
+      // Check if we  have error with imgUpload
+      if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); //HHTP 400 Err
 
-        if(await _userRepository.AsyncSaveAll()) return _autoMapper.Map<PhotoDto>(img);
+      var img = new Photo
+      {
+        Url = imgUpload.SecureUrl.AbsoluteUri,
+        PublicId = imgUpload.PublicId
+      };
 
-        return BadRequest("Photo not mapped to DTO");
+      // If first photo, have to set this to main 
+      if (user.Photos.Count == 0) img.IsMainPhoto = true;
 
-      
+      //Now the EF will track this user in memory
+      user.Photos.Add(img);
+
+      if (await _userRepository.AsyncSaveAll())
+      {
+        return CreatedAtAction(
+        nameof(GetUser), // Sending back a location header for client to get img created, they go through username endpoint (api/users/username)
+        new { username = user.UserName }, // new object, assign username of user to username variable -> This is the argument we pass to GetUser
+        _autoMapper.Map<PhotoDto>(img));  // Pass object we have created back ->passing back photoDto, and we map FROM the img we created 
+      }
+
+
+      return BadRequest("Photo not mapped to DTO"); // HTTP 400 Err
+
+
 
     }
 

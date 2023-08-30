@@ -45,6 +45,7 @@ namespace API.Services
 
     public async Task<DeletionResult> AsyncDeletePhoto(string publicId)
     {
+      //TODO: Error handling -> implement --> What if publicId of img doesn't exist? (return to user the img uploaded/ ID requested was incorrect?)
       var parameterDelete = new DeletionParams(publicId);
 
       return await _cloud.DestroyAsync(parameterDelete); //DestroyAsync returns DeletionResult
