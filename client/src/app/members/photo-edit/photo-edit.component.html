@@ -1,23 +1,134 @@
 <!-- Child of editProfile component -->
 
 <div class="row" *ngIf="member">
-  <div class="col-2" *ngFor="let photo of member.photos">
-    <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}">
-      <img src="{{photo.url}}" alt="user photo" class="photo-thumbnail-size mb-1">
-      <div class="text-center">
-        <button class="btn-main btn btn-sm" 
-                (mouseover)="onHover(photo)" 
-                (mouseout)="hoverOut(photo)">Main
-        </button>
-        <button class="btn-delete btn btn-med btn-danger">
-          <i class="fa fa-trash"></i>
-        </button>
-      </div>
+    <div class="col-2 mb-1" *ngFor="let photo of member.photos">
+        <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}">
+            <img src="{{photo.url}}" alt="user photo" class="photo-thumbnail-size mb-1">
+            <div class="text-center">
+                <button class="btn-main btn btn-sm" (mouseover)="onHover(photo)" (mouseout)="hoverOut(photo)">Main
+                </button>
+                <button class="btn-delete btn btn-med btn-danger">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
+<!-- img upload from ng2 TODO: Reference below! -->
+<div class="row">
+    <!-- FIXME:Can change this to col-md-3 , md allows it to change/stack the imgs on smaller screens (leave it unstacked for now, since we want img viewable at all time) -->
+    <div class="col-3 p-3">
+
+        <!-- FIXME: Drop box should 'hover out' similar to img icons, so show user we are about to drop an image in! -->
+        <h3>Drop or Upload Photos</h3>
+
+        <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
+            [uploader]="uploader" class="card bg-faded p-3 text-center mb-3 my-drop-zone">
+            <i class="fa fa-upload fa-3x"></i>
+            <!-- TODO: Change the calss and Icon styling (can make it look better) -->
+            Drag and Drop Photo
+        </div>
+        <div class="file-upload-container">
+            <!-- Select File Button -->
+            <label for="singleFileInput" class="custom-file-upload-btn">Select File</label>
+            <input id="singleFileInput" type="file" ng2FileSelect [uploader]="uploader"
+                (change)="onFileSelected($event)" class="file-input-hidden">
+            <div>{{selectedFileName}}</div>
+        </div>
+
+        <div class="file-upload-container">
+
+            <!-- Select Multiple File Button - Using native angular for this (not ng2) -->
+
+            <label for="nativeMultipleFileInput" class="custom-file-upload-btn">Select Multiple Files</label>
+            <input id="nativeMultipleFileInput" type="file" multiple (change)="onMultipleFilesSelected($event)"
+                class="file-input-hidden">
+            <div *ngIf="selectedFiles && selectedFiles.length > 0">
+                <p>{{ selectedFiles.length }} files selected</p>
+                <ul>
+                    <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+                </ul>
+            </div>
+        </div>
 
 
+    </div>
+    <!-- FIXME: Again, can add col-md-9 , test with both to see which looks better -->
+    <div class="col-9" style="margin-bottom: 40px" *ngIf="uploader?.queue?.length">
 
+        <h3>Upload queue</h3>
+        <p>Queue length: {{ uploader?.queue?.length }}</p>
 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="50%">Name</th>
+                    <th>Size</th>
+                    <!-- TODO: Change these icon sizes (make a little smaller + bg colors) -->
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of uploader?.queue">
+                    <td><strong>{{ item?.file?.name }}</strong></td>
+                    <!-- Tells us image size -->
+                    <td *ngIf="uploader?.options?.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                    <!-- TODO: Similar to one TODO above -->
+                    <td *ngIf="uploader?.options?.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }">
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </td>
+                    <td nowrap>
+                        <button type="button" class="btn btn-success btn-xs" (click)="item.upload()"
+                            [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span> Upload
+                        </button>
+                        <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()"
+                            [disabled]="!item.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                            <span class="glyphicon glyphicon-trash"></span> Remove
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <div>
+                Queue progress:
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader?.progress + '%' }">
+                    </div>
+                </div>
+            </div>
+            <!-- ? for optional chaining  -->
+            <button type="button" class="btn btn-success btn-s" (click)="uploader?.uploadAll()"
+                [disabled]="!uploader?.getNotUploadedItems()?.length">
+                <!-- TODO: Change these font awesome icons around (can maybe find nicer?) -->
+                <span class="fa fa-upload"></span> Upload all
+            </button>
+            <button type="button" class="btn btn-warning btn-s" (click)="uploader?.cancelAll()"
+                [disabled]="!uploader?.isUploading">
+                <span class="fa fa-ban"></span> Cancel all
+            </button>
+            <button type="button" class="btn btn-danger btn-s" (click)="uploader?.clearQueue()"
+                [disabled]="!uploader?.queue?.length">
+                <span class="fa fa-trash"></span> Remove all
+            </button>
+        </div>
+
+    </div>
+
+</div>

@@ -4,6 +4,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FileUploadModule } from 'ng2-file-upload';
 
 //3rd Party imports here
 
@@ -20,14 +21,16 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ),
     NgxSpinnerModule.forRoot({
       type: 'pacman'
-    })
-    // TODO: Change this if pacman loading doesn't work!
+    }),
+    FileUploadModule
+    
   ],
   exports: [
     BsDropdownModule,
     ToastrModule,
     TabsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FileUploadModule
   ]
 })
 export class SharedModule { }

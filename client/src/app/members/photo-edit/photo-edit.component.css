@@ -1,4 +1,4 @@
-.photo-thumbnail-size{
+.photo-thumbnail-size {
   max-width: 100%;
   max-height: 200px;
   height: auto;
@@ -10,21 +10,22 @@
 }
 
 .img-container.hovered .photo-thumbnail-size {
-  transform: scale(1.2); 
+  transform: scale(1.2);
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.8);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 
-.btn-main{
+.btn-main {
   font-size: large;
   border: 2px solid #757070;
   transition: border-color 0.3s ease;
 }
-.btn-main:hover{
-  border-color:#161616;
+
+.btn-main:hover {
+  border-color: #161616;
   outline: none;
-  
+
 }
 
 .btn-delete {
@@ -35,4 +36,33 @@
 .btn-delete:hover {
   background-color: #d3160f;
   border-color: #161616;
+}
+
+.nv-file-over {
+  border: dashed 4px rgb(197, 32, 32);
+}
+
+.custom-file-upload-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #d6d4d4d8;
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.file-input-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-upload-container{
+  margin-bottom: 10px;
 }
