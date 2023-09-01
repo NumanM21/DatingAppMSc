@@ -93,11 +93,12 @@
                             [disabled]="item.isReady || item.isUploading || item.isSuccess">
                             <span class="glyphicon glyphicon-upload"></span> Upload
                         </button>
-                        <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()"
+                        <button type="button" class="btn btn-cancel btn-xs" (click)="item.cancel()"
                             [disabled]="!item.isUploading">
-                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                            <span class="glyphicon  glyphicon-ban-circle"></span> Cancel
                         </button>
-                        <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                        <button type="button" class="btn btn-remove  btn-xs" 
+                        (click)="removeSingleItem(item)">
                             <span class="glyphicon glyphicon-trash"></span> Remove
                         </button>
                     </td>
@@ -119,11 +120,11 @@
                 <!-- TODO: Change these font awesome icons around (can maybe find nicer?) -->
                 <span class="fa fa-upload"></span> Upload all
             </button>
-            <button type="button" class="btn btn-warning btn-s" (click)="uploader?.cancelAll()"
+            <button type="button" class="btn btn-cancel btn-s" (click)="uploader?.cancelAll()"
                 [disabled]="!uploader?.isUploading">
                 <span class="fa fa-ban"></span> Cancel all
             </button>
-            <button type="button" class="btn btn-danger btn-s" (click)="uploader?.clearQueue()"
+            <button type="button" class="btn btn-remove btn-s" (click)="removeAllItems()"
                 [disabled]="!uploader?.queue?.length">
                 <span class="fa fa-trash"></span> Remove all
             </button>

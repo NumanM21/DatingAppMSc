@@ -77,16 +77,42 @@ export class PhotoEditComponent implements OnInit {
     }
   }
 
-  
+
   onMultipleFilesSelected(event: any): void {
     this.selectedFiles = Array.from(event.target.files);
     console.log('Native event.target.files:', this.selectedFiles); // Debugging
 
     // If you have an upload queue, add the files to it
     for (let i = 0; i < this.selectedFiles.length; i++) {
-       this.uploader?.addToQueue([this.selectedFiles[i]]);
+      this.uploader?.addToQueue([this.selectedFiles[i]]);
     }
-}
+  }
+
+  // Remove single or multiple files from showing under button (when removed from queue)
+  removeSingleItem(item: any): void {
+    // functionality to remove the item
+    item.removeFromQueue();
+
+    // Update UI
+    if (item.file.name === this.selectedFileName) {
+      this.selectedFileName = '';
+    } else {
+      const index = this.selectedFiles.indexOf(item.file);
+      if (index > -1) {
+        this.selectedFiles.splice(index, 1);
+      }
+    }
+  }
+
+  removeAllItems(): void {
+    // functionality to clear the queue
+    this.uploader?.clearQueue();
+
+    // update  UI
+    this.selectedFileName = '';
+    this.selectedFiles = [];
+  }
+
 
 
 

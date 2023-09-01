@@ -66,3 +66,13 @@
 .file-upload-container{
   margin-bottom: 10px;
 }
+
+.btn-remove{
+  background-color: #d3160f;
+  color: white;
+}
+
+.btn-cancel{
+  background-color: rgb(255, 125, 3);
+  color: white;
+}
