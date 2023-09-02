@@ -14,3 +14,11 @@
 .icon-size-nav{
   font-size: medium;
 }
+
+img{
+  max-height: 45px;
+  max-width: 45px;
+  border: 1px solid white;
+  display: inline;
+  margin-right: 10px;
+}

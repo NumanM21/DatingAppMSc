@@ -5,6 +5,7 @@ import { Member } from 'src/app/_models/Member';
 import { Photo } from 'src/app/_models/Photo';
 import { User } from 'src/app/_models/User';
 import { AccountService } from 'src/app/_services/account.service';
+import { MembersService } from 'src/app/_services/members.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -25,7 +26,7 @@ export class PhotoEditComponent implements OnInit {
   selectedFiles: File[] = []; // multiple
 
 
-  constructor(private serviceAccount: AccountService) {
+  constructor(private serviceAccount: AccountService, private serviceMember: MembersService) {
     // Sets our user property
     this.serviceAccount.currentUser$.pipe(take(1)).subscribe({
       next: user => {
@@ -37,6 +38,24 @@ export class PhotoEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeUploader();
+  }
+
+  // Similar to our method in member service 
+  setPhotoMain(photo: Photo){
+    this.serviceMember.setPhotoMain(photo.id).subscribe({
+      // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
+      next:() =>{
+        if (this.user && this.member){
+          this.user.photoURL = photo.url;
+          this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
+          this.member.photoUrl = photo.url;
+          this.member.photos.forEach(p =>{
+            if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
+            else if (p.id === photo.id) p.isMainPhoto = true; // set new photo as main
+          })
+        }
+      } 
+    })
   }
 
   //To get dropzone functionality

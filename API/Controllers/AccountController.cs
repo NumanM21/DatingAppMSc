@@ -45,7 +45,8 @@ namespace API.Controllers
       return new UserDto
       {
         Username = user.UserName,
-        Token = _tokenService.CreateToken(user)
+        Token = _tokenService.CreateToken(user),
+        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url
       };
     }
 
@@ -53,25 +54,28 @@ namespace API.Controllers
 
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(x => 
-        x.UserName == loginDto.Username);
+      // Not going to repo (so don't have access to photos directly with user) -> photo is related entity (EF doesn't load these by default)
+      var user = await _context.Users.Include(p=>p.Photos)
+      .SingleOrDefaultAsync(x =>
+      x.UserName == loginDto.Username);
 
-        if (user == null) return Unauthorized("Invalid username"); 
+      if (user == null) return Unauthorized("Invalid username");
 
-        using var hmac = new HMACSHA512(user.PasswordSalt); // if same pass, same hashing
+      using var hmac = new HMACSHA512(user.PasswordSalt); // if same pass, same hashing
 
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+      var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-          if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
-        }
-        
-        return new UserDto
+      for (int i = 0; i < computedHash.Length; i++)
       {
-          Username = user.UserName,
-          Token = _tokenService.CreateToken(user)
-        };
+        if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
+      }
+
+      return new UserDto
+      {
+        Username = user.UserName,
+        Token = _tokenService.CreateToken(user),
+        PhotoURL = user.Photos.FirstOrDefault(x=>x.IsMainPhoto)?.Url
+      };
     }
 
     private async Task<bool> UserExists(string username)

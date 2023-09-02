@@ -45,5 +45,9 @@ export class MembersService {
     )
   }
 
+    // Allows users to select main photo on edit profile
+  setPhotoMain(photoId: number){
+    return this.httpClient.put(this.baseUrl + 'users/set-photo-main/'+ photoId, {}) //put so we have to sent something back (we send an empty object {})
+  }
 
 }

@@ -114,5 +114,30 @@ namespace API.Controllers
 
     }
 
+    [HttpPut("set-photo-main/{photoId}")] // Put for updating resource (selecting Main photo)
+    public async Task<ActionResult> SetPhotoMain(int photoId) // EF Tracks these changes automatically --> So have to update DB at the end
+    {
+      var user = await _userRepository.AsyncGetUserByUsername(User.GetUsername());
+
+      if (user == null) return NotFound("User not found, is null");
+
+      var photo = user.Photos.FirstOrDefault(x => x.Id == photoId); // can return null
+
+      if (photo == null) return NotFound("id to match Photo not found");
+
+      if (photo.IsMainPhoto) return BadRequest("Photo already set to Main photo"); 
+      // In-case user uses 3rd party tool to update photo (app safety)
+
+      var currMain = user.Photos.FirstOrDefault(x => x.IsMainPhoto);
+      // Already have a main photo, we disable it / remove it via the bool flag
+      if (currMain != null) currMain.IsMainPhoto = false;
+
+      photo.IsMainPhoto = true;
+
+      if (await _userRepository.AsyncSaveAll()) return NoContent(); // update
+      // Failed to save all if we return below
+      return BadRequest("Main photo couldn't be updated!");
+    }
+
   }
 }

@@ -25,7 +25,19 @@
 .btn-main:hover {
   border-color: #161616;
   outline: none;
+  background-color: rgb(58, 211, 58);
+  color: white;
 
+}
+
+.btn-main-true{
+  background-color: rgb(58, 211, 58);
+  color: rgb(0, 0, 0);
+  
+}
+
+.btn-main-false{
+  color: rgb(58, 211, 58);
 }
 
 .btn-delete {

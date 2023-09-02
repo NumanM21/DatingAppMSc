@@ -5,7 +5,8 @@
         <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}">
             <img src="{{photo.url}}" alt="user photo" class="photo-thumbnail-size mb-1">
             <div class="text-center">
-                <button class="btn-main btn btn-sm" (mouseover)="onHover(photo)" (mouseout)="hoverOut(photo)">Main
+                <button class="btn-main btn btn-sm"  [disabled]="photo.isMainPhoto" (click)="setPhotoMain(photo)"  [ngClass]="photo.isMainPhoto ? 'btn-main-true' : 'btn-main-false'"
+                (mouseover)="onHover(photo)" (mouseout)="hoverOut(photo)">Main
                 </button>
                 <button class="btn-delete btn btn-med btn-danger">
                     <i class="fa fa-trash"></i>
