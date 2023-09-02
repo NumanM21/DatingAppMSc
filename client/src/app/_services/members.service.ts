@@ -50,4 +50,9 @@ export class MembersService {
     return this.httpClient.put(this.baseUrl + 'users/set-photo-main/'+ photoId, {}) //put so we have to sent something back (we send an empty object {})
   }
 
+  photoDelete(photoId:number){
+    // KEY: DON'T FORGET RETURN (will get error from .subscribe)
+   return this.httpClient.delete(this.baseUrl + 'users/photo-delete/'+photoId);
+  }
+
 }

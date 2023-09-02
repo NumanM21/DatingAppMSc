@@ -41,20 +41,30 @@ export class PhotoEditComponent implements OnInit {
   }
 
   // Similar to our method in member service 
-  setPhotoMain(photo: Photo){
+  setPhotoMain(photo: Photo) {
     this.serviceMember.setPhotoMain(photo.id).subscribe({
       // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
-      next:() =>{
-        if (this.user && this.member){
+      next: () => {
+        if (this.user && this.member) {
           this.user.photoURL = photo.url;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
           this.member.photoUrl = photo.url;
-          this.member.photos.forEach(p =>{
+          this.member.photos.forEach(p => {
             if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
             else if (p.id === photo.id) p.isMainPhoto = true; // set new photo as main
           })
         }
-      } 
+      }
+    })
+  }
+
+  photoDelete(photoId: number) {
+    this.serviceMember.photoDelete(photoId).subscribe({
+      next: () => {
+        if (this.member) {
+          this.member.photos = this.member.photos.filter(x => x.id !== photoId); // Return all photos EXCPET the photo which matches this id we passed in argument above (.subscribe so we listen to the response from client)
+        }
+      }
     })
   }
 

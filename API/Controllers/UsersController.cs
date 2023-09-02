@@ -139,5 +139,38 @@ namespace API.Controllers
       return BadRequest("Main photo couldn't be updated!");
     }
 
+
+    // Method to delete photos
+    [HttpDelete("photo-delete/{photoId}")]
+    
+    public async Task<ActionResult> PhotoDelete(int photoId)
+    {
+      //User.GetUsername retrives username from user token (only possible if authenticated)
+      var user = await _userRepository.AsyncGetUserByUsername(User.GetUsername()) ;
+
+      if (user == null) return NotFound("User not found to delete photo");
+      // if we use user. and get random methods (forgetten await --> this took a while!!)
+      var photo = user.Photos.FirstOrDefault(x=>x.Id == photoId);
+      // root parameter we are passing up so need this to NOT be null
+      if (photo == null) return NotFound("User photo not found"); // HTTP 404
+
+      if (photo.IsMainPhoto) return BadRequest("This is main photo, cannot be deleted. Choose another main photo before deleting this one 😄");
+
+      // img without id are in our DB (from seeding --> used for testing, not in cloudinary so user can't access these)
+      if (photo.PublicId != null) 
+      {
+        var res = await _servicePhoto.AsyncDeletePhoto(photo.PublicId);
+
+        if (res.Error != null) BadRequest(res.Error.Message); // error msg from cloudinary
+      }
+
+      user.Photos.Remove(photo); // EF auto updates DB
+
+      if (await _userRepository.AsyncSaveAll()) return Ok(); // HTTP 200
+
+      return BadRequest("Photo cannot be deleted -> Debug time :D");
+
+    }
+
   }
 }
