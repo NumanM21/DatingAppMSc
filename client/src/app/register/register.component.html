@@ -1,39 +1,19 @@
+<!-- TODO: Add stuff for email -> gender, lookingfor and interests (interests can be options they can select which we can use for our matching algorithm?) Also need to update these forms in our input-text.component-->
+
 <form [formGroup]="formRegister" (ngSubmit)="register()" autocomplete="false">
   <h2 class="text-center text-dark"> Sign Up</h2>
   <hr>
 
+  <!-- Username -->
+  <app-input-text [formControl]="$any(formRegister.controls['username'])" [label]="'Username'"></app-input-text>
 
-  <div class="mb-3">
-    <input type="text"
-      [class.is-invalid]="formRegister.get('username')?.errors && formRegister.get('username')?.touched"
-      class="form-control" formControlName="username" placeholder="Username">
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback">Invalid Username. Please enter a valid username with minimum 4 characters</div>
-  </div>
+  <!-- Password -->
+  <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'"
+    [type]="'password'"></app-input-text>
 
-  <div class="mb-3">
-    <input type="password"
-      [class.is-invalid]="formRegister.get('password')?.errors && formRegister.get('password')?.touched"
-      class="form-control" formControlName="password" placeholder="Password">
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('required')" >Password cannot be empty. Please enter a password</div>
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('minlength')" >Password must be at least 4 characters</div>
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('maxlength')" >Password cannot exceed 8 characters</div>
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('complexity')" > {{ formRegister.get('password')?.errors?.['complexity']}}</div>
-  </div>
-
-  <div class="mb-3">
-    <input type="password"
-      [class.is-invalid]="formRegister.get('confirmPassword')?.errors && formRegister.get('confirmPassword')?.touched"
-      class="form-control" formControlName="confirmPassword" placeholder="Confirm Password">
-      <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('confirmPassword')?.hasError('required')" >Password cannot be empty. Please enter a password</div>
-    <!-- ToolTip message under -->
-    <div class="invalid-feedback" *ngIf="formRegister.get('confirmPassword')?.hasError('MatchNotValid')" >Passwords do not match!</div>
-  </div>
+  <!-- Confirm Password -->
+  <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
+    [type]="'confirmPassword'"></app-input-text>
 
 
   <div class="text-center">

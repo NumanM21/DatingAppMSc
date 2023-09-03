@@ -23,6 +23,7 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { MemberEditprofileComponent } from './members/member-editprofile/member-editprofile.component';
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { PhotoEditComponent } from './members/photo-edit/photo-edit.component';
+import { InputTextComponent } from './_forms/input-text/input-text.component';
 
 
 
@@ -45,6 +46,7 @@ import { PhotoEditComponent } from './members/photo-edit/photo-edit.component';
     MemberDisplayComponent,
     MemberEditprofileComponent,
     PhotoEditComponent,
+    InputTextComponent,
   ],
   imports: [
     BrowserAnimationsModule,

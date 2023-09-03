@@ -1,0 +1,23 @@
+<!-- Password Input -->
+<div class="mb-3">
+  <input type={{type}}
+    [class.is-invalid]="_formControl.touched && _formControl.invalid"
+    class="form-control" 
+    [formControl]="_formControl" 
+    placeholder={{label}}>
+
+  <!-- ToolTip required message  -->
+  <div class="invalid-feedback" *ngIf="_formControl.errors?.['required']" >{{label}} cannot be empty. Please enter a {{label}}</div>
+
+  <!-- ToolTip minLength message  -->
+  <div class="invalid-feedback" *ngIf="_formControl.errors?.['minlength']" >{{label}} must be at least  {{_formControl.errors?.['minlength'].requiredLength}} characters!</div>
+
+  <!-- ToolTip maxLength message  -->
+  <div class="invalid-feedback" *ngIf="_formControl.errors?.['maxlength']" >{{label}} cannot exceed {{_formControl.errors?.['maxlength'].requiredLength}} characters</div>
+
+  <!-- ToolTip Regex message FIXME: Used ? for both get methods (issue)--> 
+  <div class="invalid-feedback" *ngIf="parentForm?.get(controlName)?.hasError('complexity')">{{ parentForm?.get(controlName)?.errors?.['complexity'] }}</div>
+
+  <!-- ToolTip Not Matching message  FIXME: May need to replace {{label}} with Password!-->
+  <div class="invalid-feedback" *ngIf="_formControl.errors?.['MatchNotValid']" >{{label}} do not Match!</div>
+</div>
