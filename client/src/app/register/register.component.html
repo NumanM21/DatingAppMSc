@@ -1,24 +1,48 @@
-<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="false"> 
+<form [formGroup]="formRegister" (ngSubmit)="register()" autocomplete="false">
   <h2 class="text-center text-dark"> Sign Up</h2>
   <hr>
+
+
   <div class="mb-3">
     <input type="text"
-        class="form-control"
-        name="username"
-        [(ngModel)]="model.username"
-        placeholder="Username"
-    >
+      [class.is-invalid]="formRegister.get('username')?.errors && formRegister.get('username')?.touched"
+      class="form-control" formControlName="username" placeholder="Username">
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback">Invalid Username. Please enter a valid username with minimum 4 characters</div>
   </div>
+
   <div class="mb-3">
     <input type="password"
-        class="form-control"
-        name="password"
-        [(ngModel)]="model.password"
-        placeholder="Password"
-    >
+      [class.is-invalid]="formRegister.get('password')?.errors && formRegister.get('password')?.touched"
+      class="form-control" formControlName="password" placeholder="Password">
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('required')" >Password cannot be empty. Please enter a password</div>
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('minlength')" >Password must be at least 4 characters</div>
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('maxlength')" >Password cannot exceed 8 characters</div>
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('password')?.hasError('complexity')" > {{ formRegister.get('password')?.errors?.['complexity']}}</div>
   </div>
+
+  <div class="mb-3">
+    <input type="password"
+      [class.is-invalid]="formRegister.get('confirmPassword')?.errors && formRegister.get('confirmPassword')?.touched"
+      class="form-control" formControlName="confirmPassword" placeholder="Confirm Password">
+      <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('confirmPassword')?.hasError('required')" >Password cannot be empty. Please enter a password</div>
+    <!-- ToolTip message under -->
+    <div class="invalid-feedback" *ngIf="formRegister.get('confirmPassword')?.hasError('MatchNotValid')" >Passwords do not match!</div>
+  </div>
+
+
   <div class="text-center">
     <button class="btn bg-success bg-gradient text-light me-2" type="submit"> Register</button>
     <button class="btn bg-secondary bg-gradient text-light" type="button" (click)="cancel()"> Cancel</button>
   </div>
+
+
 </form>
+<!-- Pipped out in json format FIXME: Need to remove in future -->
+<p>Form Value: {{formRegister.value | json}}</p>
+<p>Form Status: {{formRegister.status | json}}</p>
