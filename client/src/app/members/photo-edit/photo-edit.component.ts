@@ -94,6 +94,13 @@ export class PhotoEditComponent implements OnInit {
       if (response) { // see if we have a response
         const photo = JSON.parse(response);
         this.member?.photos.push(photo); // push photo we get from members API
+
+        // Need to see if user has any photo, if not, uploaded photo auto becomes main photo (need to show this profile in navbar + member profile)
+        if (photo.isMainPhoto && this.user && this.member){
+          this.user.photoURL = photo.url;
+          this.member.photoUrl = photo.url;
+          this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
+        }
       }
     }
   }

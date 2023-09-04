@@ -15,9 +15,9 @@
   <!-- ToolTip maxLength message  -->
   <div class="invalid-feedback" *ngIf="_formControl.errors?.['maxlength']" >{{label}} cannot exceed {{_formControl.errors?.['maxlength'].requiredLength}} characters</div>
 
-  <!-- ToolTip Regex message FIXME: Used ? for both get methods (issue)--> 
-  <div class="invalid-feedback" *ngIf="parentForm?.get(controlName)?.hasError('complexity')">{{ parentForm?.get(controlName)?.errors?.['complexity'] }}</div>
+  <!-- ToolTip Regex message --> 
+  <div class="invalid-feedback" *ngIf="_formControl.hasError('complexity')">{{ _formControl.errors?.['complexity'] }}</div>
 
-  <!-- ToolTip Not Matching message  FIXME: May need to replace {{label}} with Password!-->
+  <!-- ToolTip Not Matching message -->
   <div class="invalid-feedback" *ngIf="_formControl.errors?.['MatchNotValid']" >{{label}} do not Match!</div>
 </div>

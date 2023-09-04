@@ -39,3 +39,7 @@ input[type="radio"]:checked {
   vertical-align: middle;
 }
 
+.validation-err{
+  font-weight: bold;
+  color: rgb(185, 16, 16);
+}

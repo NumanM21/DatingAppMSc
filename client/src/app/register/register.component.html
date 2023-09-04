@@ -1,6 +1,6 @@
 <!-- TODO: Add stuff for email -> gender, lookingfor and interests (interests can be options they can select which we can use for our matching algorithm?) Also need to update these forms in our input-text.component-->
 
-<form [formGroup]="formRegister" (ngSubmit)="register()" autocomplete="false">
+<form [formGroup]="formRegister" (ngSubmit)="formRegister.valid && register()" autocomplete="false">
   <h2 class="text-center text-dark"> Sign Up</h2>
   <hr>
 
@@ -13,7 +13,7 @@
 
   <!-- Confirm Password -->
   <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
-    [type]="'confirmPassword'"></app-input-text>
+    [type]="'password'"></app-input-text>
 
   <!-- KnownAs -->
   <app-input-text [formControl]="$any(formRegister.controls['knownAs'])" [label]="'Known As'"></app-input-text>
@@ -41,16 +41,23 @@
     </label>
   </div>
  
-
-
+  <!-- Check to see if we have any validation errors (errorValiation array) - Extra safetly layer -->
+  <div class="row" *ngIf="ErrorValidation">
+    <ul class="validation-err">
+      <li *ngFor="let err of ErrorValidation">
+        {{err}}
+      </li>
+    </ul>
+  </div>
 
   <div class="text-center">
-    <button class="btn btn-register text-light me-2" type="submit"> Register</button>
+    <button [disabled]="!formRegister.valid" class="btn btn-register text-light me-2" type="submit"> Register</button>
     <button class="btn btn-cancel text-light" type="button" (click)="cancel()"> Cancel</button>
   </div>
 
-
 </form>
+
+
 <!-- Pipped out in json format FIXME: Need to remove in future -->
 <p>Form Value: {{formRegister.value | json}}</p>
 <p>Form Status: {{formRegister.status | json}}</p>
