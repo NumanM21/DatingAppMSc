@@ -4,6 +4,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,11 @@ namespace API.Controllers
   {
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
-    public AccountController(DataContext context, ITokenService tokenService)
+    private readonly IMapper _autoMapper;
+    public AccountController(DataContext context, ITokenService tokenService, IMapper autoMapper)
+    // Classes/services we have injected using our controller's constructor
     {
+      _autoMapper = autoMapper;
       _tokenService = tokenService;
       _context = context;
     }
@@ -27,26 +31,30 @@ namespace API.Controllers
 
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
+      // Check to see if user exists
       if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
+      // Go to App user from register DTO
+      var user = _autoMapper.Map<AppUser>(registerDto);
 
       using var hmac = new HMACSHA512(); // key from HMAC is used as our passwordSalt
 
-      var user = new AppUser
-      {
-        UserName = registerDto.Username.ToLower(),
-        PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-        PasswordSalt = hmac.Key
-        // pass comes to us as string from user, we have to hash it to then store it!
-      };
+      // Updating these objects with values from our register DTO
+      user.UserName = registerDto.Username.ToLower();
+      user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+      user.PasswordSalt = hmac.Key;
+      // pass comes to us as string from user, we have to hash it to then store it!
 
+      // Adding user to our DB
       _context.Users.Add(user);
-      await _context.SaveChangesAsync();
+      await _context.SaveChangesAsync(); // Saving changes
 
+      // What we return when a user registers
       return new UserDto
       {
         Username = user.UserName,
         Token = _tokenService.CreateToken(user),
-        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url
+        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
+        KnownAs = user.KnownAs
       };
     }
 
@@ -55,7 +63,7 @@ namespace API.Controllers
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
       // Not going to repo (so don't have access to photos directly with user) -> photo is related entity (EF doesn't load these by default)
-      var user = await _context.Users.Include(p=>p.Photos)
+      var user = await _context.Users.Include(p => p.Photos)
       .SingleOrDefaultAsync(x =>
       x.UserName == loginDto.Username);
 
@@ -70,11 +78,13 @@ namespace API.Controllers
         if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
       }
 
+      // What we return when user logs in
       return new UserDto
       {
         Username = user.UserName,
         Token = _tokenService.CreateToken(user),
-        PhotoURL = user.Photos.FirstOrDefault(x=>x.IsMainPhoto)?.Url
+        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
+        KnownAs = user.KnownAs
       };
     }
 

@@ -16,6 +16,9 @@ namespace API.ExternalHelpers
             CreateMap<Photo, PhotoDto>(); 
             // Update FROM UpdateMember dto -> App User
             CreateMap<UpdateMemberDto, AppUser>();
+
+            // Update FROM Register dto -> App User
+            CreateMap<RegisterDto, AppUser>();
         }
 
     }
