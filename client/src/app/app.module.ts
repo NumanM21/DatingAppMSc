@@ -24,6 +24,7 @@ import { MemberEditprofileComponent } from './members/member-editprofile/member-
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { PhotoEditComponent } from './members/photo-edit/photo-edit.component';
 import { InputTextComponent } from './_forms/input-text/input-text.component';
+import { PickDateComponent } from './_forms/pick-date/pick-date.component';
 
 
 
@@ -47,6 +48,7 @@ import { InputTextComponent } from './_forms/input-text/input-text.component';
     MemberEditprofileComponent,
     PhotoEditComponent,
     InputTextComponent,
+    PickDateComponent,
   ],
   imports: [
     BrowserAnimationsModule,

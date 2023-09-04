@@ -5,6 +5,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 //3rd Party imports here
 
@@ -22,15 +23,18 @@ import { FileUploadModule } from 'ng2-file-upload';
     NgxSpinnerModule.forRoot({
       type: 'pacman'
     }),
-    FileUploadModule
+    FileUploadModule,
+    BsDatepickerModule.forRoot()
     
   ],
+  // export imported modules since we are in the SHARED module
   exports: [
     BsDropdownModule,
     ToastrModule,
     TabsModule,
     NgxSpinnerModule,
-    FileUploadModule
+    FileUploadModule,
+    BsDatepickerModule
   ]
 })
 export class SharedModule { }

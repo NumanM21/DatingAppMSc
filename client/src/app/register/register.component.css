@@ -1,1 +1,41 @@
+.btn-register {
+  background-color: rgb(61, 172, 61);
+  color: white;
+  border: solid 1px black;
+}
+
+.btn-cancel {
+  background-color: rgb(235, 64, 64);
+  color: white;
+  border: solid 1px black;
+}
+
+label {
+  margin-right: 20px;
+}
+
+label,
+.btn {
+  font-weight: bold;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(31, 31, 31); /* Black outline */
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked {
+  background: #404040; /* Fill in completely when checked */
+  border: 1px solid black; /* Black outline */
+}
+
+.align-middle{
+  vertical-align: middle;
+}
 

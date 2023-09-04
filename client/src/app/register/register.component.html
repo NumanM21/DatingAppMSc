@@ -15,10 +15,38 @@
   <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
     [type]="'confirmPassword'"></app-input-text>
 
+  <!-- KnownAs -->
+  <app-input-text [formControl]="$any(formRegister.controls['knownAs'])" [label]="'Known As'"></app-input-text>
+
+  <!-- Date of Birth -->
+  <app-pick-date [formControl]="$any(formRegister.controls['dateOfBirth'])"
+    [label]="'Date of Birth (DD/MM/YYYY)'" [maxDate]="maxDate"></app-pick-date>
+
+  <!-- City -->
+  <app-input-text [formControl]="$any(formRegister.controls['city'])" [label]="'City'"></app-input-text>
+
+  <!-- Country -->
+  <app-input-text [formControl]="$any(formRegister.controls['country'])" [label]="'Country'"></app-input-text>
+
+  <!-- Radio button for gender -->
+  <div class="mb-3">
+    <label class="d-inline-flex align-items-center align-middle" style="margin-right: 10px;">Gender:</label>
+    <label for="male" class="d-inline-flex align-items-center align-middle">
+      <input type="radio" id="male" class="check-form-input align-middle" value="male" formControlName="gender">
+      <span style="margin-left: 0.25rem;">Male</span>
+    </label>
+    <label for="female" class="d-inline-flex align-items-center align-middle ms-3">
+      <input type="radio" id="female" class="check-form-input align-middle" value="female" formControlName="gender">
+      <span style="margin-left: 0.25rem;">Female</span>
+    </label>
+  </div>
+ 
+
+
 
   <div class="text-center">
-    <button class="btn bg-success bg-gradient text-light me-2" type="submit"> Register</button>
-    <button class="btn bg-secondary bg-gradient text-light" type="button" (click)="cancel()"> Cancel</button>
+    <button class="btn btn-register text-light me-2" type="submit"> Register</button>
+    <button class="btn btn-cancel text-light" type="button" (click)="cancel()"> Cancel</button>
   </div>
 
 
