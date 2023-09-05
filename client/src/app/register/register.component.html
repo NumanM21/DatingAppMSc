@@ -1,4 +1,6 @@
 <!-- TODO: Add stuff for email -> gender, lookingfor and interests (interests can be options they can select which we can use for our matching algorithm?) Also need to update these forms in our input-text.component-->
+<!-- fun animation link -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
 
 <form [formGroup]="formRegister" (ngSubmit)="formRegister.valid && register()" autocomplete="false">
   <h2 class="text-center text-dark"> Sign Up</h2>
@@ -8,12 +10,31 @@
   <app-input-text [formControl]="$any(formRegister.controls['username'])" [label]="'Username'"></app-input-text>
 
   <!-- Password -->
-  <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'"
-    [type]="'password'"></app-input-text>
+  <!-- <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'"
+    [type]="'password'" #passwordField></app-input-text>
+    <button (click)="togglePasswordVisibility(passwordField)">👁️</button> -->
 
   <!-- Confirm Password -->
-  <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
-    [type]="'password'"></app-input-text>
+  <!-- <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
+    [type]="'password'" #confirmPasswordField></app-input-text>
+    <button (click)="togglePasswordVisibility(confirmPasswordField)">👁️</button> -->
+
+    <!-- Password -->
+<div class="input-group mb-3">
+  <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'" [type]="'password'" #passwordField></app-input-text>
+  <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility(passwordField)">
+    <i [ngClass]="passwordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+  </button>
+</div>
+
+<!-- Confirm Password -->
+<div class="input-group mb-3">
+  <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'" [type]="'password'" #confirmPasswordField></app-input-text>
+  <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility(confirmPasswordField)">
+    <i [ngClass]="confirmPasswordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i> 
+  </button>
+</div>
+
 
   <!-- KnownAs -->
   <app-input-text [formControl]="$any(formRegister.controls['knownAs'])" [label]="'Known As'"></app-input-text>

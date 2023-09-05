@@ -102,4 +102,13 @@ export class RegisterComponent implements OnInit {
     }
     else return; // no dateOfBirth
   }
+
+  // Toggle password visibility
+  togglePasswordVisibility(passwordField: any): void {
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+    } else {
+      passwordField.type = 'password';
+    }
+  }
 }

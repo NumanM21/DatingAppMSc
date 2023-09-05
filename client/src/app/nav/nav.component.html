@@ -28,19 +28,26 @@
       </div>
     </div>
 
+    <!-- TODO: Adding font awesome eye icon into this for password login -->
     <form *ngIf="!(accountService.currentUser$| async)" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off">
+
+      <!-- Username -->
       <input 
       name="username"
       [(ngModel)] ="model.username"
       class="form-control me-2" 
       type="text" 
       placeholder="Username">
+
+      <!-- Password -->
       <input 
       name="password"
       [(ngModel)]="model.password"
       class="form-control me-2" 
       type="password" 
       placeholder="Password">
+      
+      <!-- Login  -->
       <button class="btn btn-outline-success" type="submit">Login</button>
     </form>
   </div>
