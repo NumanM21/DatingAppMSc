@@ -35,4 +35,13 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/')
   }
 
+  // Toggle password visibility
+  togglePasswordVisibility(passwordField: any): void {
+    if (passwordField.type === 'text') {
+      passwordField.type = 'password';
+    } else {
+      passwordField.type = 'text';
+    }
+  }
+
 }

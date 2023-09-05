@@ -43,3 +43,30 @@ input[type="radio"]:checked {
   font-weight: bold;
   color: rgb(185, 16, 16);
 }
+
+.input-group {
+  position: relative;
+  width: 100%;  
+}
+
+.input-group > input {
+  width: calc(100% - 30px);  
+}
+
+.input-group-text {
+  position: absolute; 
+  right: 0;  
+  top: 50%;  
+  transform: translateY(-50%); 
+}
+
+.eye-icon-above {
+  position: absolute;
+  top: -20px;  
+  right: 0;
+  
+}
+
+.input-wrapper {
+  position: relative;
+}

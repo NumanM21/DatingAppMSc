@@ -40,13 +40,26 @@
       placeholder="Username">
 
       <!-- Password -->
-      <input 
+      <div class="input-group">
+        <input 
+          name="password"
+          [(ngModel)]="model.password"
+          class="form-control" 
+          type="password" 
+          placeholder="Password"
+          #loginPasswordField>
+        <button class="btn btn-outline-secondary border-0" type="button" (click)="togglePasswordVisibility(loginPasswordField)">
+          <i [ngClass]="loginPasswordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </button>
+      </div>
+
+      <!-- <input 
       name="password"
       [(ngModel)]="model.password"
       class="form-control me-2" 
       type="password" 
-      placeholder="Password">
-      
+      placeholder="Password"> -->
+
       <!-- Login  -->
       <button class="btn btn-outline-success" type="submit">Login</button>
     </form>

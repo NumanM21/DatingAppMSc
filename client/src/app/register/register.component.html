@@ -1,6 +1,7 @@
 <!-- TODO: Add stuff for email -> gender, lookingfor and interests (interests can be options they can select which we can use for our matching algorithm?) Also need to update these forms in our input-text.component-->
-<!-- fun animation link -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+
+
 
 <form [formGroup]="formRegister" (ngSubmit)="formRegister.valid && register()" autocomplete="false">
   <h2 class="text-center text-dark"> Sign Up</h2>
@@ -9,39 +10,31 @@
   <!-- Username -->
   <app-input-text [formControl]="$any(formRegister.controls['username'])" [label]="'Username'"></app-input-text>
 
+
   <!-- Password -->
-  <!-- <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'"
-    [type]="'password'" #passwordField></app-input-text>
-    <button (click)="togglePasswordVisibility(passwordField)">👁️</button> -->
+  <div class="input-wrapper">
+    <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'" [type]="'password'"
+      #passwordField></app-input-text>
+    <span class="eye-icon-above" (click)="togglePasswordVisibility(passwordField)">
+      <i [ngClass]="passwordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+    </span>
+  </div>
 
   <!-- Confirm Password -->
-  <!-- <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
-    [type]="'password'" #confirmPasswordField></app-input-text>
-    <button (click)="togglePasswordVisibility(confirmPasswordField)">👁️</button> -->
-
-    <!-- Password -->
-<div class="input-group mb-3">
-  <app-input-text [formControl]="$any(formRegister.controls['password'])" [label]="'Password'" [type]="'password'" #passwordField></app-input-text>
-  <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility(passwordField)">
-    <i [ngClass]="passwordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-  </button>
-</div>
-
-<!-- Confirm Password -->
-<div class="input-group mb-3">
-  <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'" [type]="'password'" #confirmPasswordField></app-input-text>
-  <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility(confirmPasswordField)">
-    <i [ngClass]="confirmPasswordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i> 
-  </button>
-</div>
-
+  <div class="input-wrapper">
+    <app-input-text [formControl]="$any(formRegister.controls['confirmPassword'])" [label]="'Confirm Password'"
+      [type]="'password'" #confirmPasswordField></app-input-text>
+    <span class="eye-icon-above" (click)="togglePasswordVisibility(confirmPasswordField)">
+      <i [ngClass]="confirmPasswordField.type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+    </span>
+  </div>
 
   <!-- KnownAs -->
   <app-input-text [formControl]="$any(formRegister.controls['knownAs'])" [label]="'Known As'"></app-input-text>
 
   <!-- Date of Birth -->
-  <app-pick-date [formControl]="$any(formRegister.controls['dateOfBirth'])"
-    [label]="'Date of Birth (DD/MM/YYYY)'" [maxDate]="maxDate"></app-pick-date>
+  <app-pick-date [formControl]="$any(formRegister.controls['dateOfBirth'])" [label]="'Date of Birth (DD/MM/YYYY)'"
+    [maxDate]="maxDate"></app-pick-date>
 
   <!-- City -->
   <app-input-text [formControl]="$any(formRegister.controls['city'])" [label]="'City'"></app-input-text>
@@ -61,7 +54,7 @@
       <span style="margin-left: 0.25rem;">Female</span>
     </label>
   </div>
- 
+
   <!-- Check to see if we have any validation errors (errorValiation array) - Extra safetly layer -->
   <div class="row" *ngIf="ErrorValidation">
     <ul class="validation-err">
