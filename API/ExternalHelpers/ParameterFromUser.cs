@@ -16,5 +16,14 @@ namespace API.ExternalHelpers
             set => _pageSize = (value > maxPageSize) ? maxPageSize : value; 
         }
         
+        // We need to know who the current user is (so we can exclude them from the list of users we return)
+        public string currUsername { get; set; }
+
+        // gender filter (default returns opposite sex)
+        public string gender { get; set; }
+
+        // age filter 
+        public int minAge  { get; set; } = 18; // legal age we allow
+        public int maxAge { get; set; } = 150; 
     }
 }

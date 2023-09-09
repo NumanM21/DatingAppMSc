@@ -3,7 +3,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs';
 import { Member } from 'src/app/_models/Member';
 import { Photo } from 'src/app/_models/Photo';
-import { User } from 'src/app/_models/User';
+import { User } from "src/app/_models/User";
 import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 import { environment } from 'src/environments/environment';
@@ -96,7 +96,7 @@ export class PhotoEditComponent implements OnInit {
         this.member?.photos.push(photo); // push photo we get from members API
 
         // Need to see if user has any photo, if not, uploaded photo auto becomes main photo (need to show this profile in navbar + member profile)
-        if (photo.isMainPhoto && this.user && this.member){
+        if (photo.isMainPhoto && this.user && this.member) {
           this.user.photoURL = photo.url;
           this.member.photoUrl = photo.url;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)

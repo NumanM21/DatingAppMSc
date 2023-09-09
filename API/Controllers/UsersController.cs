@@ -30,12 +30,28 @@ namespace API.Controllers
 
     }
 
-
-    [HttpGet] // Api end point (this + route make up our API root)
+    // Api end point (this + route make up our API root)
     // Ask client to sent this as query string hence we use [FromQuery] (since ParameterFromUser is a object)
+    [HttpGet] 
     public async Task<ActionResult<PaginationList<MemberDto>>> GetUsers([FromQuery]ParameterFromUser parameterFromUser) // gets specified # users
     {
+      //get current user
+      var currUser = await _userRepository.AsyncGetUserByUsername(User.GetUsername());
+
+      // populate parameterFromUser with current user's username
+      parameterFromUser.currUsername = currUser.UserName;
+
+      // Default member page to display is opposite gender (unless specified otherwise)
+
+      if (string.IsNullOrEmpty(parameterFromUser.gender))
+      { // setting parameter to DEFAULT value
+        parameterFromUser.gender = currUser.UserGender == "male"?"female": "male";
+      }
+
+
       var users = await _userRepository.AsyncGetMembers(parameterFromUser);
+
+
       // return pagination info using pagination header
       Response.HeadPaginationAdd(new HeadPagination(users.currentPage, users.PageSize, users.totalCount, users.totalPage));
 

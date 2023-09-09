@@ -32,17 +32,41 @@ namespace API.Data
       .SingleOrDefaultAsync();
     }
 
-    
-     // TODO: Limit # of users being displayed (pagination)
 
-    
-    public async Task<PaginationList<MemberDto>> AsyncGetMembers(ParameterFromUser parametereFromUser) 
+    // TODO: Limit # of users being displayed (pagination)
+    // AsNoTracking() => EF doesn't track changes to these objects (since we are not updating them) -> Optimization to EF
+
+    public async Task<PaginationList<MemberDto>> AsyncGetMembers(ParameterFromUser parameterFromUser)
     {
-      // We don't use this in our UserController (hence we use AsNoTracking())
-      var query =  _context.Users
-      .ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider).AsNoTracking(); // AsNoTracking() => EF doesn't track changes to these objects (since we are not updating them) -> Optimization to EF
 
-      return await PaginationList<MemberDto>.AsyncCreate(query, parametereFromUser.PageNumber, parametereFromUser.PageSize);
+      // We don't use this in our UserController (hence we use AsNoTracking())
+
+      var query = _context.Users.AsQueryable();
+
+      // build query (filter) based on paramteres from user
+
+      // exclude current user from list we return
+      query = query.Where(x => x.UserName != parameterFromUser.currUsername); 
+
+      // Gender (default is opposite) 
+      query = query.Where(x => x.UserGender == parameterFromUser.gender); 
+
+      // Age filter
+
+      // minDob (earliest Year they can be born to be under maxAge)
+      var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.maxAge -1)); // date is today (so -1)
+
+      // maxDob (latest Year they can be born to be over minAge)
+      var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.minAge)); 
+
+
+      query = query.Where(x=> x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+      return await PaginationList<MemberDto>.AsyncCreate(
+        // Still create our query from paginationList -> but it looks at the query we created above (so we can filter it)
+        query.AsNoTracking().ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider),
+        parameterFromUser.PageNumber,
+        parameterFromUser.PageSize);
     }
 
     public async Task<AppUser> AsyncGetUserByID(int id)
