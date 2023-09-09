@@ -12,20 +12,20 @@ import { ResultPaginated } from '../_models/Pagination';
 export class MembersService {
   // Service remains for lifetime of application, components distroyed and re-built, so can store memberLIST HERE (in service) once memberlist component created
 
-  resultPaginated: ResultPaginated<Member[]> = new ResultPaginated<Member[]>();
   members: Member[] = []
   baseUrl = environment.apiUrl;
+  resultPaginated: ResultPaginated<Member[]> = new ResultPaginated<Member[]>;
 
   constructor(private httpClient: HttpClient) { }
 
-  getMembers(page? : number, perPageItems? : number) {
+  getMembers(page? : number, itemsPerPage? : number) {
     // Need to send info as query string, so we need to create a new object of HttpParams (httpParams is a angular class that allows us to build up a list of parameters (query string) and pass them to our API)
 
     // Has to be params, parameter show error?
     let params = new HttpParams();
-    if (page && perPageItems) {
+    if (page && itemsPerPage) {
       params = params.append('pageNumber', page)
-      params = params.append('pageSize', perPageItems)
+      params = params.append('pageSize', itemsPerPage)
     }
 
 

@@ -7,16 +7,16 @@ namespace API.ExternalHelpers
   {
     public HeadPagination(int pageCurrent, int pageTotal, int itemsTotal, int perPageItems)
     {
-      PageCurrent = pageCurrent;
-      PageTotal = pageTotal;
-      ItemsTotal = itemsTotal;
-      PerPageItems = perPageItems;
+      currentPage = pageCurrent;
+      totalPages = pageTotal;
+      totalItems = itemsTotal;
+      itemsPerPage = perPageItems;
     }
 
-    public int PageCurrent { get; set; }
-    public int PageTotal { get; set; }
-    public int ItemsTotal { get; set; }
-    public int PerPageItems { get; set; }
+    public int currentPage { get; set; }
+    public int itemsPerPage { get; set; }
+    public int totalItems { get; set; }
+    public int totalPages { get; set; }
 
 
   }

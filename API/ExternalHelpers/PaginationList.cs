@@ -7,19 +7,19 @@ namespace API.ExternalHelpers
   // T is generic, can be any type (can work with any object) -> We specify the type when we use it!
   public class PaginationList<T> : List<T>
   {
-    public PaginationList(IEnumerable<T> items,  int pageNumber, int size, int count)
+    public PaginationList(IEnumerable<T> items, int pageNumber, int size, int count)
     {
-      PageCurrent = pageNumber;
-      PageTotal = (int) Math.Ceiling(count / (double) size); //(10 / 3 = 3.333) -> 4 pages
-      PageSize = size;
-      CountTotal = count;
+      this.currentPage = pageNumber;
+      this.totalPage = (int)Math.Ceiling(count / (double)size); //(10 / 3 = 3.333) -> 4 pages
+      this.PageSize = size;
+      this.totalCount = count;
       AddRange(items); // return all of our items when we call this method
     }
 
-    public int PageCurrent { get; set; }
-    public int PageTotal { get; set; }
+    public int currentPage { get; set; }
+    public int totalPage { get; set; }
     public int PageSize { get; set; }
-    public int CountTotal { get; set; }
+    public int totalCount { get; set; }
 
 
     // Pass this method our query -> Built up in memory by EF. Doesn't execute until we use one of the methods below
@@ -35,6 +35,6 @@ namespace API.ExternalHelpers
       return new PaginationList<T>(items, pageNumber, pageSize, count);
 
     }
-    
+
   }
 }

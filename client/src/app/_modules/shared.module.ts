@@ -27,7 +27,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     FileUploadModule,
     BsDatepickerModule.forRoot(),
     PaginationModule.forRoot()
-    
   ],
   // export imported modules since we are in the SHARED module
   exports: [

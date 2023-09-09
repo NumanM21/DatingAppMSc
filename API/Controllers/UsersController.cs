@@ -37,7 +37,7 @@ namespace API.Controllers
     {
       var users = await _userRepository.AsyncGetMembers(parameterFromUser);
       // return pagination info using pagination header
-      Response.HeadPaginationAdd(new HeadPagination(users.PageCurrent, users.PageSize, users.CountTotal, users.PageTotal));
+      Response.HeadPaginationAdd(new HeadPagination(users.currentPage, users.PageSize, users.totalCount, users.totalPage));
 
       return Ok(users); // HTTP 200 
 

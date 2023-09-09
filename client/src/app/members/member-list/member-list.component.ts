@@ -16,11 +16,11 @@ export class MemberListComponent implements OnInit {
   pageNumber = 1;
   pageSize = 5;
 
+
   constructor(private memberService: MembersService) { }
 
   ngOnInit(): void {
     this.membersLoad();
-    // this.members$ = this.memberService.getMembers();
   }
 
   membersLoad() {
@@ -30,6 +30,7 @@ export class MemberListComponent implements OnInit {
         if (response.result && response.pagination) {
           this.members = response.result;
           this.pagination = response.pagination;
+          // Used to dynamically set the max pages for the pagination component
         }
       }
     })
@@ -38,8 +39,10 @@ export class MemberListComponent implements OnInit {
   // event is the page changed event
 
   pageChanged(event: any) {
-    this.pageNumber = event.page;
-    this.membersLoad();
+    if (this.pageNumber !== event.page){
+      this.pageNumber = event.page;
+      this.membersLoad();
+    }
   }
 
 

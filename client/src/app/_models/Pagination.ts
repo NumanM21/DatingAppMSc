@@ -1,9 +1,9 @@
 export interface Pagination {
   // Same as the pagination header in postman 
-  pageCurrent: number;
-  pageTotal: number;
-  itemsTotal: number;
-  perPageItems: number;
+  currentPage: number;
+  itemsPerPage: number;
+  totalItems: number;
+  totalPages: number;
 }
 
 export class ResultPaginated<T> {
