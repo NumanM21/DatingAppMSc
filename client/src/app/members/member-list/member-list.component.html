@@ -1,3 +1,33 @@
+<!-- Display how many matches found in users filter -->
+<div class="text-center mt-2">
+  <h2>Found {{pagination?.totalItems}} Matches </h2>
+</div>
+
+<!-- filters + Header above cards  -->
+
+<div class="container-mt-2" *ngIf="parameterUser">
+  <form #form="ngForm" class="filter-form mb-2 d-flex" (ngSubmit)="membersLoad()" autocomplete="off">
+    <div class="age-filter d-flex mx-2">
+      <label class="col-form-label"> Minimum Age: </label>
+      <input [(ngModel)]="parameterUser.minAge" type="number" name="minAge" class="min-age-input form-control ms-1">
+    </div>
+    <div class="age-filter d-flex mx-2">
+      <label class="col-form-label"> Maximum Age: </label>
+      <input [(ngModel)]="parameterUser.maxAge" type="number" name="maxAge" class="max-age-input form-control ms-1">
+    </div>
+
+    <div class="gender-filter d-flex px-2">
+      <label class="col-form-label ">Show: </label>
+      <select [(ngModel)]="parameterUser.gender" name="gender" class="gender-select form-select ms-1">
+        <option *ngFor="let gender of listGender" [value]="gender.value"> {{gender.display}}</option>
+      </select>
+      <button class="btn apply-filters-btn" type="submit">Apply Filters</button>
+      <button (click)="filtersReset()" class="btn reset-filters-btn ms-1" type="submit">Reset Filters</button>
+    </div>
+  </form>
+</div>
+
+
 <div class="row">
   <!-- Async subscribes to the observable -->
   <div class="col-2" *ngFor="let member of members">
@@ -7,18 +37,9 @@
 
 <!-- Taken from angular bootstrap - valor software (Already referenced) -->
 <div class="d-flex justify-content-center" *ngIf="pagination">
-  <pagination 
-  [boundaryLinks]="true" 
-  [totalItems]="pagination.totalItems"
-  [itemsPerPage]="pagination.itemsPerPage"
-  [maxSize]="5"         
-  [(ngModel)]="pagination.currentPage"
-  (pageChanged)="pageChanged($event)" 
-  previousText="&lsaquo;" 
-  nextText="&rsaquo;" 
-  firstText="&laquo;" 
-  lastText="&raquo;">
- 
-</pagination>
-</div>
+  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [maxSize]="5" [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
 
+  </pagination>
+</div>

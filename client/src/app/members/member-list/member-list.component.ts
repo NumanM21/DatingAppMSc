@@ -14,6 +14,7 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberListComponent implements OnInit {
   // members$: Observable<Member[]> | undefined;
+  listGender = [{value: 'female', display: 'Female'},{value: 'male', display: 'Male'}] 
   members: Member[] = []; // this is the array of members we want to display
   pagination: Pagination | undefined;
   user: User | undefined;
@@ -57,6 +58,14 @@ export class MemberListComponent implements OnInit {
     if (this.parameterUser && this.parameterUser?.pageNumber !== event.page) {
       this.parameterUser.pageNumber = event.page;
       this.membersLoad();
+    }
+  }
+
+
+  filtersReset() {
+    if (this.user){
+      this.parameterUser = new parameterUser(this.user);
+      this.membersLoad(); // get re-setted list of users based on default parameters 
     }
   }
 }

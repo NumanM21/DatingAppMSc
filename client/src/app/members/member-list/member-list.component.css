@@ -49,5 +49,58 @@
   border-color: black !important;
 }
 
+ 
+
+
+
+input, select, button {
+  height: 34px;
+  line-height: 34px;
+}
+
+
+label.col-form-label {
+  vertical-align: top; 
+  padding-top: 7px; 
+  margin-bottom: 0;
+}
+
+
+.min-age-input, .max-age-input {
+  width: 80px;
+}
+
+.gender-select {
+  width: 120px;
+  padding: 0 10px; 
+  line-height: 34px; 
+}
+
+
+.apply-filters-btn, .reset-filters-btn {
+  text-align: center;
+  line-height: 24px;
+}
+
+.apply-filters-btn {
+  background-color: #47a74a;
+  border-color: #333232;
+  margin-left: 70px; 
+}
+
+.apply-filters-btn:hover {
+  background-color: #2a922f;
+}
+
+.reset-filters-btn {
+  background-color: #e73d31;
+  border-color: #333232;
+}
+
+.reset-filters-btn:hover {
+  background-color: #be3838;
+}
+
+
 
 

@@ -38,3 +38,9 @@
 .animate{
   transition: all 0.5s ease-in-out;
 }
+
+.member-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* This will vertically align the items in the center */
+}
