@@ -1,6 +1,23 @@
 <div class="row">
   <!-- Async subscribes to the observable -->
-  <div class="col-2" *ngFor="let member of members$ | async">
+  <div class="col-2" *ngFor="let member of members">
     <app-member-display [member]="member"></app-member-display>
   </div>
+</div>
+
+<!-- Taken from angular bootstrap - valor software (Already referenced) -->
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <pagination 
+  [boundaryLinks]="true" 
+  [totalItems]="pagination.itemsTotal"
+  [itemsPerPage]="pagination.perPageItems"
+  [maxSize]="5"         
+  [(ngModel)]="pagination.pageCurrent"
+  (pageChanged)="pageChanged($event)" 
+  previousText="&lsaquo;" 
+  nextText="&rsaquo;" 
+  firstText="&laquo;" 
+  lastText="&raquo;">
+ 
+</pagination>
 </div>

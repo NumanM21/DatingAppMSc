@@ -30,8 +30,6 @@ namespace API.ExternalHelpers
       //pageNum -1 so we don't skip any users if we are on page 1
 
       //FIXME: Debug
-      System.Console.WriteLine("PageNum: " + pageNum, "pageSize" + pageSize);
-      System.Console.WriteLine(source.ToQueryString());
       var items = await source.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
       return new PaginationList<T>(items, pageNum, pageSize, count);

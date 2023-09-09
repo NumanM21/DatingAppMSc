@@ -1,18 +1,19 @@
-.member-name{
-  font-style:oblique;
-  font-size:large;
-  font-weight:600;
+.member-name {
+  font-style: oblique;
+  font-size: large;
+  font-weight: 600;
   margin-bottom: 5px;
-  position:relative;
+  position: relative;
 }
 
-.member-name::before{
+.member-name::before {
   content: "";
   position: absolute;
   left: -20px;
-  top:50%;
+  top: 50%;
   transform: translateY(-50%);
   border-left: 10px solid black;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
 }
+
