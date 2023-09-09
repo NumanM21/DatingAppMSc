@@ -1,6 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using API.DTOs;
 using API.Entities;
+using API.ExternalHelpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -21,7 +22,8 @@ namespace API.Data
 
     }
 
-    //TODO: Caching is how we make this FASTER! --> Query from Cache rather than DB (optimize at end) TODO:
+    //TODO: Caching is how we make this FASTER! --> Query from Cache rather than DB (optimize at end) 
+
     public async Task<MemberDto> AsyncGetMember(string username)
     {
       return await _context.Users
@@ -30,11 +32,17 @@ namespace API.Data
       .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<MemberDto>> AsyncGetMembers()
+    
+     // TODO: Limit # of users being displayed (pagination)
+
+    
+    public async Task<PaginationList<MemberDto>> AsyncGetMembers(ParameterFromUser parametereFromUser) 
     {
-      return await _context.Users
-      .ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider)
-      .ToListAsync();
+      // We don't use this in our UserController (hence we use AsNoTracking())
+      var query =  _context.Users
+      .ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider).AsNoTracking(); // AsNoTracking() => EF doesn't track changes to these objects (since we are not updating them) -> Optimization to EF
+
+      return await PaginationList<MemberDto>.AsyncCreate(query, parametereFromUser.PageNum, parametereFromUser.PageSize);
     }
 
     public async Task<AppUser> AsyncGetUserByID(int id)

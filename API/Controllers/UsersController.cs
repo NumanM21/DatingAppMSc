@@ -3,6 +3,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.ExternalHelpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -33,9 +34,12 @@ namespace API.Controllers
 
 
     [HttpGet] // Api end point (this + route make up our API root)
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // gets all users
+    // Ask client to sent this as query string hence we use [FromQuery] (since ParameterFromUser is a object)
+    public async Task<ActionResult<PaginationList<MemberDto>>> GetUsers([FromQuery]ParameterFromUser parameterFromUser) // gets specified # users
     {
-      var users = await _userRepository.AsyncGetMembers();
+      var users = await _userRepository.AsyncGetMembers(parameterFromUser);
+      // return pagination info using pagination header
+      Response.HeadPaginationAdd(new HeadPagination(users.PageCurrent, users.PageSize, users.CountTotal, users.PageTotal));
 
       return Ok(users); // HTTP 200 
 
