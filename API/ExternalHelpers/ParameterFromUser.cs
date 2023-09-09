@@ -7,7 +7,7 @@ namespace API.ExternalHelpers
         // Users can 'filter' to how many users they want to see per page, but we will have a max
         // TODO: Can create different size of normal and premium users (if we have time to implement that)
         private const int pageSizeMax = 30; 
-        public int PageNum { get; set; }  = 1; // default to page 1
+        public int PageNumber { get; set; }  = 1; // default to page 1
         private int _pageSize = 5; // default to 5 users per page
         public int PageSize // return this in IUserRepository.cs
         {

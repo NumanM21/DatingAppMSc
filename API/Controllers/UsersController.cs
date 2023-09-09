@@ -28,8 +28,6 @@ namespace API.Controllers
       _autoMapper = autoMapper;
       _userRepository = userRepository;
 
-
-
     }
 
 

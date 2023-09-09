@@ -42,7 +42,7 @@ namespace API.Data
       var query =  _context.Users
       .ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider).AsNoTracking(); // AsNoTracking() => EF doesn't track changes to these objects (since we are not updating them) -> Optimization to EF
 
-      return await PaginationList<MemberDto>.AsyncCreate(query, parametereFromUser.PageNum, parametereFromUser.PageSize);
+      return await PaginationList<MemberDto>.AsyncCreate(query, parametereFromUser.PageNumber, parametereFromUser.PageSize);
     }
 
     public async Task<AppUser> AsyncGetUserByID(int id)

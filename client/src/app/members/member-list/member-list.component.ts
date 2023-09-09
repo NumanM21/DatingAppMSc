@@ -13,7 +13,7 @@ export class MemberListComponent implements OnInit {
   // members$: Observable<Member[]> | undefined;
   members: Member[] = []; // this is the array of members we want to display
   pagination: Pagination | undefined;
-  pageNum = 1;
+  pageNumber = 1;
   pageSize = 5;
 
   constructor(private memberService: MembersService) { }
@@ -24,7 +24,7 @@ export class MemberListComponent implements OnInit {
   }
 
   membersLoad() {
-    this.memberService.getMembers(this.pageNum, this.pageSize).subscribe({
+    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
       // response we get from our member service is the result paginated class populated
       next: response => {
         if (response.result && response.pagination) {
@@ -38,7 +38,7 @@ export class MemberListComponent implements OnInit {
   // event is the page changed event
 
   pageChanged(event: any) {
-    this.pageNum = event.page;
+    this.pageNumber = event.page;
     this.membersLoad();
   }
 
