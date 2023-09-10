@@ -1,7 +1,10 @@
-
+﻿using API.Controllers;
+using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.ExternalHelpers;
 using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,7 +17,6 @@ namespace API.Controllers
     {
       _userRepo = userRepo;
       _likeRepo = likeRepo;
-
     }
 
     // Creating new resource for when a user likes another user (username of person they are GOING to like) -> Updating join table! 
@@ -30,32 +32,40 @@ namespace API.Controllers
 
       // if user being liked does not exist
       if (userBeingLiked == null) return NotFound("User being liked does not exist");
-      
+
       // if user being liked is the same as the user liking
       if (sourceUser.UserName == username) return BadRequest("Cannot like yourself"); // incase user uses 3rd party tool to send request (security)
 
       // check if user has already liked the user they are trying to like
-      var userLiked = await _likeRepo.GetUserLikes(sourceUserId, userBeingLiked.Id);
-      if (userLiked != null) return BadRequest("User already liked");
+      var userLike = await _likeRepo.GetLikeUser(sourceUserId, userBeingLiked.Id);
 
+
+      if (userLike != null) return BadRequest("User already liked");
 
       // create new like
 
-      userLiked = new LikeUser
+      userLike = new LikeUser
       {
-        SourceUserID = sourceUserId, 
+        SourceUserID = sourceUserId,
         UserLikedBySourceID = userBeingLiked.Id
       };
 
       // add like to db
-      sourceUser.UsersLiked.Add((LikeUser)userLiked);
+      sourceUser.UsersLiked.Add(userLike);
 
       if (await _userRepo.AsyncSaveAll()) return Ok();
 
       return BadRequest("Failed to save like");
-
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<LikeUserDto>>> GetUserLikes(string predicate)
+    {
+      // get all users our user has liked
+      var users = await _likeRepo.GetUserLikes(predicate, User.GetUserId());
+
+      return Ok(users);
+    }
 
   }
 }
