@@ -7,6 +7,7 @@ export class parameterUser{
   gender: string;
   minAge: number = 18;
   maxAge: number = 150;
+  orderByActive = 'lastActive';
   pageNumber = 1;
   pageSize = 5;
 

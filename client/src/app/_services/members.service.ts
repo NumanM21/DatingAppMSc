@@ -25,6 +25,7 @@ export class MembersService {
     // Has to be params, parameter show error?
     let params = this.getHeadPagination(parameterUser.pageNumber, parameterUser.pageSize);
 
+    params = params.append('orderByActive', parameterUser.orderByActive);
     params = params.append('gender', parameterUser.gender);
     params = params.append('maxAge', parameterUser.maxAge);
     params = params.append('min', parameterUser.minAge);

@@ -3,10 +3,11 @@
   <h2>Found {{pagination?.totalItems}} Matches </h2>
 </div>
 
-<!-- filters + Header above cards  -->
+<!-- filters above cards  -->
 
 <div class="container-mt-2" *ngIf="parameterUser">
-  <form #form="ngForm" class="filter-form mb-2 d-flex" (ngSubmit)="membersLoad()" autocomplete="off">
+  <form #form="ngForm" class="filter-form mb-2 d-flex align-items-center" (ngSubmit)="membersLoad()" autocomplete="off">
+    <!-- Age Filters -->
     <div class="age-filter d-flex mx-2">
       <label class="col-form-label"> Minimum Age: </label>
       <input [(ngModel)]="parameterUser.minAge" type="number" name="minAge" class="min-age-input form-control ms-1">
@@ -16,11 +17,38 @@
       <input [(ngModel)]="parameterUser.maxAge" type="number" name="maxAge" class="max-age-input form-control ms-1">
     </div>
 
-    <div class="gender-filter d-flex px-2">
-      <label class="col-form-label ">Show: </label>
+    <!-- Gender Filter -->
+    <div class="gender-filter d-flex mx-2">
+      <label class="col-form-label">Show: </label>
       <select [(ngModel)]="parameterUser.gender" name="gender" class="gender-select form-select ms-1">
         <option *ngFor="let gender of listGender" [value]="gender.value"> {{gender.display}}</option>
       </select>
+    </div>
+
+    <!-- Order By Filter Buttons -->
+    <div class="mx-2">
+      <div class="btn-group" id="radio-button-group">
+        <button 
+          class="custom-btn btn order-button"
+          type="button" 
+          name="OrderByLastActive" 
+          (click)="membersLoad()" 
+          [(ngModel)]="parameterUser.orderByActive"
+          btnRadio="lastActive">Last Active</button>
+        <button 
+          class="custom-btn btn order-button"
+          type="button" 
+          name="OrderByNewMembers" 
+          (click)="membersLoad()" 
+          [(ngModel)]="parameterUser.orderByActive"
+          btnRadio="newMembers">New Members</button>
+      </div>
+    </div>
+
+ 
+    
+    <!-- Apply and Reset Filter Buttons -->
+    <div class="mx-2">
       <button class="btn apply-filters-btn" type="submit">Apply Filters</button>
       <button (click)="filtersReset()" class="btn reset-filters-btn ms-1" type="submit">Reset Filters</button>
     </div>

@@ -7,6 +7,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TimeagoModule } from "ngx-timeago";
+
 
 //3rd Party imports here
 
@@ -26,7 +29,9 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     }),
     FileUploadModule,
     BsDatepickerModule.forRoot(),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   // export imported modules since we are in the SHARED module
   exports: [
@@ -36,7 +41,9 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     NgxSpinnerModule,
     FileUploadModule,
     BsDatepickerModule,
-    PaginationModule
+    PaginationModule,
+    ButtonsModule,
+    TimeagoModule
   ]
 })
 export class SharedModule { }

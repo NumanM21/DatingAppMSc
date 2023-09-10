@@ -27,11 +27,12 @@
         </div>
         <div>
           <strong>Last Active:</strong>
-          <p>{{member.lastActive}}</p>
+          <!-- member.lastActive + 'Z' | -> This updates to UTC from client (FIXME: No ideal !) -->
+          <p>{{member.lastActive | timeago}}</p>
         </div>
         <div>
           <strong>Member since:</strong>
-          <p>{{member.userCreated}}</p>
+          <p>{{member.userCreated | date: 'dd MMMM yyyy'}}</p>
         </div>
       </div>
       <div class="card-footer">

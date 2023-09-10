@@ -49,9 +49,6 @@
   border-color: black !important;
 }
 
- 
-
-
 
 input, select, button {
   height: 34px;
@@ -72,14 +69,15 @@ label.col-form-label {
 
 .gender-select {
   width: 120px;
-  padding: 0 10px; 
+  padding: 1px 10px; 
   line-height: 34px; 
 }
 
 
 .apply-filters-btn, .reset-filters-btn {
   text-align: center;
-  line-height: 24px;
+  line-height: 10px;
+  width: 115px;
 }
 
 .apply-filters-btn {
@@ -102,5 +100,24 @@ label.col-form-label {
 }
 
 
+.order-button.custom-btn {
+  border: 1px solid black !important;
+  background-color: lightblue !important;
+  color: black !important;
+  font-size: 16px !important;
+  padding: 4px 6px !important;
+  line-height: 1 !important;
+  margin-left: 10px !important;
+  width: 110px !important;  /* Set to the width of the widest button */
+  text-align: center !important;  /* Center the text */
+}
 
+.order-button.custom-btn:hover {
+  background-color: rgb(116, 167, 184) !important;
+}
+
+/* To create a gap between the group and other buttons */
+#radio-button-group {
+  margin-right: 10px !important;
+}
 
