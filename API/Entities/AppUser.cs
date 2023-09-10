@@ -35,10 +35,13 @@ namespace API.Entities
 
     public List<Photo> Photos { get; set; } = new List<Photo>();
 
-    // public int calculateUserAge()
-    // {
-    //   return DateOfBirth.CalculateAge();
-    // } <- Specified different path for automapper 
+
+    // Many to many relationship between users
+
+    // OTHER users who like our user
+    public List<LikeUser> UserLikedBy { get; set; }
+    // OUR user who likes OTHER users
+    public List<LikeUser> UsersLiked { get; set; }
 
   }
 }
