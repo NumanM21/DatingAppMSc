@@ -1,1 +1,31 @@
-<p>lists works!</p>
+<div class="text-center mt-3">
+  <h1>{{predicate === 'liked'? 'My Liked Members' : 'Members who Like me'}}</h1>
+</div>
+
+<div class="container mt-3">
+  <div class="d-flex btn-container"> <!-- Added btn-container for custom styling -->
+    <div class="btn-group" name="predicate">
+      <!-- My likes button -->
+      <button class="btn like-button" 
+      btnRadio="liked" 
+      [(ngModel)]="predicate" 
+      [ngClass]="{'active-button': predicate === 'liked', 'inactive-button': predicate !== 'liked'}"
+      (click)="likesLoader()">
+      My Likes</button>
+      
+      <!-- Likes me button -->
+      <button class="btn like-button" 
+      btnRadio="likedBy" 
+      [(ngModel)]="predicate" 
+      [ngClass]="{'active-button': predicate === 'likedBy', 'inactive-button': predicate !== 'likedBy'}"
+      (click)="likesLoader()">
+      Likes Me</button>
+    </div>
+  </div>
+  <!-- Display member cards -->
+  <div class="row mt-3">
+    <div class="col-2" *ngFor="let member of members">
+      <app-member-display [member]="member"></app-member-display>
+    </div>
+  </div>
+</div>

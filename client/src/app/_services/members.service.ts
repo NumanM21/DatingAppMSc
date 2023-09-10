@@ -137,4 +137,14 @@ export class MembersService {
     return this.httpClient.delete(this.baseUrl + 'users/photo-delete/' + photoId);
   }
 
+  // add like to user
+  likeAdd(username: string) {
+    return this.httpClient.post(this.baseUrl + 'like/' + username, {}); // post so we have to sent something back (we send an empty object {})
+  }
+
+  likeGetter(predicate: string) {
+    return this.httpClient.get<Member[]>(this.baseUrl + 'like?predicate=' + predicate) // the predicate is the string we pass in (like, likedBy)
+  }
+
+
 }

@@ -1,0 +1,28 @@
+/* Common styles for both buttons */
+.like-button {
+  width: 120px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin-right: 10px;  /* added a small right margin */
+}
+
+/* Styles for the active button */
+.active-button {
+  background-color: black;
+  color: white;
+}
+
+/* Styles for the inactive button */
+.inactive-button {
+  background-color: white;
+  color: black;
+}
+
+/* Hover effect for the inactive button */
+.inactive-button:hover {
+  background-color: rgb(175, 169, 169);
+}
