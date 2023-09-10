@@ -42,21 +42,24 @@ namespace API.Data
         users = like.Select(like => like.UserLikedBySource);
       }
       // return users who have liked our user
-      if (predicate == "likedby")
+      if (predicate == "likedBy")
       {
+        // get all users who have liked our user 
         like = like.Where(like => like.UserLikedBySourceID == userID);
-        // refining our users query to only return users who have liked our user
-        users = like.Select(like => like.SourceUser);
-      }
+        users = from user in users
+                join l in like on user.Id equals l.SourceUserID
+                select user;
+      } 
+
 
       return await users.Select(user => new LikeUserDto
       {
         UserName = user.UserName,
-        Id = user.Id,
         KnownAs = user.KnownAs,
         Age = user.DateOfBirth.CalculateAge(),
         photoUrl = user.Photos.FirstOrDefault(x => x.IsMainPhoto).Url,
-        City = user.City
+        City = user.City,
+        Id = user.Id
       }).ToListAsync();
 
     }
