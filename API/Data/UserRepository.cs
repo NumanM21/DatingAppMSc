@@ -62,6 +62,17 @@ namespace API.Data
 
       query = query.Where(x=> x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
 
+
+      // Order by filter (default is last active)
+
+      query = parameterFromUser.orderByActive
+      switch{
+        // give newest users first (most recently created)
+        "created" => query.OrderByDescending(x=>x.UserCreated),
+        //default - last active (has to be _ others show error?)
+        _ => query.OrderByDescending(x=>x.LastActive)
+      };
+
       return await PaginationList<MemberDto>.AsyncCreate(
         // Still create our query from paginationList -> but it looks at the query we created above (so we can filter it)
         query.AsNoTracking().ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider),
@@ -76,7 +87,7 @@ namespace API.Data
 
     public async Task<AppUser> AsyncGetUserByUsername(string username)
     {
-      // TODO: Not efficient => Querying unwanted data from AppUser -> Better to get the Dto itself (contains only fields we require)
+      
       return await _context.Users
       .Include(p => p.Photos)
       .SingleOrDefaultAsync(x => x.UserName == username);

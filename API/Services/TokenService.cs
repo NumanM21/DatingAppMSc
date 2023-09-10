@@ -18,8 +18,10 @@ namespace API.Services
       {
         var claims = new List<Claim> // claim is info user 'claims'
         {
-          new Claim(JwtRegisteredClaimNames.NameId, user.UserName) 
-          // we set the claim to userName
+          new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName.ToString()) ,
+          new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()) 
+          // we set the claim to specific id of user -> more efficient than storing all user info in token
+          
         };
 
         // signing credentials which we sign this token with 

@@ -13,7 +13,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-  [Authorize] // Wherever we place this, need to authorize user to access all endpoints after it (our authorization is jwt token)
+  // Wherever we place this, need to authorize user to access all endpoints after it (our authorization is jwt token)
+
+  [Authorize] 
   public class UsersController : BaseApiController
   {
 

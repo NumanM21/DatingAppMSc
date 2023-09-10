@@ -25,6 +25,7 @@ namespace API.Extensions
       services.Configure<SettingsCloudinary>(config.GetSection("SettingsCloudinary"));
       services.AddScoped<IPhotoService, ServicePhoto>(); 
       //Interface and then Implementation class of that service
+      services.AddScoped<UserActiveLogger>(); 
       
       return services;
     }
