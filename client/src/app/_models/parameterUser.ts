@@ -9,7 +9,7 @@ export class parameterUser{
   maxAge: number = 150;
   orderByActive = 'lastActive';
   pageNumber = 1;
-  pageSize = 5;
+  pageSize = 3;
 
 
   constructor (paramUser: User){

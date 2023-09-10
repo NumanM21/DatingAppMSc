@@ -14,23 +14,16 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberListComponent implements OnInit {
   // members$: Observable<Member[]> | undefined;
-  listGender = [{value: 'female', display: 'Female'},{value: 'male', display: 'Male'}] 
+  listGender = [{ value: 'female', display: 'Female' }, { value: 'male', display: 'Male' }]
   members: Member[] = []; // this is the array of members we want to display
   pagination: Pagination | undefined;
-  user: User | undefined;
   parameterUser: parameterUser | undefined;
 
 
   constructor(private serviceAccount: AccountService, private memberService: MembersService) {
-    this.serviceAccount.currentUser$.pipe(take(1)).subscribe({
-      // user is the currUser we get from our account service
-      next: user => {
-        if (user) {
-          this.parameterUser = new parameterUser(user);
-          this.user = user;
-        }
-      }
-    })
+    // account service updated in the member service ctor
+
+    this.parameterUser = this.memberService.getParameterUser();
   }
 
   ngOnInit(): void {
@@ -39,6 +32,7 @@ export class MemberListComponent implements OnInit {
 
   membersLoad() {
     if (this.parameterUser) {
+      this.memberService.setParameterUser(this.parameterUser);
       this.memberService.getMembers(this.parameterUser).subscribe({
         // response we get from our member service is the result paginated class populated
         next: response => {
@@ -56,6 +50,7 @@ export class MemberListComponent implements OnInit {
 
   pageChanged(event: any) {
     if (this.parameterUser && this.parameterUser?.pageNumber !== event.page) {
+      this.memberService.setParameterUser(this.parameterUser);
       this.parameterUser.pageNumber = event.page;
       this.membersLoad();
     }
@@ -63,9 +58,7 @@ export class MemberListComponent implements OnInit {
 
 
   filtersReset() {
-    if (this.user){
-      this.parameterUser = new parameterUser(this.user);
+      this.parameterUser = this.memberService.userFilterReset();
       this.membersLoad(); // get re-setted list of users based on default parameters 
-    }
   }
 }
