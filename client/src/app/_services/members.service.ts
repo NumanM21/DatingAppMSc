@@ -67,6 +67,7 @@ export class MembersService {
     this.parameterUser = parameters;
   }
 
+
   userFilterReset() {
     if (this.user) {
       this.parameterUser = new parameterUser(this.user);
@@ -142,8 +143,15 @@ export class MembersService {
     return this.httpClient.post(this.baseUrl + 'like/' + username, {}); // post so we have to sent something back (we send an empty object {})
   }
 
-  likeGetter(predicate: string) {
-    return this.httpClient.get<Member[]>(this.baseUrl + 'like?predicate=' + predicate) // the predicate is the string we pass in (like, likedBy)
+  likeGetter(predicate: string, pageNumber: number, pageSize: number) {
+    // set up params 
+    let parameters = this.getHeadPagination(pageNumber, pageSize);
+
+    // add predicate to params
+    parameters = parameters.append('predicate', predicate);
+
+    return this.getResultPagination<Member[]>(this.baseUrl + 'like', parameters);
+
   }
 
 

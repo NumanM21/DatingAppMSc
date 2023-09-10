@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.ExternalHelpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +28,7 @@ namespace API.Data
     }
 
 
-    public async Task<IEnumerable<LikeUserDto>> GetUserLikes(string predicate, int userID)
+    public async Task<PaginationList<LikeUserDto>> GetUserLikes(ParameterLikes paramLikes)
     {
       // need to build our query (not hitting our DB!)
       var users = _context.Users.OrderBy(x => x.UserName).AsQueryable(); // queryable so we can add more to it (get all users)
@@ -35,24 +36,24 @@ namespace API.Data
       var like = _context.Like.AsQueryable(); //  not being executed yet
 
       // if we want to return users our user has liked
-      if (predicate == "liked")
+      if (paramLikes.predicate == "liked")
       {
-        like = like.Where(like => like.SourceUserID == userID);
+        like = like.Where(like => like.SourceUserID == paramLikes.userId);
         // refining our users query to only return users our user has liked
         users = like.Select(like => like.UserLikedBySource);
       }
       // return users who have liked our user
-      if (predicate == "likedBy")
+      if (paramLikes.predicate == "likedBy")
       {
         // get all users who have liked our user 
-        like = like.Where(like => like.UserLikedBySourceID == userID);
+        like = like.Where(like => like.UserLikedBySourceID == paramLikes.userId);
         users = from user in users
                 join l in like on user.Id equals l.SourceUserID
                 select user;
       } 
 
 
-      return await users.Select(user => new LikeUserDto
+      var usersLiked = users.Select(user => new LikeUserDto
       {
         UserName = user.UserName,
         KnownAs = user.KnownAs,
@@ -60,7 +61,10 @@ namespace API.Data
         photoUrl = user.Photos.FirstOrDefault(x => x.IsMainPhoto).Url,
         City = user.City,
         Id = user.Id
-      }).ToListAsync();
+      });
+
+      // Return our usersLiked query 
+      return await PaginationList<LikeUserDto>.AsyncCreate(usersLiked, paramLikes.PageNumber, paramLikes.PageSize);
 
     }
 

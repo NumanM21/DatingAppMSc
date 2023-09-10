@@ -1,4 +1,4 @@
-/* Common styles for both buttons */
+
 .like-button {
   width: 120px;
   height: 50px;
@@ -7,22 +7,53 @@
   border: 1px solid black;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  margin-right: 10px;  /* added a small right margin */
+  margin-right: 10px;  
 }
 
-/* Styles for the active button */
+
 .active-button {
   background-color: black;
   color: white;
 }
 
-/* Styles for the inactive button */
+
 .inactive-button {
   background-color: white;
   color: black;
 }
 
-/* Hover effect for the inactive button */
+
 .inactive-button:hover {
   background-color: rgb(175, 169, 169);
+}
+
+
+::ng-deep pagination .btn, 
+::ng-deep pagination .page-link {
+  color: black !important; 
+  background-color: white !important; 
+  border-color: rgb(160, 159, 159) !important;
+}
+
+
+::ng-deep pagination .btn:hover, 
+::ng-deep pagination .page-link:hover {
+  background-color: rgb(197, 191, 191) !important;
+  border-color: black !important;
+}
+
+
+::ng-deep pagination .btn.active, 
+::ng-deep pagination .page-link.active,
+::ng-deep pagination .btn.active:focus,
+::ng-deep pagination .page-link.active:focus {
+  color: white !important; 
+  background-color: black !important; 
+  border-color: darkgrey !important;
+}
+
+::ng-deep pagination .page-item.active .page-link {
+  background-color: black !important;
+  color: white !important;
+  border-color: black !important;
 }

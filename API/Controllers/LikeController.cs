@@ -59,11 +59,17 @@ namespace API.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LikeUserDto>>> GetUserLikes(string predicate)
+    // param is query string (need to tell it where to get the parameters from)
+    public async Task<ActionResult<PaginationList<LikeUserDto>>> GetUserLikes([FromQuery] ParameterLikes paramLikes)
     {
-      // get all users our user has liked
-      var users = await _likeRepo.GetUserLikes(predicate, User.GetUserId());
+      paramLikes.userId = User.GetUserId(); // get current user id
 
+      // get all users our user has liked
+      var users = await _likeRepo.GetUserLikes(paramLikes);
+
+      // add pagination headers to response
+      Response.HeadPaginationAdd(new HeadPagination(users.currentPage, users.PageSize, users.totalCount, users.totalPage));
+      
       return Ok(users);
     }
 

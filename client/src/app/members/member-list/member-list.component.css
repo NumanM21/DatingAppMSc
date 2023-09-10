@@ -108,15 +108,15 @@ label.col-form-label {
   padding: 4px 6px !important;
   line-height: 1 !important;
   margin-left: 10px !important;
-  width: 110px !important;  /* Set to the width of the widest button */
-  text-align: center !important;  /* Center the text */
+  width: 110px !important;  
+  text-align: center !important;  
 }
 
 .order-button.custom-btn:hover {
   background-color: rgb(116, 167, 184) !important;
 }
 
-/* To create a gap between the group and other buttons */
+
 #radio-button-group {
   margin-right: 10px !important;
 }
