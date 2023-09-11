@@ -23,14 +23,14 @@
 
 <!-- No Message -->
 
-<div class="row" *ngIf="!message">
+<div class="row" *ngIf="!message || message.length==0">
   <h2>Oh, looks empty... 😕 </h2>
   <h3>Match and message a member to fill this place up 😋</h3>
 </div>
 
 <!-- Have Messages -->
 
-<div class="row" *ngIf="message">
+<div class="row" *ngIf="message && message.length > 0">
   <table class="table-hover">
     <thead>
       <tr>
@@ -69,7 +69,7 @@
 </div>
 
 <!-- Pagination  -->
-<div class="d-flex justify-content-center mt-3" *ngIf="pagination">
+<div class="d-flex justify-content-center mt-3" *ngIf="pagination &&message && message.length > 0">
   <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
     [maxSize]="5" [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
     nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
