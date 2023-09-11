@@ -76,7 +76,7 @@ namespace API.Data
 
         "Inbox" => query.Where(x => x.messageReceivingUsername == parameterMessage.currUsername),
 
-        "Outbox" => query.Where(x => x.messageSenderUsername == parameterMessage.currUsername),
+        "Sent" => query.Where(x => x.messageSenderUsername == parameterMessage.currUsername),
 
         // default case (message not read hence check null)
 

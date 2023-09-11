@@ -26,6 +26,7 @@ export class MessagesComponent implements OnInit {
       next: res => {
 
         this.message = res.result;
+        console.log(this.message);
         this.pagination = res.pagination;
   
         

@@ -45,22 +45,20 @@
       routerLink="{{messageContainer === 'Sent'? 
       '/members/' + msg.messageReceivingUsername 
       : '/members/' + msg.messageSenderUsername}}">
-
         <td>{{msg.messageContent}}</td>
         <td>
-
            <!-- I am sending (to) -->
            <div *ngIf="messageContainer === 'Sent'">
             <img class="img-circle"
               src="{{msg.messageReceivingPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
-            <strong>{{msg.messageReceivingUsername | titlecase}}</strong>
+            <strong class="ms-1">{{msg.messageReceivingUsername | titlecase}}</strong>
           </div>
 
           <!-- I am receiving (from) -->
           <div *ngIf="messageContainer !== 'Sent'">
             <img class="img-circle"
               src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
-            <strong>{{msg.messageSenderUsername | titlecase}}</strong>
+            <strong class="ms-1">{{msg.messageSenderUsername | titlecase}}</strong>
           </div>
         </td>
         <td>{{msg.messageSentAt | timeago}}</td>
