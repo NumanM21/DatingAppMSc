@@ -11,8 +11,8 @@ namespace API.Interfaces
         void MessageAdd(MessageUser message);
         void MessageDelete(MessageUser message);
         Task<MessageUser> AsyncMessageGetter(int messageId);
-        Task<PaginationList<MessageUserDto>> LoadMessageForUser();        
-        Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(int sourceUserId, int receivingUserId);
+        Task<PaginationList<MessageUserDto>> LoadMessageForUser(ParameterMessage parameterMessage);        
+        Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername);
 
         Task<bool> AsyncSaveAll();
     }

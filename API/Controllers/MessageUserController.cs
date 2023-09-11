@@ -2,6 +2,7 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.ExternalHelpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -26,43 +27,77 @@ namespace API.Controllers
     [HttpPost]
     public async Task<ActionResult<MessageUserDto>> MessageCreate(MessageCreateDto messageCreateDto)
     {
-        // get username (from token - claimsprincipleextension)
-        var username = User.GetUsername();
+      // get username (from token - claimsprincipleextension)
+      var username = User.GetUsername();
 
-        // check if message being sent to self (cannot send message to self)
+      // check if message being sent to self (cannot send message to self)
 
-        if (username == messageCreateDto.messageReceivingUsername.ToLower()) 
-        {
-            return BadRequest("Message cannot be sent to self");
-        }
+      if (username == messageCreateDto.messageReceivingUsername.ToLower())
+      {
+        return BadRequest("Message cannot be sent to self");
+      }
 
-        // get username of sender
-        var senderUser = await _repoUser.AsyncGetUserByUsername(username);
+      // get username of sender
+      var senderUser = await _repoUser.AsyncGetUserByUsername(username);
 
-        // get username of receiving user -> From client
-        var receivingUser = await _repoUser.AsyncGetUserByUsername(messageCreateDto.messageReceivingUsername);
+      // get username of receiving user -> From client
+      var receivingUser = await _repoUser.AsyncGetUserByUsername(messageCreateDto.messageReceivingUsername);
 
-        // check if receiving user exists
-        if (receivingUser == null) return NotFound("User not found");
+      // check if receiving user exists
+      if (receivingUser == null) return NotFound("User not found");
 
-        // create new message
-        var msg = new MessageUser
-        {
-            SenderUser = senderUser,
-            messageSenderUsername = senderUser.UserName,
-            ReceivingUser = receivingUser,
-            messageReceivingUsername = receivingUser.UserName,
-            messageContent = messageCreateDto.messageContent // message content from client (hence use a Dto)
-        };
+      // create new message
+      var msg = new MessageUser
+      {
+        SenderUser = senderUser,
+        messageSenderUsername = senderUser.UserName,
+        ReceivingUser = receivingUser,
+        messageReceivingUsername = receivingUser.UserName,
+        messageContent = messageCreateDto.messageContent // message content from client (hence use a Dto)
+      };
 
-        // add message to DB (need to use context .add so EF tracks our message)
-        _repoMessageUser.MessageAdd(msg); 
+      // add message to DB (need to use context .add so EF tracks our message)
+      _repoMessageUser.MessageAdd(msg);
 
 
-        if (await _repoMessageUser.AsyncSaveAll()) return Ok(_map.Map<MessageUserDto>(msg)); 
+      if (await _repoMessageUser.AsyncSaveAll()) return Ok(_map.Map<MessageUserDto>(msg));
 
-        return BadRequest("Message not sent");
+      return BadRequest("Message not sent");
+    }
 
+    // Get message for a user
+    [HttpGet]
+    public async Task<ActionResult<PaginationList<MessageUserDto>>> LoadMessageForUser([FromQuery] ParameterMessage parameterMessage)
+    {
+
+      // get username (from token - claimsprincipleextension)
+      parameterMessage.currUsername = User.GetUsername();
+
+      // get messages for user
+      var msg = await _repoMessageUser.LoadMessageForUser(parameterMessage);
+
+      // add pagination header to response
+      Response.HeadPaginationAdd(new HeadPagination
+      (
+      msg.currentPage,
+      msg.PageSize,
+      msg.totalCount,
+      msg.totalPage
+      ));
+
+      // return messages
+      return msg;
+    }
+
+    // Get message between two users
+    [HttpGet("message-between-users/{username}")]
+    public async Task<ActionResult<IEnumerable<MessageUserDto>>> LoadMessageBetweenUsers(string username)
+    {
+      // get curr username
+      var currUsername = User.GetUsername();
+
+      // return messages between two users
+      return Ok(await _repoMessageUser.LoadMessageBetweenUsers(currUsername, username)); // username comes from route HttpGet
 
     }
 

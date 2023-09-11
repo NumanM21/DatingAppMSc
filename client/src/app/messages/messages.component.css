@@ -1,0 +1,112 @@
+.table-hover {
+  cursor: pointer;
+}
+
+.table-headers,
+.table-headers-main {
+  border-bottom: 2px solid black;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.table-headers {
+  width: 20%;
+  background-color: white;
+}
+
+.table-headers-main {
+  width: 40%;
+  background-color: white;
+}
+
+.img-circle {
+  border-radius: 60%; 
+  width: 60px; 
+  height: 60px; 
+  border: 1px solid black;
+}
+
+.btn-dark:not(.active) {
+  background-color: white;
+  color: black;
+}
+
+.btn-dark.active {
+  background-color: black;
+  color: white;
+}
+
+tr {
+  background-color: rgb(218, 216, 216);
+  border-bottom: 1px solid grey;
+}
+
+
+tr:hover {
+  background-color: rgba(138, 130, 130, 0.5); 
+}
+
+
+.btn-dark:hover {
+  background-color: grey;
+  color: white;
+}
+
+.btn-delete{
+  background-color: rgb(247, 65, 65);
+  color: white;
+}
+
+.btn-delete:hover{
+  background-color: rgb(182, 25, 25);
+  color: white;
+}
+
+/*  pagination css */
+
+.active-button {
+  background-color: black;
+  color: white;
+}
+
+
+.inactive-button {
+  background-color: white;
+  color: black;
+}
+
+
+.inactive-button:hover {
+  background-color: rgb(175, 169, 169);
+}
+
+
+::ng-deep pagination .btn, 
+::ng-deep pagination .page-link {
+  color: black !important; 
+  background-color: white !important; 
+  border-color: rgb(160, 159, 159) !important;
+}
+
+
+::ng-deep pagination .btn:hover, 
+::ng-deep pagination .page-link:hover {
+  background-color: rgb(197, 191, 191) !important;
+  border-color: black !important;
+}
+
+
+::ng-deep pagination .btn.active, 
+::ng-deep pagination .page-link.active,
+::ng-deep pagination .btn.active:focus,
+::ng-deep pagination .page-link.active:focus {
+  color: white !important; 
+  background-color: black !important; 
+  border-color: darkgrey !important;
+}
+
+::ng-deep pagination .page-item.active .page-link {
+  background-color: black !important;
+  color: white !important;
+  border-color: black !important;
+}

@@ -1,1 +1,79 @@
-<p>messages works!</p>
+<!-- Buttons -->
+<div class="mb-4 d-flex">
+  <div class="btn-group" name="messageContainer">
+    <!-- Inbox -->
+    <button class="btn btn-dark" [class.active]="messageContainer === 'Inbox'" btnRadio="Inbox"
+      [(ngModel)]="messageContainer" (click)="messageLoader()">
+      <i class="fa fa-envelope-open"></i> Inbox
+    </button>
+
+    <!-- Unread -->
+    <button class="btn btn-dark" [class.active]="messageContainer === 'Unread'" btnRadio="Unread"
+      [(ngModel)]="messageContainer" (click)="messageLoader()">
+      <i class="fa fa-envelope"></i> Unread
+    </button>
+
+    <!-- Sent -->
+    <button class="btn btn-dark" [class.active]="messageContainer === 'Sent'" btnRadio="Sent"
+      [(ngModel)]="messageContainer" (click)="messageLoader()">
+      <i class="fa fa-paper-plane"></i> Sent
+    </button>
+  </div>
+</div>
+
+<!-- No Message -->
+
+<div class="row" *ngIf="!message">
+  <h2>Oh, looks empty... 😕 </h2>
+  <h3>Match and message a member to fill this place up 😋</h3>
+</div>
+
+<!-- Have Messages -->
+
+<div class="row" *ngIf="message">
+  <table class="table-hover">
+    <thead>
+      <tr>
+        <th class="table-headers-main"> Message </th>
+        <th class="table-headers"> From / To </th>
+        <th class="table-headers"> Sent / Received </th>
+        <th class="table-headers"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let msg of message"
+      routerLink="{{messageContainer === 'Sent'? 
+      '/members/' + msg.messageReceivingUsername 
+      : '/members/' + msg.messageSenderUsername}}">
+
+        <td>{{msg.messageContent}}</td>
+        <td>
+
+           <!-- I am sending (to) -->
+           <div *ngIf="messageContainer === 'Sent'">
+            <img class="img-circle"
+              src="{{msg.messageReceivingPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
+            <strong>{{msg.messageReceivingUsername | titlecase}}</strong>
+          </div>
+
+          <!-- I am receiving (from) -->
+          <div *ngIf="messageContainer !== 'Sent'">
+            <img class="img-circle"
+              src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
+            <strong>{{msg.messageSenderUsername | titlecase}}</strong>
+          </div>
+        </td>
+        <td>{{msg.messageSentAt | timeago}}</td>
+        <td><button class="btn btn-delete">Delete Message</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination  -->
+<div class="d-flex justify-content-center mt-3" *ngIf="pagination">
+  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [maxSize]="5" [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+  </pagination>
+</div>
