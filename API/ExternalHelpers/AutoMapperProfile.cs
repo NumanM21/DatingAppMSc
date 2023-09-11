@@ -23,6 +23,18 @@ namespace API.ExternalHelpers
       // Update FROM Register dto -> App User
       CreateMap<RegisterDto, AppUser>();
 
+      // Update FROM MessageUser -> MessageUser dto
+
+      // Sender -> Receiving
+      CreateMap<MessageUser, MessageUserDto>()
+      .ForMember(dest => dest.messageSenderPhotoURL, opt => opt.MapFrom(src => src.SenderUser.Photos.FirstOrDefault(x => x.IsMainPhoto).Url)); // get the main photo of the sender
+
+      // Receiving -> Sender
+      CreateMap<MessageUser, MessageUserDto>()
+      .ForMember(dest => dest.messageReceivingPhotoURL, opt => opt.MapFrom(src => src.ReceivingUser.Photos.FirstOrDefault(x => x.IsMainPhoto).Url)); // get the main photo of the receiving
+
+      // ^ Automapper can figure out the rest of the properties, but for the photo, we need to specify the source and destination 
+
     }
 
   }

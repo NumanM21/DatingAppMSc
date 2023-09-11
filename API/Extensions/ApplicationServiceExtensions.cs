@@ -27,6 +27,7 @@ namespace API.Extensions
       services.AddScoped<ILikeRepository, LikeRepository>(); 
       //Interface and then Implementation class of that service
       services.AddScoped<UserActiveLogger>();
+      services.AddScoped<IMessageUserRepository, MessageUserRepository>();
       
       return services;
     }

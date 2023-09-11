@@ -1,4 +1,4 @@
-using API.Extensions;
+ using API.Extensions;
 
 namespace API.Entities
 {
@@ -42,6 +42,9 @@ namespace API.Entities
     public List<LikeUser> UserLikedBy { get; set; }
     // OUR user who likes OTHER users
     public List<LikeUser> UsersLiked { get; set; }
+
+    public List<MessageUser> MessageSent { get; set; }
+    public List<MessageUser> MessageReceived { get; set; }
 
   }
 }
