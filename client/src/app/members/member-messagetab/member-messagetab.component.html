@@ -1,1 +1,38 @@
-<h2 *ngFor="let msg of message">{{msg.messageContent}}</h2>
+<div class="card">
+  <div class="card-body">
+    <div *ngIf="message.length == 0" class="empty-message">😞 Seems Empty... </div>
+    <ul *ngIf="message.length > 0" class="chat-card">
+      <li *ngFor="let msg of message" class="message-item">
+        <div class="message-content">
+          <div class="chat-body">
+            <div class="chat-header">
+              <small class="text-muted">
+                <span class="time-stamp">{{msg.messageSentAt | timeago}}</span>
+                <span class="text-danger unread-indicator" *ngIf="!msg.messageReadAt && msg.messageSenderUsername !== username"> Unread <i class="fa fa-exclamation-circle"></i></span>
+                <span class="text-success read-indicator" *ngIf="msg.messageReadAt && msg.messageSenderUsername !== username">Read {{msg.messageReadAt|timeago}}</span>
+              </small>
+            </div>
+            <p>{{msg.messageContent}}</p>
+          </div>
+          <span class="chat-img"> 
+            <img class="rounded-circle user-icon" 
+            src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}" 
+            alt="User Img">
+            <div class="username-label">{{msg.messageSenderUsername}}</div>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-footer">
+    <form>
+      <div class="input-group">
+        <textarea class="form-control input-sm message-input" placeholder="Send a message"></textarea>
+        <div class="input-group-append">
+          <button class="btn btn-custom-submit" type="submit">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

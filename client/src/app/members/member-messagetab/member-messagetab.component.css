@@ -1,0 +1,90 @@
+.empty-message {
+  color: grey;
+  font-style: italic;
+}
+
+.chat-card {
+  list-style-type: none; 
+  padding-left: 0;
+}
+
+.message-item {
+  padding: 5px 0px;
+  border-bottom: 1px solid lightgrey; 
+}
+
+.message-item:hover {
+  background-color: #d3d3d3; 
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+}
+
+.username-label {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.time-icon {
+  margin-right: 5px;
+}
+
+.time-stamp {
+  margin-right: 10px;
+}
+
+.unread-indicator {
+  font-weight: bold;
+  color: rgb(194, 14, 14);
+}
+
+.read-indicator {
+  color: green;
+}
+
+.message-input {
+  border-radius: 15px !important;
+  border: 1px solid transparent;
+  transition: border-color 0.3s;
+  resize: none; 
+  overflow: auto; 
+  height: 38px; 
+  max-height: 150px; 
+}
+
+.input-group {
+  gap: 5px; 
+}
+
+.chat-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.message-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.message-input:focus {
+  box-shadow: none !important;
+  border-color: black !important;
+}
+
+
+.btn-custom-submit {
+  background-color: black;
+  color: white;
+  border-radius: 15px 15px 15px 15px; 
+}
+
+.btn-custom-submit:hover {
+  background-color: #4d4b4b;
+  color: white;
+}
