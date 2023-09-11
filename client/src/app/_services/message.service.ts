@@ -12,6 +12,7 @@ export class MessageService {
 
   constructor(private httpClient: HttpClient) { }
 
+  
 
   messageGetter(pageNumber:number, pageSize:number, messageContainer:string){
 
@@ -24,7 +25,11 @@ export class MessageService {
     // return the result of the query
     return getResultPagination<MessageUser[]>(this.baseURL + 'messageUser', parameter, this.httpClient);
     // messageUser is same API endpoint as in the backend!!! 
+  }
 
+  
 
+  messageLoaderBetweenUsers(username:string){
+    return this.httpClient.get<MessageUser[]>(this.baseURL + 'messageUser/message-between-users/' + username);
   }
 }

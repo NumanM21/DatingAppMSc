@@ -46,7 +46,7 @@
       </tab>
       <!-- TODO: This tab should have like a 'lock' symbol and a message to say 'Match with User before being able to message them' -->
       <tab heading="Messages">
-        <p>Messages</p>
+        <app-member-messagetab [username]="member.userName"></app-member-messagetab>
       </tab>
       <tab heading="Photos" #tabPhoto="tab"> 
         <gallery [items]="img" *ngIf="tabPhoto.active" class="photo-gallery"></gallery>  

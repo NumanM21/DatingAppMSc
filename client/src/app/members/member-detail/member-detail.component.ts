@@ -6,13 +6,14 @@ import { TabsModule} from 'ngx-bootstrap/tabs';
 import { TimeagoModule } from 'ngx-timeago';
 import { Member } from 'src/app/_models/Member';
 import { MembersService } from 'src/app/_services/members.service';
+import { MemberMessagetabComponent } from '../member-messagetab/member-messagetab.component';
 
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css'],
   standalone: true,
-  imports: [CommonModule, TabsModule, GalleryModule, TimeagoModule] // import specific modules since this is now standalone component
+  imports: [CommonModule, TabsModule, GalleryModule, TimeagoModule, MemberMessagetabComponent] // import specific modules since this is now standalone component
 })
 export class MemberDetailComponent implements OnInit {
   member: Member | undefined;
