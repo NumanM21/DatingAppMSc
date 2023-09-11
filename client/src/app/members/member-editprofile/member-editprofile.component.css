@@ -14,7 +14,38 @@
   border-top: none;
 }
 
-.member-tabs{
-  color: black;
-  font-weight: bold;
+
+/* works till above here */
+
+::ng-deep .member-tabs .nav-tabs > li.active > a {
+  color: black !important;
+  border-color: black !important;
+  border-bottom-color: black !important;
 }
+
+::ng-deep .member-tabs .nav-tabs .nav-link.active {
+  color: black !important;
+  border-color: black !important;
+  border-bottom-color: black !important;
+}
+
+::ng-deep .member-tabs .nav-tabs > li > a:hover {
+  color: black !important;
+  border-color: black !important;
+  border-bottom-color: black !important;
+}
+
+::ng-deep .member-tabs .nav-tabs .nav-link:hover {
+  color: black !important;
+  border-color: black !important;
+  border-bottom-color: black !important;
+}
+
+::ng-deep .member-tabs .nav-tabs .nav-link {
+  transition: none !important;
+}
+
+::ng-deep .member-tabs .nav-tabs > li > a {
+  border-color: transparent !important;
+}
+
