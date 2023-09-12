@@ -15,36 +15,40 @@ namespace API.Controllers
 {
   public class AccountController : BaseApiController
   {
-    private readonly DataContext _context;
+    private readonly UserManager<AppUser> _appUserManager;
+
     private readonly ITokenService _tokenService;
     private readonly IMapper _autoMapper;
-    public AccountController(DataContext context, ITokenService tokenService, IMapper autoMapper)
+    public AccountController(UserManager<AppUser> appUserManager, ITokenService tokenService, IMapper autoMapper)
     // Classes/services we have injected using our controller's constructor
     {
+      _appUserManager = appUserManager;
       _autoMapper = autoMapper;
       _tokenService = tokenService;
-      _context = context;
+
     }
 
-    [HttpPost("register")] // POST Request: api/account/register (first part of class name)
+    // POST Request: api/account/register (first part of class name)
 
-
+    [HttpPost("register")] // api/account/register
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
       // Check to see if user exists
       if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
+
       // Go to App user from register DTO
       var user = _autoMapper.Map<AppUser>(registerDto);
 
       // Updating these objects with values from our register DTO
       user.UserName = registerDto.Username.ToLower();
 
-
-      // pass comes to us as string from user, we have to hash it to then store it!
-
       // Adding user to our DB
-      _context.Users.Add(user);
-      await _context.SaveChangesAsync(); // Saving changes
+      var res = await _appUserManager.CreateAsync(user, registerDto.Password);
+
+      // if user creation fails
+      if (res.Succeeded == false)
+
+      return BadRequest(res.Errors);
 
       // What we return when a user registers
       return new UserDto
@@ -58,15 +62,21 @@ namespace API.Controllers
     }
 
     [HttpPost("login")]
-
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
       // Not going to repo (so don't have access to photos directly with user) -> photo is related entity (EF doesn't load these by default)
-      var user = await _context.Users.Include(p => p.Photos)
+      var user = await _appUserManager.Users.Include(p => p.Photos)
       .SingleOrDefaultAsync(x =>
       x.UserName == loginDto.Username);
 
-      if (user == null) return Unauthorized("Invalid username");
+
+      // Check user exists 
+      if (user == null) return Unauthorized("Username is invalid. Please check your username and try again.");
+
+      // Check password is correct (ASP.NET Core Identity does this for us)
+      var res = await _appUserManager.CheckPasswordAsync(user, loginDto.Password);
+
+      if (res == false) return Unauthorized("Password is invalid.");
 
       // What we return when user logs in
       return new UserDto
@@ -81,7 +91,7 @@ namespace API.Controllers
 
     private async Task<bool> UserExists(string username)
     {
-      return await _context.Users.AnyAsync(AppUser => AppUser.UserName == username.ToLower());
+      return await _appUserManager.Users.AnyAsync(AppUser => AppUser.UserName == username.ToLower());
     }
   }
 }
