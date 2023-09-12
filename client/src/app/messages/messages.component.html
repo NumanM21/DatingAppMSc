@@ -22,21 +22,24 @@
 </div>
 
 <!-- No Message -->
-
 <div class="row" *ngIf="!message || message.length==0">
   <h2>Oh, looks empty... 😕 </h2>
   <h3>Match and message a member to fill this place up 😋</h3>
 </div>
 
 <!-- Have Messages -->
-
 <div class="row" *ngIf="message && message.length > 0">
   <table class="table-hover">
     <thead>
       <tr>
         <th class="table-headers-main"> Message </th>
-        <th class="table-headers"> From / To </th>
-        <th class="table-headers"> Sent / Received </th>
+        <th class="table-headers" *ngIf="messageContainer === 'Inbox'"> From </th>
+        <th class="table-headers" *ngIf="messageContainer === 'Sent'"> To </th>
+        <th class="table-headers" *ngIf="messageContainer === 'Unread'"> From </th>
+        <th class="table-headers"> 
+          <span *ngIf="messageContainer === 'Inbox' || messageContainer === 'Unread'">Received At</span>
+          <span *ngIf="messageContainer === 'Sent'">Sent At</span>
+        </th>
         <th class="table-headers"></th>
       </tr>
     </thead>
@@ -44,7 +47,8 @@
       <tr *ngFor="let msg of message"
       routerLink="{{messageContainer === 'Sent'? 
       '/members/' + msg.messageReceivingUsername 
-      : '/members/' + msg.messageSenderUsername}}">
+      : '/members/' + msg.messageSenderUsername}}"
+      [queryParams]="{tab: 'Messages'}">
         <td>{{msg.messageContent}}</td>
         <td>
            <!-- I am sending (to) -->

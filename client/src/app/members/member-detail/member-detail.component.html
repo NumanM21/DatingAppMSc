@@ -1,4 +1,4 @@
-<div class="row" *ngIf="member">
+<div class="row" >
   <div class="col-4">
     <div class="card">
       <img src="{{member.photoUrl || './assets/DefaultUser.jpg'}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
@@ -27,8 +27,8 @@
             <button class="btn btn-primary">
                 <i class="fa fa-regular fa-heart" style="color: #ffffff;"></i> Like
             </button>
-            <button class="btn btn-success">
-                Messages <i class="fas fa-comment" style="color: #ffffff;"></i>  
+            <button class="btn btn-success" (click)="tabSelector('Messages')">
+                Message <i class="fas fa-comment" style="color: #ffffff;"></i>  
             </button>
         </div>
     </div>
@@ -43,12 +43,12 @@
         <h4>Looking for</h4>
         <p>{{member.lookingFor}}</p>
       </tab>
-      <!-- TODO: Can change this interests which users can pick when they sign up (TODO: Feature to add once we have a working product (can give user both options)) -->
+
       <tab heading="Interests" (selectTab)="tabActivated($event)">
         <h4>Interests</h4>
         <p>{{member.userInterests}}</p>
       </tab>
-      <!-- TODO: This tab should have like a 'lock' symbol and a message to say 'Match with User before being able to message them' -->
+
       <tab heading="Messages" (selectTab)="tabActivated($event)">
         <app-member-messagetab [message]="message" [username]="member.userName"></app-member-messagetab>
       </tab>
