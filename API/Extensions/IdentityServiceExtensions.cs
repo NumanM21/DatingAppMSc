@@ -19,7 +19,7 @@ namespace API.Extensions
       .AddRoles<Roles>() 
       // add roles to identity
 
-      .AddRoleManager<RoleManager<AppUserWithRoles>>() 
+      .AddRoleManager<RoleManager<Roles>>() 
       // add role manager to identity
 
       .AddEntityFrameworkStores<DataContext>(); 

@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,13 +35,20 @@ app.MapControllers();
 
 // How we actually seed data into our DB
 using var scope = app.Services.CreateScope();
+
 var services = scope.ServiceProvider;
+
 try
 {
+
   var context = services.GetRequiredService<DataContext>();
+
+  var appUserManager = services.GetRequiredService<UserManager<AppUser>>();
   await context.Database.MigrateAsync();
+
   // Everytime we start api, this will re-seed and re-create our DB (we just have to drop DB if want to change something)
-  await Seed.SeedUsers(context);
+
+  await Seed.SeedUsers(appUserManager);
 }
 catch (Exception e)
 {

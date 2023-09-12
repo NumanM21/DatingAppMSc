@@ -3,17 +3,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-  public class AppUser : IdentityUser<int> // int so Id is int in IdentityUser
+  public class AppUser : IdentityUser<int> 
+  // int so Id is int in IdentityUser
   
   {
-    // public int Id { get; set; }
 
-    // public string UserName { get; set; }
-
-    // public byte[] PasswordHash { get; set; }
-
-    // public byte[] PasswordSalt { get; set; }
-    
     public DateOnly DateOfBirth { get; set; }
 
     public string KnownAs { get; set; } 

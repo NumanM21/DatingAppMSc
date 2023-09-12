@@ -6,8 +6,14 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Data
 {
   // Need to specify which entites we want to use as int -> already set up with int (easier to do this way)
-  public class DataContext : IdentityDbContext< Roles, AppUser, int, IdentityUserClaim<int>, AppUserWithRoles,
-  IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+
+  // ORDER OF CLASSES ADDED IS IMPORTANT!!!!
+  public class DataContext : IdentityDbContext<
+  AppUser, Roles, int, 
+  IdentityUserClaim<int>, AppUserWithRoles, 
+  IdentityUserLogin<int>, IdentityRoleClaim<int>, 
+  IdentityUserToken<int>>
+
   {
     public DataContext(DbContextOptions options) : base(options)
     {
