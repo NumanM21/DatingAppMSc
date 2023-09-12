@@ -25,7 +25,7 @@ namespace API.Extensions
       .AddEntityFrameworkStores<DataContext>(); 
       // create all identity related tables in database
 
-
+      // Authentication first -> then Authorization
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
           options.TokenValidationParameters = new TokenValidationParameters
@@ -37,6 +37,18 @@ namespace API.Extensions
             ValidateAudience = false
           };
         });
+
+
+      // Authorization
+      services.AddAuthorization(
+        options =>
+      {
+
+        options.AddPolicy("AdminRoleRequired", pol => pol.RequireRole("Admin"));
+
+        options.AddPolicy("ModeratorRoleRequired", pol => pol.RequireRole("Moderator", 
+        "Admin"));
+      });
 
         return services;
     }

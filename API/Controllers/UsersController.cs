@@ -32,10 +32,12 @@ namespace API.Controllers
 
     }
 
-    // Api end point (this + route make up our API root)
-    // Ask client to sent this as query string hence we use [FromQuery] (since ParameterFromUser is a object)
+    
+
+
     [HttpGet] 
-    public async Task<ActionResult<PaginationList<MemberDto>>> GetUsers([FromQuery]ParameterFromUser parameterFromUser) // gets specified # users
+    public async Task<ActionResult<PaginationList<MemberDto>>> GetUsers([FromQuery]ParameterFromUser parameterFromUser)
+    // Ask client to sent this as query string hence we use [FromQuery] (since ParameterFromUser is a object)
     {
       //get current user
       var currUser = await _userRepository.AsyncGetUserByUsername(User.GetUsername());
@@ -58,7 +60,6 @@ namespace API.Controllers
       Response.HeadPaginationAdd(new HeadPagination(users.currentPage, users.PageSize, users.totalCount, users.totalPage));
 
       return Ok(users); // HTTP 200 
-
     }
 
     [HttpGet("{username}")]

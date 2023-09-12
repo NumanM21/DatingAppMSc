@@ -50,11 +50,17 @@ namespace API.Controllers
 
       return BadRequest(res.Errors);
 
+      // Member registered at this point, so add to member role(default)
+      var resultRole = await _appUserManager.AddToRoleAsync(user, "Member");
+
+      // if role creation fails
+      if (resultRole.Succeeded == false) return BadRequest(resultRole.Errors);
+
       // What we return when a user registers
       return new UserDto
       {
         Username = user.UserName,
-        Token = _tokenService.CreateToken(user),
+        Token = await _tokenService.CreateToken(user),
         PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
         KnownAs = user.KnownAs,
         Gender = user.UserGender
@@ -78,11 +84,12 @@ namespace API.Controllers
 
       if (res == false) return Unauthorized("Password is invalid.");
 
+
       // What we return when user logs in
       return new UserDto
       {
         Username = user.UserName,
-        Token = _tokenService.CreateToken(user),
+        Token = await _tokenService.CreateToken(user),
         PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
         KnownAs = user.KnownAs,
         Gender = user.UserGender

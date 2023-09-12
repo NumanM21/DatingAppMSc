@@ -11,8 +11,8 @@ namespace API.Data
 {
   public class Seed
   {
-    public static async Task SeedUsers(UserManager<AppUser> appUserManager)
-    {  
+    public static async Task SeedUsers(RoleManager<Roles> managerRoles, UserManager<AppUser> appUserManager)
+    {
 
       // check to see if we have users in DB
       if (await appUserManager.Users.AnyAsync()) return;
@@ -24,22 +24,47 @@ namespace API.Data
       // change from json to c#
       var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
 
-     
-      // generate password for each user
+      // Creating new roles for users //TODO: Can create a PREMIUM user role here if we have time
+      var appRole = new List<Roles>
+      {
+        // in db userRole -> 1 = admin, 2 = moderator, 3 = member
+        new Roles{Name = "Admin"},
+        new Roles{Name = "Moderator"},
+        new Roles{Name = "Member"},
+      };
 
+      // Add each role to DB
+      foreach (var r in appRole)
+      {
+        await managerRoles.CreateAsync(r);
+      }
+
+
+      // Add each user to roles
       foreach (var user in users)
       {
         // Handle users
         user.UserName = user.UserName.ToLower();
 
-        await appUserManager.CreateAsync(user, "Pa$$w0rd");  
         // Creates user and hashes password and save to DB
+        await appUserManager.CreateAsync(user, "Pa$$w0rd");
 
+        // Add user to role => Default to member
+        await appUserManager.AddToRoleAsync(user, "Member");
       }
+
+      // Create admin user
+      var adminUser = new AppUser{UserName = "admin"};
+      await appUserManager.CreateAsync(adminUser, "Pa$$w0rd");
+
+      // Add admin to admin role (can add to multiple roles)
+      await appUserManager.AddToRolesAsync(adminUser, new[] {"Admin", "Moderator"});
 
     }
 
-    //TODO: Passwords are all at default Pa$$w0rd -> REMOVE THIS!(Before submitting project)
 
   }
+
+  //TODO: Passwords are all at default Pa$$w0rd -> REMOVE THIS!(Before submitting project)
+
 }

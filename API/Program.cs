@@ -44,11 +44,12 @@ try
   var context = services.GetRequiredService<DataContext>();
 
   var appUserManager = services.GetRequiredService<UserManager<AppUser>>();
+   var managerRoles = services.GetRequiredService<RoleManager<Roles>>();
   await context.Database.MigrateAsync();
 
   // Everytime we start api, this will re-seed and re-create our DB (we just have to drop DB if want to change something)
 
-  await Seed.SeedUsers(appUserManager);
+  await Seed.SeedUsers(managerRoles ,appUserManager);
 }
 catch (Exception e)
 {
