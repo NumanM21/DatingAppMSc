@@ -32,16 +32,18 @@ namespace API.Data
       var msg = await _context.Message
       .Include(x => x.SenderUser).ThenInclude(x => x.Photos)
       .Include(x => x.ReceivingUser).ThenInclude(x => x.Photos)
-      .Where(x => x.messageReceivingUsername == currUsername
-      && x.messageSenderUsername == receivingUsername // check both ways
+      .Where(
+        x => x.messageReceivingUsername == currUsername && x.messageReceivingDeleted == false && 
+        x.messageSenderUsername == receivingUsername
+      // check both ways
       || x.messageReceivingUsername == receivingUsername
-      && x.messageSenderUsername == currUsername)
+      && x.messageSentDeleted == false && x.messageSenderUsername == currUsername)
       // order by message sent at (newest first)
-      .OrderByDescending(x => x.messageSentAt).ToListAsync();
+      .OrderBy(x => x.messageSentAt).ToListAsync();
       // Now we have the entities
 
       // mark unread messages as sent
-      var messageUnread = msg.Where(x=>x.messageReadAt == null && x.messageReceivingUsername == currUsername).ToList(); 
+      var messageUnread = msg.Where(x => x.messageReadAt == null && x.messageReceivingUsername == currUsername).ToList();
       // ToList since above already gets it from DB (hence no async)
 
       // if there are unread messages (mark them)
@@ -74,14 +76,15 @@ namespace API.Data
       switch
       {
 
-        "Inbox" => query.Where(x => x.messageReceivingUsername == parameterMessage.currUsername),
+        "Inbox" => query.Where(x => x.messageReceivingUsername == parameterMessage.currUsername
+        && x.messageReceivingDeleted == false), // check if message is deleted
 
-        "Sent" => query.Where(x => x.messageSenderUsername == parameterMessage.currUsername),
+        "Sent" => query.Where(x => x.messageSenderUsername == parameterMessage.currUsername
+        && x.messageSentDeleted == false), 
 
         // default case (message not read hence check null)
 
-
-        _ => query.Where(x => x.messageReceivingUsername == parameterMessage.currUsername && x.messageReadAt == null)
+        _ => query.Where(x => x.messageReceivingUsername == parameterMessage.currUsername && x.messageReceivingDeleted == false && x.messageReadAt == null)
 
       };
 
@@ -105,7 +108,7 @@ namespace API.Data
       _context.Message.Remove(message);
     }
 
-    public async Task<MessageUser> AsyncMessageGetter(int messageId)
+    public async Task<MessageUser> MessageGetter(int messageId)
     {
       return await _context.Message.FindAsync(messageId);
     }

@@ -44,7 +44,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let msg of message"
+      <tr [hidden]="pageLoad" *ngFor="let msg of message"
       routerLink="{{messageContainer === 'Sent'? 
       '/members/' + msg.messageReceivingUsername 
       : '/members/' + msg.messageSenderUsername}}"
@@ -66,14 +66,15 @@
           </div>
         </td>
         <td>{{msg.messageSentAt | timeago}}</td>
-        <td><button class="btn btn-delete">Delete Message</button></td>
+        <td>
+          <button (click)="$event.stopPropagation()" (click)="messageDelete(msg.messageId)" class="btn btn-delete">Delete Message</button></td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <!-- Pagination  -->
-<div class="d-flex justify-content-center mt-3" *ngIf="pagination &&message && message.length > 0">
+<div class="d-flex justify-content-center mt-3"  *ngIf="!pageLoad && pagination && message && message.length > 0">
   <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
     [maxSize]="5" [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
     nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">

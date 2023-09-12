@@ -27,9 +27,16 @@ export class MessageService {
     // messageUser is same API endpoint as in the backend!!! 
   }
 
-  
-
   messageLoaderBetweenUsers(username:string){
     return this.httpClient.get<MessageUser[]>(this.baseURL + 'messageUser/message-between-users/' + username);
+  }
+
+  messageSender( username: string, msgContent: string){
+    // should match what our API is expecting to receive in the create messageDTO 
+    return this.httpClient.post<MessageUser>(this.baseURL+ 'messageUser', {messageReceivingUsername: username, messageContent: msgContent})
+  }
+
+  messageDelete(msgId:number){
+    return this.httpClient.delete(this.baseURL + 'messageUser/' + msgId);
   }
 }

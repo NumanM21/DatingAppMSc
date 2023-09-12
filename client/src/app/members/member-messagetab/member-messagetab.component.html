@@ -26,11 +26,21 @@
   </div>
 
   <div class="card-footer">
-    <form>
+    <form #msgForm="ngForm" 
+    (ngSubmit)="messageSend()" 
+    autocomplete="off">
       <div class="input-group">
-        <textarea class="form-control input-sm message-input" placeholder="Send a message"></textarea>
+        <textarea 
+        name="msgContent"
+        required
+        [(ngModel)]="msgContent"
+        class="form-control input-sm message-input" placeholder="Send a message"
+        (keydown.enter)="$event.preventDefault(); messageSend()"></textarea>
         <div class="input-group-append">
-          <button class="btn btn-custom-submit" type="submit">Submit</button>
+          <button 
+          [disabled]="!msgForm.valid"
+          class="btn btn-custom-submit" 
+          type="submit">Submit</button>
         </div>
       </div>
     </form>

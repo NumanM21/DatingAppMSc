@@ -101,5 +101,36 @@ namespace API.Controllers
 
     }
 
+    // Delete message -> Only delete message once both users have deleted it
+    [HttpDelete("{messageId}")]
+    public async Task<ActionResult> messageDelete(int messageId)
+    {
+      // get username
+      var username = User.GetUsername();
+
+      // get message from repo
+      var msg = await _repoMessageUser.MessageGetter(messageId);
+
+      if (msg == null)
+      {
+        return NotFound("Message not found");
+      }
+
+      // check if user deleting message is the sender or receiver
+
+      if (msg.messageSenderUsername != username && msg.messageReceivingUsername != username) return Unauthorized("You cannot delete this message");
+
+      if (msg.messageSenderUsername == username) msg.messageSentDeleted = true; // sender is deleting msg
+      
+      if (msg.messageReceivingUsername == username) msg.messageReceivingDeleted = true; // receiver is deleting msg
+
+      // check if both users have deleted message
+
+      if (msg.messageSentDeleted && msg.messageReceivingDeleted) _repoMessageUser.MessageDelete(msg);
+
+      return await _repoMessageUser.AsyncSaveAll() ? Ok() : BadRequest("Message cannot be deleted");
+
+    }
+
   }
 }

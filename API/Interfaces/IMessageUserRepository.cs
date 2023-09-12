@@ -10,7 +10,7 @@ namespace API.Interfaces
     
         void MessageAdd(MessageUser message);
         void MessageDelete(MessageUser message);
-        Task<MessageUser> AsyncMessageGetter(int messageId);
+        Task<MessageUser> MessageGetter(int messageId);
         Task<PaginationList<MessageUserDto>> LoadMessageForUser(ParameterMessage parameterMessage);        
         Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername);
 

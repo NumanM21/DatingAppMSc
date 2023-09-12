@@ -14,6 +14,7 @@ export class MessagesComponent implements OnInit {
   messageContainer = 'Inbox';// default value (Unread / Sent )
   pageNumber = 1;
   pageSize = 3;
+  pageLoad = false; // Hide saved icons until data is loaded from server(api)
 
   constructor(private serviceMessage: MessageService) { }
 
@@ -22,22 +23,28 @@ export class MessagesComponent implements OnInit {
   }
 
   messageLoader() {
+    this.pageLoad = true; // flag set to true
     this.serviceMessage.messageGetter(this.pageNumber, this.pageSize, this.messageContainer).subscribe({
       next: res => {
 
         this.message = res.result;
-        // FIXME: debugging (remove later)
-        console.log(this.message);
         this.pagination = res.pagination;
-  
-        
+        this.pageLoad = false; // flag set to false
+
       }
     });
   }
 
-pageChanged(event: any){
-  this.pageNumber = event.page;
-  this.messageLoader();
-}
+  pageChanged(event: any) {
+    this.pageNumber = event.page;
+    this.messageLoader();
+  }
 
+  messageDelete(msgId: number) {
+    this.serviceMessage.messageDelete(msgId).subscribe({
+
+      next: _ => this.message?.splice(this.message.findIndex(x => x.messageId === msgId), 1) 
+      // remove the message from the array at specified index where the message id matches the id of the message we want to delete
+    })
+  }
 }

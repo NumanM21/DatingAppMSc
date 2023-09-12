@@ -154,9 +154,7 @@ namespace API.Controllers
 
       photo.IsMainPhoto = true;
 
-      if (await _userRepository.AsyncSaveAll()) return NoContent(); // update
-      // Failed to save all if we return below
-      return BadRequest("Main photo couldn't be updated!");
+       return await _userRepository.AsyncSaveAll() ? NoContent() : BadRequest("Main photo couldn't be updated!"); // HTTP 204
     }
 
 
