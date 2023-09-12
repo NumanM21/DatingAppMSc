@@ -27,7 +27,7 @@ namespace API.Data
       // change from json to c#
       var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
 
-      //FIXME: #1 Debugging (Can remove later)
+      //FIXME:  Debugging (Can remove later)
       foreach (var user in users)
       {
         foreach (var photo in user.Photos)
@@ -44,8 +44,6 @@ namespace API.Data
 
         // Handle users
         user.UserName = user.UserName.ToLower();
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-        user.PasswordSalt = hmac.Key;
 
         // Handle photos
         if (user.Photos != null)

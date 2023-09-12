@@ -1,17 +1,18 @@
  using API.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-  public class AppUser
+  public class AppUser : IdentityUser<int> // int so Id is int in IdentityUser
   
   {
-    public int Id { get; set; }
+    // public int Id { get; set; }
 
-    public string UserName { get; set; }
+    // public string UserName { get; set; }
 
-    public byte[] PasswordHash { get; set; }
+    // public byte[] PasswordHash { get; set; }
 
-    public byte[] PasswordSalt { get; set; }
+    // public byte[] PasswordSalt { get; set; }
     
     public DateOnly DateOfBirth { get; set; }
 
@@ -45,6 +46,9 @@ namespace API.Entities
 
     public List<MessageUser> MessageSent { get; set; }
     public List<MessageUser> MessageReceived { get; set; }
+
+  // property to the join table to roles in application (in RolesInAppUser)
+    public ICollection<AppUserWithRoles> AppUserRoles { get; set; }
 
   }
 }

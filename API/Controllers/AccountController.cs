@@ -36,12 +36,10 @@ namespace API.Controllers
       // Go to App user from register DTO
       var user = _autoMapper.Map<AppUser>(registerDto);
 
-      using var hmac = new HMACSHA512(); // key from HMAC is used as our passwordSalt
-
       // Updating these objects with values from our register DTO
       user.UserName = registerDto.Username.ToLower();
-      user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
-      user.PasswordSalt = hmac.Key;
+
+
       // pass comes to us as string from user, we have to hash it to then store it!
 
       // Adding user to our DB
@@ -69,15 +67,6 @@ namespace API.Controllers
       x.UserName == loginDto.Username);
 
       if (user == null) return Unauthorized("Invalid username");
-
-      using var hmac = new HMACSHA512(user.PasswordSalt); // if same pass, same hashing
-
-      var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-
-      for (int i = 0; i < computedHash.Length; i++)
-      {
-        if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
-      }
 
       // What we return when user logs in
       return new UserDto
