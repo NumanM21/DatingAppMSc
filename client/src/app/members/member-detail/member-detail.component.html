@@ -21,34 +21,38 @@
           <p>{{member.userCreated | date: 'dd MMMM yyyy'}}</p>
         </div>
       </div>
+      <!-- Fa Icons -->
       <div class="card-footer">
-        <!-- TODO: Add a heart for the like (move like test right center, and heart on the left). Similar for the message (move to center left and have envelope on the right?) -->
         <div class="btn-group d-flex">
-          <button class="btn btn-primary">Like</button>
-          <!-- TODO: This message should ONLY be visible if the users have MATCHED (have a *ngIf) -->
-          <button class="btn btn-success">Messages</button>
+            <button class="btn btn-primary">
+                <i class="fa fa-regular fa-heart" style="color: #ffffff;"></i> Like
+            </button>
+            <button class="btn btn-success">
+                Messages <i class="fas fa-comment" style="color: #ffffff;"></i>  
+            </button>
         </div>
-      </div>
+    </div>
+    
     </div>
   </div>
   <div class="col-8">
-    <tabset class="member-tabs">
-      <tab heading="About {{member.knownAs}}">
+    <tabset #tabsMember class="member-tabs">
+      <tab heading="About {{member.knownAs}}" (selectTab)="tabActivated($event)">
         <h4>Description</h4>
         <p>{{member.introduction}}</p>
         <h4>Looking for</h4>
         <p>{{member.lookingFor}}</p>
       </tab>
       <!-- TODO: Can change this interests which users can pick when they sign up (TODO: Feature to add once we have a working product (can give user both options)) -->
-      <tab heading="Interests">
+      <tab heading="Interests" (selectTab)="tabActivated($event)">
         <h4>Interests</h4>
         <p>{{member.userInterests}}</p>
       </tab>
       <!-- TODO: This tab should have like a 'lock' symbol and a message to say 'Match with User before being able to message them' -->
-      <tab heading="Messages">
-        <app-member-messagetab [username]="member.userName"></app-member-messagetab>
+      <tab heading="Messages" (selectTab)="tabActivated($event)">
+        <app-member-messagetab [message]="message" [username]="member.userName"></app-member-messagetab>
       </tab>
-      <tab heading="Photos" #tabPhoto="tab"> 
+      <tab heading="Photos" #tabPhoto="tab" (selectTab)="tabActivated($event)"> 
         <gallery [items]="img" *ngIf="tabPhoto.active" class="photo-gallery"></gallery>  
       </tab>
     </tabset>

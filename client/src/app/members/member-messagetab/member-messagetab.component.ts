@@ -13,21 +13,15 @@ import { MessageService } from 'src/app/_services/message.service';
   imports: [CommonModule, TimeagoModule]
 })
 export class MemberMessagetabComponent implements OnInit {
+  @Input() message: MessageUser[] = [];
   @Input() username: string | undefined;
-  message: MessageUser[] = [];
+  
 
   constructor(private serviceMessage: MessageService) { }
 
   ngOnInit(): void {
-    this.messageLoader();
   }
 
-  messageLoader() {
-    if (this.username) {
-      this.serviceMessage.messageLoaderBetweenUsers(this.username).subscribe({
-        next: msg => this.message = msg,
-      })
-    }
-  }
+  
 
 }

@@ -1,24 +1,27 @@
-<div class="card mb-3 " *ngIf="member"> 
+<div class="card mb-3 " *ngIf="member">
   <!-- displayed IF we have a member (prevents undefined errors) -->
   <!-- TODO: Can use this *ngIf to display only users which have MATCHED (Rather than all!) -->
   <div class="card-img-wrapper">
     <img src="{{member.photoUrl || './assets/DefaultUser.jpg'}}" alt="{{member.knownAs}}" class="card-img-top">
     <ul class="list-inline member-icon animate text-center">
       <li class="list-inline-item">
-        <button class="btn btn-dark" routerLink="/members/{{member.userName}}"><i class="fa fa-user"></i></button>
+        <button class="btn btn-dark" routerLink="/members/{{member.userName}}"> <i class="fas fa-user"
+            style="color: #ffffff;"></i>
+        </button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-dark" 
-        (click)="likeAdd(member)"><i  class="fa fa-heart"></i></button>
+        <button class="btn btn-dark" (click)="likeAdd(member)"><i class="fa fa-regular fa-heart"
+            style="color: #ffffff;"></i></button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-dark"><i class="fa fa-envelope"></i></button>
+        <button class="btn btn-dark"><i class="fas fa-comment" style="color: #ffffff;"></i></button>
       </li>
     </ul>
     <div class="card-body p-1">
       <div class="member-info">
         <h5 class="card-title text-left mb-1">
-          <i class="fa fa-user mb-1"></i>
+          <i class="fas fa-user"
+            style="color: #000000;"></i>
           {{member.knownAs}}
         </h5>
         <h5 class="card-title text-right mb-1">
@@ -27,6 +30,3 @@
       </div>
       <p class="card-text text-muted text-end custom-bold">{{member.city}}</p>
     </div>
-    
-
-
