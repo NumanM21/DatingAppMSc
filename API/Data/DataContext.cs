@@ -33,6 +33,10 @@ namespace API.Data
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+       // call the base method in DbContext class and builds the model => creates the tables (IMPORTANT to call this first)
+
+      base.OnModelCreating(modelBuilder); 
+
       // Configure join between User and Roles table
 
       // One user can have many roles
@@ -65,9 +69,6 @@ namespace API.Data
       .IsRequired(); // so foreign keys can't be null
 
 
-      // call the base method in DbContext class and builds the model
-
-      base.OnModelCreating(modelBuilder); 
 
       // configure the PRIMARY key for the LikeUser table
       modelBuilder.Entity<LikeUser>()

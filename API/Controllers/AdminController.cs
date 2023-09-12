@@ -14,8 +14,7 @@ namespace API.Controllers
 
         public AdminController(UserManager<AppUser> managerUser)
         {
-         _managerUser = managerUser;
-            
+         _managerUser = managerUser;  
         }
 
         [Authorize(Policy = "AdminRoleRequired")]
@@ -26,7 +25,8 @@ namespace API.Controllers
             // Get all users (.Users table in database and order by username alphabetically)
             var user = await _managerUser.Users.OrderBy(x=>x.UserName)
             // Want to get roles (Access user roles from user , then user roles to get roles)
-            .Select(x => new{
+            // FIXME: Array of role not showing up
+            .Select(x => new {
                 x.Id, //userID
                 Username = x.UserName,
                 Roles = x.AppUserRoles.Select(s => s.appRole.Name).ToList() // List of roles 

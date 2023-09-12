@@ -49,7 +49,8 @@ try
 
   // Everytime we start api, this will re-seed and re-create our DB (we just have to drop DB if want to change something)
 
-  await Seed.SeedUsers(managerRoles ,appUserManager);
+  await Seed.SeedUsers(managerRoles, appUserManager);
+
 }
 catch (Exception e)
 {

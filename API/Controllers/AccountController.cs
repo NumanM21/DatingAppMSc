@@ -46,9 +46,7 @@ namespace API.Controllers
       var res = await _appUserManager.CreateAsync(user, registerDto.Password);
 
       // if user creation fails
-      if (res.Succeeded == false)
-
-      return BadRequest(res.Errors);
+      if (res.Succeeded == false) return BadRequest(res.Errors);
 
       // Member registered at this point, so add to member role(default)
       var resultRole = await _appUserManager.AddToRoleAsync(user, "Member");

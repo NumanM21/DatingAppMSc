@@ -28,9 +28,9 @@ namespace API.Data
       var appRole = new List<Roles>
       {
         // in db userRole -> 1 = admin, 2 = moderator, 3 = member
-        new Roles{Name = "Admin"},
-        new Roles{Name = "Moderator"},
-        new Roles{Name = "Member"},
+        new() {Name = "Admin"},
+        new() {Name = "Moderator"},
+        new() {Name = "Member"},
       };
 
       // Add each role to DB
