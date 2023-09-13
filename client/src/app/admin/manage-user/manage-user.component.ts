@@ -46,6 +46,8 @@ export class ManageUserComponent implements OnInit {
         // Pass the roles of the appUser to the modal.
         // Use the spread operator to create a new array from appUser.roles 
         // to ensure we're not modifying the original roles array directly.
+        
+        // Using rolesAvailableToAssign -> We see the roles the user currently IS  (not how I want it)
         rolesSelected: [...appUser.roles]
       }
     }
