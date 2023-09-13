@@ -1,18 +1,22 @@
-<div class="row">
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="class-table-table-header-username">Username</th>
-        <th class="class-table-table-header-role">Current Role</th>
-        <th class="class-table-table-header"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of usersToManage">
-        <td>{{user.username}}</td>
-        <td>{{user.appRole}}</td>
-        <td><button class="btn info">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+<ng-container *ngIf="serviceAccount.currentUser$ | async as currentUser">
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="class-table-table-header-username">Username</th>
+          <th class="class-table-table-header-role">Current Role</th>
+          <th class="class-table-table-header">--------</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of usersToManage">
+          <td>{{user.username}}</td>
+          <td>{{user.roles.join(', ')}}</td>
+          <td><button class="btn btn-dark btn info edit-button">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<!-- TODO: Advanced feature -> Have a slight grey hover => When user is hovering over a row, we then display the edit button, edit button still turns grey ish on hover => Reduces noise on the table! -->

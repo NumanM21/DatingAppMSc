@@ -11,3 +11,31 @@
 ::ng-deep .member-tabs .nav-link {
   color: black !important;
 }
+
+.edit-button:hover{
+  background-color: rgb(85, 83, 83);
+  border-color: rgb(85, 83, 83);
+}
+
+.edit-button {
+  margin-bottom: 8px;  
+}
+
+.class-table-table-header-username,
+.class-table-table-header-role,
+.class-table-table-header {
+  font-size: 1.2em; 
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #585353;  
+}
+.table thead th {
+  border-bottom: 2px solid #585353; 
+}
+
+.table td {
+  padding-top: 15px;
+  padding-bottom: 5px;
+  line-height: 2.5;
+}

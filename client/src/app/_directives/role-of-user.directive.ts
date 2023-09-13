@@ -3,6 +3,7 @@ import { User } from '../_models/User';
 import { AccountService } from '../_services/account.service';
 import { take } from 'rxjs';
 import { ThisReceiver } from '@angular/compiler';
+import { NgControlStatusGroup } from '@angular/forms';
 
 
 // Can use THIS directive to check if the user has a specific role ==> Instead of *ngIf in the HTML 
@@ -13,13 +14,16 @@ import { ThisReceiver } from '@angular/compiler';
   selector: '[appRoleOfUser]'
 })
 export class RoleOfUserDirective implements OnInit{
-  @Input() appRoleOfUser: string[] | undefined;
+  @Input() appRoleOfUser: string[]  = [];
   user: User = {} as User; // Empty user object
 
   constructor(
      private serviceAccount:AccountService 
     ,private refTemplate: TemplateRef<any> 
-    ,private refContainerView: ViewContainerRef) {
+    ,private refContainerView: ViewContainerRef) {}
+
+  // This will run when the directive is initialized
+  ngOnInit(): void {
 
     this.serviceAccount.currentUser$.pipe(take(1)).subscribe({
       next: u => {
@@ -29,14 +33,14 @@ export class RoleOfUserDirective implements OnInit{
         }
       }
     })
-  }
 
-  // This will run when the directive is initialized
-  ngOnInit(): void {
+    console.log("user app role in role-of-dire:", this.user.roles);
 
     // .some will return true if the user has any of the roles in the array
     // .includes will check appRoleOfUser array if it contains any of the roles in the user object --> if this is true, our * will display
-    if (this.user.appRole.some(x => this.appRoleOfUser?.includes(x))){
+
+    if (this.user.roles && this.user.roles.some(x => this.appRoleOfUser.includes(x))){
+
       this.refContainerView.createEmbeddedView(this.refTemplate);
     } // user does not have any of the roles in the array 
     else {

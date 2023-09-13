@@ -41,18 +41,19 @@ export class AccountService {
 
   setCurrentUser(user: User) {
     // User role might be single or array of roles, we need to make sure it is always an array
-    user.appRole = [];
+    user.roles = [];
 
     const userRoles = this.TokenDecoded(user.token); // Directly get the roles without .role
 
     // console.log('Decoded roles:', userRoles); // This will print the decoded roles from the token
 
-    Array.isArray(userRoles) ? user.appRole = userRoles : user.appRole.push(userRoles);
+    Array.isArray(userRoles) ? user.roles = userRoles : user.roles.push(userRoles);
 
     // console.log('Final user object:', user); // This will print the final user object with roles
 
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
+    console.log(this.currentUserSource);
 }
 
 
@@ -61,7 +62,9 @@ export class AccountService {
     this.currentUserSource.next(null);
   }
 
+
   // Get the token from the local storage -> to get our roles (from api --> API still 'protects' the data from security breach)!
+
   TokenDecoded(Token:string){
     // split by . and get the middle part (where our roles array is at, 0-indexed)
 

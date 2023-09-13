@@ -7,6 +7,15 @@
   - Can also ask GPT to refactor this code slightly (help me come up with better variable names if needed (might help with good coding practice?)
 */
 
+body {
+  font-family: 'Roboto', sans-serif;
+}
+  
+
+
+
+
+
 .tab-panel {
   border: 1px solid #ddd;
   padding: 10px;

@@ -25,7 +25,7 @@ export const AdminGuard: CanActivateFn = () => {
       }
 
       // Check if we have admin / Mod role
-      if (u.appRole.includes('Admin') || u.appRole.includes('Moderator')) {
+      if (u.roles.includes('Admin') || u.roles.includes('Moderator')) {
 
         // console.log('User has Admin or Moderator role. Access granted.');
 
