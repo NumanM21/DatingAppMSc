@@ -14,9 +14,9 @@ export const AdminGuard: CanActivateFn = () => {
     map(u => {
 
       //FIXME: Debugg clogs
-      console.log('User:', u); // This will print the entire user object
+      // console.log('User:', u); // This will print the entire user object
       
-      console.log('User roles:', u?.appRole); // This will print the roles of the user
+      // console.log('User roles:', u?.appRole); // This will print the roles of the user
 
       // Check if we have user
       if (u == null) {
@@ -27,14 +27,14 @@ export const AdminGuard: CanActivateFn = () => {
       // Check if we have admin / Mod role
       if (u.appRole.includes('Admin') || u.appRole.includes('Moderator')) {
 
-        console.log('User has Admin or Moderator role. Access granted.');
+        // console.log('User has Admin or Moderator role. Access granted.');
 
         return true;
       }
       // User not authorized
       else {
 
-        console.log('User does not have Admin or Moderator role. Access denied.');
+        // console.log('User does not have Admin or Moderator role. Access denied.');
 
         toast.error('You are not authorized to access this area!');
 

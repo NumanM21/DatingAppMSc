@@ -1,1 +1,18 @@
-<p>manage-user works!</p>
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="class-table-table-header-username">Username</th>
+        <th class="class-table-table-header-role">Current Role</th>
+        <th class="class-table-table-header"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of usersToManage">
+        <td>{{user.username}}</td>
+        <td>{{user.appRole}}</td>
+        <td><button class="btn info">Edit</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

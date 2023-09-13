@@ -1,0 +1,13 @@
+.class-table-table-header-username{
+  width: 25%;
+}
+.class-table-table-header-role{
+  width: 40%;
+}
+.class-table-table-header{
+  width: 30%;
+}
+
+::ng-deep .member-tabs .nav-link {
+  color: black !important;
+}
