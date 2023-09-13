@@ -22,3 +22,15 @@ img{
   display: inline;
   margin-right: 10px;
 }
+
+.dropdown-item:active {
+  background-color: rgb(177, 172, 172);
+  color: white;
+}
+
+.img-border{
+  border: 1px solid black;
+}
+
+
+

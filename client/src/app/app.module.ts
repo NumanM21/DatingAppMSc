@@ -27,6 +27,9 @@ import { InputTextComponent } from './_forms/input-text/input-text.component';
 import { PickDateComponent } from './_forms/pick-date/pick-date.component';
 import { MemberMessagetabComponent } from './members/member-messagetab/member-messagetab.component';
 import { AdminMainPanelComponent } from './admin/admin-main-panel/admin-main-panel.component';
+import { RoleOfUserDirective } from './_directives/role-of-user.directive';
+import { ManageUserComponent } from './admin/manage-user/manage-user.component';
+import { ManagePhotoComponent } from './admin/manage-photo/manage-photo.component';
 
 
 
@@ -52,6 +55,9 @@ import { AdminMainPanelComponent } from './admin/admin-main-panel/admin-main-pan
     InputTextComponent,
     PickDateComponent,
     AdminMainPanelComponent,
+    RoleOfUserDirective,
+    ManageUserComponent,
+    ManagePhotoComponent,
   ],
   imports: [
     BrowserAnimationsModule,

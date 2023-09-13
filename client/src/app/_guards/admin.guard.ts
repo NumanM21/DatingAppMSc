@@ -4,29 +4,43 @@ import { Observable, map } from 'rxjs';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
 
-export const AdminGuard: CanActivateFn = (route, state) => {
- 
-    const serviceAccount = inject(AccountService)
-    const toast = inject(ToastrService)
+export const AdminGuard: CanActivateFn = () => {
 
-    // Get the user from the local storage
-    return serviceAccount.currentUser$.pipe(
-      map(u => {
+  const serviceAccount = inject(AccountService)
+  const toast = inject(ToastrService)
 
-        // Check if we have user
-        if (u == null) {
-          toast.error('You are not authorized to access this area!')
-          return false;
-        }
+  // Get the user from the local storage
+  return serviceAccount.currentUser$.pipe(
+    map(u => {
 
-        // Check if we have admin / Mod role
-        if (u.roles.includes('Admin') || u.roles.includes('Moderator')) return true;
+      //FIXME: Debugg clogs
+      console.log('User:', u); // This will print the entire user object
+      
+      console.log('User roles:', u?.appRole); // This will print the roles of the user
 
-        // User not authorized
-        else {
-          toast.error('You are not authorized to access this area!');
-          return false;
-        }
-      })
-    )
+      // Check if we have user
+      if (u == null) {
+        toast.error('You are not authorized to access this area!')
+        return false;
+      }
+
+      // Check if we have admin / Mod role
+      if (u.appRole.includes('Admin') || u.appRole.includes('Moderator')) {
+
+        console.log('User has Admin or Moderator role. Access granted.');
+
+        return true;
+      }
+      // User not authorized
+      else {
+
+        console.log('User does not have Admin or Moderator role. Access denied.');
+
+        toast.error('You are not authorized to access this area!');
+
+        return false;
+      }
+
+    })
+  )
 };

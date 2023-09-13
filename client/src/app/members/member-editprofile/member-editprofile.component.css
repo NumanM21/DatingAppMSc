@@ -15,7 +15,7 @@
 }
 
 
-/* works till above here */
+
 
 ::ng-deep .member-tabs .nav-tabs > li.active > a {
   color: black !important;
@@ -47,5 +47,10 @@
 
 ::ng-deep .member-tabs .nav-tabs > li > a {
   border-color: transparent !important;
+}
+
+ 
+::ng-deep .member-tabs .nav-link {
+  color: black !important;
 }
 

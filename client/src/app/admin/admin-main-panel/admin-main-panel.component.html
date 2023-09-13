@@ -1,1 +1,15 @@
-<p>admin-main-panel works!</p>
+<h1>Admin Panel</h1>
+<div class="tab-panel">
+  <tabset class="member-tabs">
+    <tab  *appRoleOfUser="['Admin']" heading="Manage Users">
+      <div class="container">
+        <app-manage-user></app-manage-user>
+      </div>
+    </tab>
+    <tab  *appRoleOfUser="['Admin', 'Moderator']" heading="Manage Photos">
+      <div class="container">
+        <app-manage-photo></app-manage-photo>
+      </div>
+    </tab>
+  </tabset>
+</div>

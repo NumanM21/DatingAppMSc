@@ -5,27 +5,31 @@
     <ul class="navbar-nav me-auto mb-2 mb-md-0" >
       <!-- Authenticated Links -->
       <ng-container *ngIf="accountService.currentUser$ | async" >
-        <li class="nav-item">
+        <li class="nav-item" 
+        *appRoleOfUser="['Admin', 'Moderator']">
           <a class="nav-link icon-size-nav" routerLink="/admin" routerLinkActive="link-active">Admin</a>
         </li>
+        <!-- Matches -->
         <li class="nav-item">
           <a class="nav-link icon-size-nav" routerLink="/members" routerLinkActive="link-active">Matches</a>
         </li>
+        <!-- Likes -->
         <li class="nav-item">
           <a class="nav-link icon-size-nav" routerLink="/lists" routerLinkActive="link-active">Likes</a>
         </li>
+        <!-- Messages -->
         <li class="nav-item">
           <a class="nav-link icon-size-nav" routerLink="/messages" routerLinkActive="link-active">Messages</a>
         </li>
       </ng-container>
       <!-- Error tab (for testing FIXME:) -->
-      <!-- <li class="nav-item">
+      <li class="nav-item" *appRoleOfUser="['Admin', 'Moderator']">
         <a class="nav-link icon-size-nav" routerLink="/errors" routerLinkActive="link-active">Errors</a>
-      </li> -->
+      </li>
     </ul>
 
     <div class="dropdown" *ngIf="(accountService.currentUser$| async) as user" dropdown>
-      <img src="{{user.photoURL || './assets/DefaultUser.jpg'}}" alt="photo user">
+      <img src="{{user.photoURL || './assets/DefaultUser.jpg'}}" alt="photo user" class="img-border">
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{user.knownAs}}</a>
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a class="dropdown-item" routerLink="/member/editprofile">Edit Profile</a>
@@ -33,7 +37,7 @@
       </div>
     </div>
 
-    <!-- TODO: Adding font awesome eye icon into this for password login -->
+
     <form *ngIf="!(accountService.currentUser$| async)" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off">
 
       <!-- Username -->

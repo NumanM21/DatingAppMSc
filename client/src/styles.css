@@ -14,7 +14,7 @@
 }
 
 .nav-tabs > li.open, .member-tabs > .nav-tabs > li:hover {
-  border-bottom: 4px solid #fbcdcf;
+  border-bottom: 4px solid #000000;
 }
 
 .member-tabs > .nav-tabs > li.open > a, .member-tabs > .nav-tabs > li:hover > a {
@@ -32,7 +32,7 @@
 }
 
 .member-tabs > .nav-tabs > li.active {
-  border-bottom: 4px solid #E95420;
+  border-bottom: 4px solid #000000;
   position: relative;
 }
 
@@ -47,9 +47,9 @@
 
 .member-tabs > .tab-content {
   margin-top: -3px;
-  background-color: #fff;
+  background-color: #ffffff;
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #000000;
   padding: 15px 0;
 }
 
@@ -58,3 +58,17 @@
   height: 650px;
   padding: 5px ;
 }
+
+
+
+.card {
+  border: 1px solid black;
+}
+
+input:focus, 
+textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: 2px solid black !important;
+}
+

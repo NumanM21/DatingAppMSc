@@ -35,18 +35,26 @@ export class AccountService {
       })
     )
   }
-  // Use this method to follow DRY principle (repeated code in login and register)
-  setCurrentUser(user: User) {
-    // need to check if we usea[] or single role for roles in user.ts
-    user.roles = [];
-    // .role (not roles!)
-    const userRoles = this.TokenDecoded(user.token).role;
-    Array.isArray(userRoles) ? user.roles = userRoles : user.roles.push(userRoles);
 
+
+  // Use this method to follow DRY principle (repeated code in login and register)
+
+  setCurrentUser(user: User) {
+    // User role might be single or array of roles, we need to make sure it is always an array
+    user.appRole = [];
+
+    const userRoles = this.TokenDecoded(user.token); // Directly get the roles without .role
+
+    // console.log('Decoded roles:', userRoles); // This will print the decoded roles from the token
+
+    Array.isArray(userRoles) ? user.appRole = userRoles : user.appRole.push(userRoles);
+
+    // console.log('Final user object:', user); // This will print the final user object with roles
 
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
-  }
+}
+
 
   logout() {
     localStorage.removeItem('user');
@@ -57,7 +65,17 @@ export class AccountService {
   TokenDecoded(Token:string){
     // split by . and get the middle part (where our roles array is at, 0-indexed)
 
-    return JSON.parse(atob(Token.split('.')[1])).role;
+    const decodedToken = JSON.parse(atob(Token.split('.')[1]));
+
+    // console.log('Decoded token:', decodedToken); // This will print the entire decoded token
+
+    const roles = decodedToken.role;
+    
+    // console.log('Roles from decoded token:', roles); // This will print the roles extracted from the decoded token
+
+    return roles;
+    
     // atob = decode Token from base64
-  }
+}
+
 }
