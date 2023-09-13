@@ -26,6 +26,7 @@ import { PhotoEditComponent } from './members/photo-edit/photo-edit.component';
 import { InputTextComponent } from './_forms/input-text/input-text.component';
 import { PickDateComponent } from './_forms/pick-date/pick-date.component';
 import { MemberMessagetabComponent } from './members/member-messagetab/member-messagetab.component';
+import { AdminMainPanelComponent } from './admin/admin-main-panel/admin-main-panel.component';
 
 
 
@@ -50,6 +51,7 @@ import { MemberMessagetabComponent } from './members/member-messagetab/member-me
     PhotoEditComponent,
     InputTextComponent,
     PickDateComponent,
+    AdminMainPanelComponent,
   ],
   imports: [
     BrowserAnimationsModule,

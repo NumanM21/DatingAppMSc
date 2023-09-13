@@ -3,7 +3,11 @@
     <a class="navbar-brand icon-size-app" routerLink="/" >Dating App</a>
 
     <ul class="navbar-nav me-auto mb-2 mb-md-0" >
+      <!-- Authenticated Links -->
       <ng-container *ngIf="accountService.currentUser$ | async" >
+        <li class="nav-item">
+          <a class="nav-link icon-size-nav" routerLink="/admin" routerLinkActive="link-active">Admin</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link icon-size-nav" routerLink="/members" routerLinkActive="link-active">Matches</a>
         </li>
@@ -14,9 +18,10 @@
           <a class="nav-link icon-size-nav" routerLink="/messages" routerLinkActive="link-active">Messages</a>
         </li>
       </ng-container>
-      <li class="nav-item">
+      <!-- Error tab (for testing FIXME:) -->
+      <!-- <li class="nav-item">
         <a class="nav-link icon-size-nav" routerLink="/errors" routerLinkActive="link-active">Errors</a>
-      </li>
+      </li> -->
     </ul>
 
     <div class="dropdown" *ngIf="(accountService.currentUser$| async) as user" dropdown>
