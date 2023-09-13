@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Edit {{userToManage}}'s Roles </h4>
+  <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form #formForRoles="ngForm" id="formForRoles">
+    <div class="check-form" *ngFor="let role of rolesAvailableToAssign">
+      <input type="checkbox"
+      class="check-form-input"
+      [checked]="rolesSelected.includes(role)"
+      value="role"
+      (change)="CheckBoxUpdate(role)"
+      [disabled]="role === 'Admin' && userToManage == 'admin'">
+      <!-- Disabelled to ensure atleast 1 admin in system -->
+      <label>{{role}}</label>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-dark" (click)="bsModalRef.hide()">Submit</button>
+</div>
+
+<!-- TODO: Change close button to be black box with white text (similar to edit) -> Add black line on top and bottom of border -->

@@ -13,7 +13,7 @@
         <tr *ngFor="let user of usersToManage">
           <td>{{user.username}}</td>
           <td>{{user.roles.join(', ')}}</td>
-          <td><button class="btn btn-dark btn info edit-button">Edit</button></td>
+          <td><button (click)="openModalForRoles(user)" class="btn btn-dark btn info edit-button">Edit</button></td>
         </tr>
       </tbody>
     </table>

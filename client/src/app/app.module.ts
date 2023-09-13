@@ -30,6 +30,7 @@ import { AdminMainPanelComponent } from './admin/admin-main-panel/admin-main-pan
 import { RoleOfUserDirective } from './_directives/role-of-user.directive';
 import { ManageUserComponent } from './admin/manage-user/manage-user.component';
 import { ManagePhotoComponent } from './admin/manage-photo/manage-photo.component';
+import { ModalForRolesComponent } from './modal/modal-for-roles/modal-for-roles.component';
 
 
 
@@ -58,6 +59,7 @@ import { ManagePhotoComponent } from './admin/manage-photo/manage-photo.componen
     RoleOfUserDirective,
     ManageUserComponent,
     ManagePhotoComponent,
+    ModalForRolesComponent,
   ],
   imports: [
     BrowserAnimationsModule,
