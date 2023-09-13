@@ -14,6 +14,7 @@ export class ManageUserComponent implements OnInit {
   usersToManage: User[] = [];
   refModalBs: BsModalRef<ModalForRolesComponent> = new BsModalRef<ModalForRolesComponent>(); // this is the modal reference
   rolesAvailable = ['Member', 'Admin', 'Moderator'];
+  rolesAvailableToAssign: any[] = [];
 
 
   constructor(private serviceModal: BsModalService, public serviceAccount: AccountService, private serviceAdmin: AdminService) { }
@@ -36,7 +37,9 @@ export class ManageUserComponent implements OnInit {
       // This state will be passed to the modal component when it's instantiated
 
       initialState: {
-        
+
+        rolesAvailableToAssign: this.rolesAvailable,
+
         // Pass the username of the appUser to the modal
         username: appUser.username,
 
@@ -46,7 +49,7 @@ export class ManageUserComponent implements OnInit {
         // Pass the roles of the appUser to the modal.
         // Use the spread operator to create a new array from appUser.roles 
         // to ensure we're not modifying the original roles array directly.
-        
+
         // Using rolesAvailableToAssign -> We see the roles the user currently IS  (not how I want it)
         rolesSelected: [...appUser.roles]
       }
@@ -55,6 +58,30 @@ export class ManageUserComponent implements OnInit {
     // Use the modal service to show the ModalForRolesComponent with the specified configuration.
     // The result (a reference to the modal) is stored in this.refModalBs.
     this.refModalBs = this.serviceModal.show(ModalForRolesComponent, modalConfiguration);
+    this.refModalBs.onHide?.subscribe({
+      next: () => {
+
+        // when the modal is closed, update the user's roles (if they were changed)
+
+        const rolesSelected = this.refModalBs.content?.rolesSelected;
+
+        if (!this.checkArray(rolesSelected!, appUser.roles)) {
+          // if change happened, call api to update roles
+          const rolesString = rolesSelected!.join(',');
+          this.serviceAdmin.UserRolesUpdate(appUser.username, rolesString).subscribe({
+            next: (response) => {
+              appUser.roles = response;
+            }
+          });
+
+        }
+
+      }
+    })
+  }
+
+  private checkArray(array1: any[], array2: any[]) {
+    return JSON.stringify(array1.sort()) === JSON.stringify(array2.sort());
   }
 
 

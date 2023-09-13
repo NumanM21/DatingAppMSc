@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">Edit {{userToManage}}'s Roles </h4>
+  <h4 class="modal-title pull-left">Edit {{username}}'s Roles </h4>
   <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
     <span aria-hidden="true" class="visually-hidden">&times;</span>
   </button>
@@ -12,7 +12,7 @@
       [checked]="rolesSelected.includes(role)"
       value="role"
       (change)="CheckBoxUpdate(role)"
-      [disabled]="role === 'Admin' && userToManage == 'admin'">
+      [disabled]="role === 'Admin' && username == 'admin'">
       <!-- Disabelled to ensure atleast 1 admin in system -->
       <label>{{role}}</label>
     </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -11,9 +11,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 
 // manage-user.component will populate field below
 export class ModalForRolesComponent implements OnInit {
-  userToManage = '';
-  rolesAvailableToAssign: any[] = [];
+  username = '';
   rolesSelected: any[] = [];
+  @Input() rolesAvailableToAssign: string[] = [];
+
 
   constructor(public bsModalRef: BsModalRef) { }
 
@@ -32,7 +33,7 @@ export class ModalForRolesComponent implements OnInit {
     if (idx !== -1) {
       this.rolesSelected.splice(idx, 1);
     }
-    
+
     // If the value is not in the array (so -1 idx returned) (checkbox was previously unchecked and now checked by the user), 
     // add it to the array.
     else {
