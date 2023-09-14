@@ -35,8 +35,10 @@ app.UseCors(builder => builder
 
 app.UseAuthentication(); // Checks for valid token
 app.UseAuthorization(); // Sees if this valid token is what we're looking for!
+
 // endpoints for SignalR
 app.MapHub<UserPresenceHub>("hubs/user-presence");
+app.MapHub<UserMessageHub>("hubs/users-message");
 
 app.MapControllers();
 
