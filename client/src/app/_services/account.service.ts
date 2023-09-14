@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../_models/User';
 import { environment } from 'src/environments/environment';
+import { UserPresenceService } from './user-presence.service';
 
 
 @Injectable({
@@ -13,7 +14,7 @@ export class AccountService {
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private serviceUserPresence: UserPresenceService, private httpClient: HttpClient) { }
 
   login(model: any) {
     return this.httpClient.post<User>(this.baseUrl + 'account/login', model).pipe(
@@ -39,6 +40,7 @@ export class AccountService {
 
   // Use this method to follow DRY principle (repeated code in login and register)
 
+  // called when login, register and refresh token (from local storage)
   setCurrentUser(user: User) {
     // User role might be single or array of roles, we need to make sure it is always an array
     user.roles = [];
@@ -53,19 +55,26 @@ export class AccountService {
 
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
-    console.log(this.currentUserSource);
-}
+    // console.log(this.currentUserSource);
+
+    // create connection to hub (user presence)
+    this.serviceUserPresence.CreateConnectionToHub(user);
+
+  }
 
 
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+
+    // disconnect connection to hub (user presence)
+    this.serviceUserPresence.DisconnectConnectionToHub();
   }
 
 
   // Get the token from the local storage -> to get our roles (from api --> API still 'protects' the data from security breach)!
 
-  TokenDecoded(Token:string){
+  TokenDecoded(Token: string) {
     // split by . and get the middle part (where our roles array is at, 0-indexed)
 
     const decodedToken = JSON.parse(atob(Token.split('.')[1]));
@@ -73,12 +82,12 @@ export class AccountService {
     // console.log('Decoded token:', decodedToken); // This will print the entire decoded token
 
     const roles = decodedToken.role;
-    
+
     // console.log('Roles from decoded token:', roles); // This will print the roles extracted from the decoded token
 
     return roles;
-    
+
     // atob = decode Token from base64
-}
+  }
 
 }

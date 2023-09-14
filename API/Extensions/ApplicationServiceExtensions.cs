@@ -2,6 +2,7 @@ using API.Data;
 using API.ExternalHelpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -18,7 +19,7 @@ namespace API.Extensions
         });
         // Cors helps with security and flexibility
       services.AddCors();
-      // Scoped to our HTTP request -> This makes these classes injectable to our user controller (.AddScoped means this service is created NEW for each HTTP request)
+      // Scoped to our HTTP request -> This makes these classes injectable to our user controller (.AddScoped means this service is created NEW for each HTTP request -> broken after the request is complete)
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IUserRepository,UserRepository>();
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -29,6 +30,8 @@ namespace API.Extensions
       services.AddScoped<UserActiveLogger>();
       services.AddScoped<IMessageUserRepository, MessageUserRepository>();
       services.AddSignalR();
+      // singleton -> only one instance of this class is created and used throughout the application
+      services.AddSingleton<UserPresenceTracker>();
       
       return services;
     }
