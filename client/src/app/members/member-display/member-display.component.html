@@ -1,7 +1,9 @@
 <div class="card mb-3 " *ngIf="member">
   <!-- displayed IF we have a member (prevents undefined errors) -->
   <!-- TODO: Can use this *ngIf to display only users which have MATCHED (Rather than all!) -->
-  <div class="card-img-wrapper">
+  
+  <div class="card-img-wrapper"
+    [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.userName)">
     <img src="{{member.photoUrl || './assets/DefaultUser.jpg'}}" alt="{{member.knownAs}}" class="card-img-top">
     <ul class="list-inline member-icon animate text-center">
       <li class="list-inline-item">
@@ -16,20 +18,18 @@
       </li>
       <!-- message  -->
       <li class="list-inline-item">
-        <button 
-        routerLink="/members/{{member.userName}}"
-        [queryParams]="{tab: 'Messages'}"
-        class="btn btn-dark">
-        <i class="fas fa-comment" 
-        style="color: #ffffff;"></i>
-      </button>
+        <button routerLink="/members/{{member.userName}}" [queryParams]="{tab: 'Messages'}" class="btn btn-dark">
+          <i class="fas fa-comment" style="color: #ffffff;"></i>
+        </button>
       </li>
     </ul>
     <div class="card-body p-1">
       <div class="member-info">
         <h5 class="card-title text-left mb-1">
-          <i class="fas fa-user"
-            style="color: #000000;"></i>
+          <span [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.userName)">
+            <i class="fas fa-user" style="color: #000000;"></i>
+          </span>
+
           {{member.knownAs}}
         </h5>
         <h5 class="card-title text-right mb-1">

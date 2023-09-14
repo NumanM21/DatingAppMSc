@@ -44,3 +44,11 @@
   justify-content: space-between;
   align-items: center; 
 }
+
+
+
+
+.user-is-online .fas.fa-user {
+  color: rgb(35, 231, 35) !important;
+}
+

@@ -3,6 +3,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,9 @@ import { User } from '../_models/User';
 export class UserPresenceService { // service to connect to web hub -> Listen to two events: UserIsOnline and UserIsOffline (in UserPresenceHub.cs)
   hubURL = environment.hubUrl; // URL to web hub
   private connectionToHub?: HubConnection; // connection to web hub 
+  private sourceUsersOnline = new BehaviorSubject<string[]>([]); // array of users online 
+  usersOnline$ = this.sourceUsersOnline.asObservable(); // observable for components to subscribe to track users online
+
 
 
   constructor(private serviceToast: ToastrService) { }
@@ -37,6 +41,10 @@ export class UserPresenceService { // service to connect to web hub -> Listen to
       this.connectionToHub.on('OfflineUser', username =>{
         this.serviceToast.warning(username + ' is now offline');
       })
+
+      // listen to events (Get users currently online)
+      this.connectionToHub.on('GetUsersCurrentlyOnline', usernames => this.sourceUsersOnline.next(usernames)); // update users online array using .next() method
+      
   }
 
   // stop connection

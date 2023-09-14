@@ -9,6 +9,7 @@ import { MembersService } from 'src/app/_services/members.service';
 import { MemberMessagetabComponent } from '../member-messagetab/member-messagetab.component';
 import { MessageService } from 'src/app/_services/message.service';
 import { MessageUser } from 'src/app/_models/MessageUser';
+import { UserPresenceService } from 'src/app/_services/user-presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -26,7 +27,7 @@ export class MemberDetailComponent implements OnInit {
   img: GalleryItem[] = [];
 
   
-  constructor(private serviceMessage: MessageService ,private serviceMember: MembersService, private activatedRoute: ActivatedRoute) { }
+  constructor(private serviceMessage: MessageService ,private serviceMember: MembersService, private activatedRoute: ActivatedRoute, public serviceUserPresence: UserPresenceService) { }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe({

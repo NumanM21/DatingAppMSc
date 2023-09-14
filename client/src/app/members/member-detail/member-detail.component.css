@@ -24,3 +24,7 @@
 ::ng-deep .member-tabs .nav-link {
   color: black !important;
 }
+
+.online-user-text{
+  color: rgb(15, 151, 15);
+}
