@@ -3,6 +3,7 @@ using API.Data;
 using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,13 +24,19 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod()
+// Allows any origin to access our API 
+app.UseCors(builder => builder
+.AllowAnyHeader()
+.AllowAnyMethod()
+.AllowCredentials() //need to allow credentials for SignalR
 .WithOrigins("https://localhost:4200"));
 
 // Middleware comes between the .UseCors and .MapController
 
 app.UseAuthentication(); // Checks for valid token
 app.UseAuthorization(); // Sees if this valid token is what we're looking for!
+// endpoints for SignalR
+app.MapHub<UserPresenceHub>("hubs/user-presence");
 
 app.MapControllers();
 

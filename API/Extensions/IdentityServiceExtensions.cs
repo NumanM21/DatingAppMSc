@@ -36,6 +36,32 @@ namespace API.Extensions
             ValidateIssuer = false,
             ValidateAudience = false
           };
+
+          // Authenticate signalR 
+
+          options.Events = new JwtBearerEvents
+          {
+            // When a user connects to the hub
+            OnMessageReceived = cxt => {
+              
+              // get the access token from the query string
+              var tokenToAccessHub = cxt.Request.Query["access_token"]; 
+              // pre-defined query string from signalR
+
+              var pathToHub = cxt.HttpContext.Request.Path;
+
+              // if the user is trying to access the hub
+              if(!string.IsNullOrEmpty(tokenToAccessHub) && pathToHub.StartsWithSegments("/hubs")) // hubs has to match first path of .MapHub in Program.cs
+              {
+                // on the right path and has a token -> set the token to the token from the query string
+                cxt.Token = tokenToAccessHub;
+                // hub now has access to our bearer token (which is our JWT token)
+              }
+
+              // return the context
+              return Task.CompletedTask;
+            }
+          };
         });
 
 

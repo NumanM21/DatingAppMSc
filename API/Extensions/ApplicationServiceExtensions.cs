@@ -28,6 +28,7 @@ namespace API.Extensions
       //Interface and then Implementation class of that service
       services.AddScoped<UserActiveLogger>();
       services.AddScoped<IMessageUserRepository, MessageUserRepository>();
+      services.AddSignalR();
       
       return services;
     }
