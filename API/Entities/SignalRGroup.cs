@@ -9,19 +9,17 @@ namespace API.Entities
     public class SignalRGroup
     {
         public SignalRGroup()
-        {
-            
-        }
+        {}
 
         public SignalRGroup(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         [Key] // ensure unique group name
-        public string name { get; set; } // name of group should be UNIQUE in DB
+        public string Name { get; set; } // name of group should be UNIQUE in DB
 
-        public ICollection<SRGroupConnection> groupConnections { get; set; } = new List<SRGroupConnection>(); // list of connections in group
+        public ICollection<SRGroupConnection> GroupConnections { get; set; } = new List<SRGroupConnection>(); // list of connections in group
 
         
     }

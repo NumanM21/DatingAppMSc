@@ -27,28 +27,28 @@ namespace API.Data
     }
 
     // Look interface for comments!
-    public async Task<SRGroupConnection> ConnectionGetter(string groupName)
+    public async Task<SRGroupConnection> ConnectionGetter(string connectionId)
     {
-      return await _context.groupConnection.FindAsync(groupName);
+      return await _context.GroupConnection.FindAsync(connectionId);
     }
 
     public void ConnectionRemove(SRGroupConnection srGroupConnection)
     {
-      _context.groupConnection.Remove(srGroupConnection);
+      _context.GroupConnection.Remove(srGroupConnection);
     }
 
     public void GroupAdd(SignalRGroup groupSr)
     {
-      _context.groupSignalR.Add(groupSr);
+      _context.GroupSignalR.Add(groupSr);
     }
 
     public async Task<SignalRGroup> GroupMsgGetter(string groupName)
     {
       // Goes through groupSignalR, includes groupConnections, gets first group by name
 
-      return await _context.groupSignalR
-      .Include(sr => sr.groupConnections)
-      .FirstOrDefaultAsync(sr => sr.name == groupName);
+      return await _context.GroupSignalR
+      .Include(sr => sr.GroupConnections)
+      .FirstOrDefaultAsync(sr => sr.Name == groupName);
     }
 
     public async Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername)

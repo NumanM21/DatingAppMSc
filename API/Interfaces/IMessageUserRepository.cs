@@ -19,7 +19,7 @@ namespace API.Interfaces
         // methods to track user connections to groups
         void GroupAdd(SignalRGroup groupSr); // add group to DB
         void ConnectionRemove(SRGroupConnection srGroupConnection); // remove connection from group
-        Task<SRGroupConnection> ConnectionGetter(string groupName); // get connection  by name
+        Task<SRGroupConnection> ConnectionGetter(string connectionId); // get connection  by name
 
         Task<SignalRGroup> GroupMsgGetter(string groupName); // get group by name
 
