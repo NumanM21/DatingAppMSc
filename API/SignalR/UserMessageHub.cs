@@ -8,10 +8,12 @@ using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR
 {
+    [Authorize]
     public class UserMessageHub : Hub
     {
         // Once user connects to message hub, want to return thread between users
@@ -113,7 +115,7 @@ namespace API.SignalR
                 var nameOfGroup = GroupNameGetter(senderUser.UserName, receivingUser.UserName);
 
                 // send message to group
-                await Clients.Group(nameOfGroup).SendAsync("NewMessage", _userMapper.Map<MessageUserDto>(msg));
+                await Clients.Group(nameOfGroup).SendAsync("SendNewMessage", _userMapper.Map<MessageUserDto>(msg));
             }
 
 

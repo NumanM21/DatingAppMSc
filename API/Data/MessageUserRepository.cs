@@ -26,6 +26,31 @@ namespace API.Data
       return await _context.SaveChangesAsync() > 0; // if more than 0 changes, return true
     }
 
+    // Look interface for comments!
+    public async Task<SRGroupConnection> ConnectionGetter(string groupName)
+    {
+      return await _context.groupConnection.FindAsync(groupName);
+    }
+
+    public void ConnectionRemove(SRGroupConnection srGroupConnection)
+    {
+      _context.groupConnection.Remove(srGroupConnection);
+    }
+
+    public void GroupAdd(SignalRGroup groupSr)
+    {
+      _context.groupSignalR.Add(groupSr);
+    }
+
+    public async Task<SignalRGroup> GroupMsgGetter(string groupName)
+    {
+      // Goes through groupSignalR, includes groupConnections, gets first group by name
+
+      return await _context.groupSignalR
+      .Include(sr => sr.groupConnections)
+      .FirstOrDefaultAsync(sr => sr.name == groupName);
+    }
+
     public async Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername)
     {
       // get messages between two users (and their photos)
@@ -33,7 +58,7 @@ namespace API.Data
       .Include(x => x.SenderUser).ThenInclude(x => x.Photos)
       .Include(x => x.ReceivingUser).ThenInclude(x => x.Photos)
       .Where(
-        x => x.messageReceivingUsername == currUsername && x.messageReceivingDeleted == false && 
+        x => x.messageReceivingUsername == currUsername && x.messageReceivingDeleted == false &&
         x.messageSenderUsername == receivingUsername
       // check both ways
       || x.messageReceivingUsername == receivingUsername
@@ -80,7 +105,7 @@ namespace API.Data
         && x.messageReceivingDeleted == false), // check if message is deleted
 
         "Sent" => query.Where(x => x.messageSenderUsername == parameterMessage.currUsername
-        && x.messageSentDeleted == false), 
+        && x.messageSentDeleted == false),
 
         // default case (message not read hence check null)
 

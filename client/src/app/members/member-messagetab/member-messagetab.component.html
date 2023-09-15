@@ -1,8 +1,8 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="message.length == 0" class="empty-message">😞 Seems Empty... </div>
-    <ul *ngIf="message.length > 0" class="chat-card">
-      <li *ngFor="let msg of message" class="message-item">
+    <div *ngIf="(serviceMessage.msgBetweenUsers$ | async)?.length===0" class="empty-message">😞 Seems Empty... </div>
+    <ul *ngIf="(serviceMessage.msgBetweenUsers$ | async)!.length > 0" class="chat-card">
+      <li *ngFor="let msg of (serviceMessage.msgBetweenUsers$ | async)" class="message-item">
         <div class="message-content">
           <div class="chat-body">
             <div class="chat-header">

@@ -29,6 +29,11 @@ namespace API.Data
 
     public DbSet<MessageUser> Message { get; set; }
 
+    // DB Set for SignalR groups (useful for querying DB for groups)
+
+    public DbSet<SignalRGroup> groupSignalR { get; set; }
+    public DbSet<SRGroupConnection> groupConnection { get; set; }
+
     // method from DbContext class (we are overriding it)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

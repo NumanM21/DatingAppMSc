@@ -15,30 +15,28 @@ import { MessageService } from 'src/app/_services/message.service';
 })
 export class MemberMessagetabComponent implements OnInit {
   msgContent = '';
-  @Input() message: MessageUser[] = [];
   @Input() username: string | undefined;
   @ViewChild('msgForm') msgForm?: NgForm;
-  
 
-  constructor(private serviceMessage: MessageService) { }
+
+  constructor(public serviceMessage: MessageService) { }
 
   ngOnInit(): void {
   }
 
-  messageSend(){
+  messageSend() {
     if (!this.username) return;
-    this.serviceMessage.messageSender(this.username, this.msgContent).subscribe({
-      // push our message response we get back into our message
-      next: messageResponse => {
-        this.message.push(messageResponse)
-      
-        // Need to reset the form after we send the message
-        this.msgForm?.reset();
+    this.serviceMessage.messageSender(this.username, this.
+      msgContent)
+      // use .then() when we want to do something after the promise is resolved
+      .then(() => {
         
-      }
+        // reset the form
+        this.msgForm?.reset();
+      })
 
-    })
   }
-  
+
+
 
 }
