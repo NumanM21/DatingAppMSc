@@ -45,6 +45,9 @@ namespace API.SignalR
             // user connects to group
             await Groups.AddToGroupAsync(Context.ConnectionId, nameOfGroup);
 
+            // add group to DB
+            await GroupToAdd(nameOfGroup);
+
             // get messages between users (curr user and user they are connecting to)
             var msgBetweenUsers = await _userMessageRepo.LoadMessageBetweenUsers(Context.User.GetUsername(), connectingToUser);
 
@@ -66,9 +69,12 @@ namespace API.SignalR
 
         // user disconnects from hub (all groups) when they click away from message page
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            return base.OnDisconnectedAsync(exception);
+            // remove user from group
+            await MsgGroupRemover();
+
+            await base.OnDisconnectedAsync(exception);
         }
 
         // similar to messagecreate method in MessageUserController
@@ -105,19 +111,78 @@ namespace API.SignalR
                 messageContent = msgCreateDto.messageContent
             };
 
+            // get group name
+            var nameOfGroup = GroupNameGetter(senderUser.UserName, receivingUser.UserName);
+
+            // get group from repo
+            var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
+
+            // check connection and see if our user matches the receiving user --> if so, set date read to now 
+            if (msgGroup.GroupConnections.Any(u=>u.Username == receivingUser.UserName))
+            {
+                msg.messageReadAt = DateTime.UtcNow;
+            }
+
             // add message to DB
             _userMessageRepo.MessageAdd(msg);
 
             // Save changes --> return new message to other users in group
             if (await _userMessageRepo.AsyncSaveAll())
             {
-                // get group name to send to
-                var nameOfGroup = GroupNameGetter(senderUser.UserName, receivingUser.UserName);
-
                 // send message to group
                 await Clients.Group(nameOfGroup).SendAsync("SendNewMessage", _userMapper.Map<MessageUserDto>(msg));
             }
+        }
 
+        // Add group to DB
+        private async Task<bool> GroupToAdd(string nameOfGroup)
+        {
+            // get message group from msg repo
+            var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
+
+            // Create new connection 
+            var newConnection = new SRGroupConnection(Context.ConnectionId, Context.User.GetUsername());
+
+            // check if group exists (null if group doesn't exist)
+            if (msgGroup == null)
+            {
+                // create new group
+                msgGroup = new SignalRGroup(nameOfGroup);
+
+                // Add group to repo
+                _userMessageRepo.GroupAdd(msgGroup);
+            }
+            else  //TODO: Change this to try catch (more efficient?)
+            {
+                // check if connection already exists
+                var connectionExists = msgGroup.GroupConnections.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+
+                // if connection exists, return false
+                if (connectionExists != null)
+                {
+                    return false;
+                }
+            }
+
+            // Create new connection 
+            msgGroup.GroupConnections.Add(newConnection);
+
+            // save changes (saveAll returns bool for method header)
+            return await _userMessageRepo.AsyncSaveAll();
+
+        }
+
+        // Remove connection from DB (Have another method ^above to remove user from group once they disconnect from hub)
+        private async Task MsgGroupRemover()
+        {
+            // get connection from repo
+            var connection = await _userMessageRepo.ConnectionGetter(Context.ConnectionId);
+
+            // remove connection from repo
+            _userMessageRepo.ConnectionRemove(connection);
+
+            // save changes
+            await _userMessageRepo.AsyncSaveAll();
 
         }
 

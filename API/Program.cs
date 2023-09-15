@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using API.Data;
 using API.Entities;
 using API.Extensions;
@@ -55,6 +56,12 @@ try
   var appUserManager = services.GetRequiredService<UserManager<AppUser>>();
    var managerRoles = services.GetRequiredService<RoleManager<Roles>>();
   await context.Database.MigrateAsync();
+
+  // clear connection in DB -> when we start api, we want to clear all connections --> Issue in larger DB's
+  // context.GroupConnection.RemoveRange(context.GroupConnection);
+
+  // Instead have SQL Query to clear all connections (truncate table)
+  await context.Database.ExecuteSqlRawAsync("DELETE FROM [GroupConnection]"); // truncate table is faster than remove range --> DELETE FROM is sqlLite syntax!
 
   // Everytime we start api, this will re-seed and re-create our DB (we just have to drop DB if want to change something)
 
