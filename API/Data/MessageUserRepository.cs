@@ -42,6 +42,14 @@ namespace API.Data
       _context.GroupSignalR.Add(groupSr);
     }
 
+    public async Task<SignalRGroup> GroupConnectionGetter(string connectionId)
+    {
+      return await _context.GroupSignalR
+      .Include(g => g.GroupConnections) // we want to include group connections
+      .Where(g => g.GroupConnections // where group connections contains connection id equal to connection id passed in
+      .Any(x => x.ConnectionId == connectionId)).FirstOrDefaultAsync(); // if there is a connection id, return the first group
+    }
+
     public async Task<SignalRGroup> GroupMsgGetter(string groupName)
     {
       // Goes through groupSignalR, includes groupConnections, gets first group by name

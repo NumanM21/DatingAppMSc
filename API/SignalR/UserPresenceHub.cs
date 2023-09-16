@@ -29,16 +29,17 @@ namespace API.SignalR
         {
             // Clients object -> invoke methods on clients connected to hub
 
-            // When a user connects to the hub, we want to add them to the dictionary of online users
-            await _userPresenceTracker.ConnectUser(Context.User.GetUsername(), Context.ConnectionId);
+            // When a user connects to the hub, we want to add them to the dictionary of online users + return a bool if they are connecting for the first time (so online)
+           var userOnline =  await _userPresenceTracker.ConnectUser(Context.User.GetUsername(), Context.ConnectionId);
 
             // User connects to the OnlineUser method. Whoever connects to this method, those connected receive the username of the user who connected to the hub (which is the Getusername method)
+            if (userOnline) // if the user is connecting for the first time -> We notify users 
             await Clients.Others.SendAsync("OnlineUser", Context.User.GetUsername());
 
             // Get the list of online users
             var usersCurrentlyOnline = await _userPresenceTracker.GetUsersOnline();
 
-            // Send this to all connected users (including the user who connected to the hub)
+            // Send all connected users to the caller (including the user who connected to the hub)
             await Clients.Caller.SendAsync("GetUsersCurrentlyOnline", usersCurrentlyOnline); 
             
 
@@ -48,19 +49,19 @@ namespace API.SignalR
         public override async Task OnDisconnectedAsync(Exception exp)
         {
             // removes the user from the dictionary of online users
-            await _userPresenceTracker.DiconnectUser(Context.User.GetUsername(), Context.ConnectionId);
+         var userOffline = await _userPresenceTracker.DisconnectUser(Context.User.GetUsername(), Context.ConnectionId);
 
             // removes the user from the list of online users
+            if (userOffline) // read onConnectedAsync comments ^
             await Clients.Others.SendAsync("OfflineUser", Context.User.GetUsername());
 
             // Get the list of online users after the user disconnects
             var usersCurrentlyOnline = await _userPresenceTracker.GetUsersOnline(); 
 
-            // Send this to all connected users (including the user who disconnected from the hub)
-            await Clients.All.SendAsync("GetUsersCurrentlyOnline", usersCurrentlyOnline); 
-
             // calls the base disconnect method (since we pass an exception)
             await base.OnDisconnectedAsync(exp);
+
+
         }
 
 

@@ -17,8 +17,10 @@ namespace API.SignalR
         private static readonly Dictionary<string, List<string>> UsersOnline = new Dictionary<string, List<string>>();
 
         // Add a user to the dictionary with the connection id
-        public Task ConnectUser(string username, string idConnection)
+        public Task<bool> ConnectUser(string username, string idConnection)
         {
+            bool userOnline = false; // if we add user to dict, its first time they are connecting to the hub -> so coming online
+
             // lock the dictionary so that only one thread can access it at a time -> dict is not thread safe otherwise
             lock(UsersOnline)
             {
@@ -29,16 +31,18 @@ namespace API.SignalR
                 else // don't have a key for this user
                 {
                     UsersOnline.Add(username, new List<string>{idConnection});
+                    userOnline = true; 
                 } 
             }
 
             // return a completed task 
-            return Task.CompletedTask; 
+            return Task.FromResult(userOnline); 
         }
 
         // Remove a user from the dictionary (when they disconnect)
-        public Task DiconnectUser(string username, string idConnection)
+        public Task<bool> DisconnectUser(string username, string idConnection)
         {
+            bool userOffline = false; // if we remove user (key) from dict, no more connection ids -> so going offline
             lock(UsersOnline)
             {
                 // check if the user is in the dictionary
@@ -51,10 +55,11 @@ namespace API.SignalR
                     {
                         // remove the user from the dictionary if they have no more connection ids
                         UsersOnline.Remove(username); 
+                        userOffline = true;
                     }
                 }
             }
-            return Task.CompletedTask;
+            return Task.FromResult(userOffline);
         }
 
 

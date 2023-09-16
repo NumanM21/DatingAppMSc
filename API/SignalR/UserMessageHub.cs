@@ -11,6 +11,7 @@ using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
 
 namespace API.SignalR
 {
@@ -48,14 +49,17 @@ namespace API.SignalR
             // user connects to group
             await Groups.AddToGroupAsync(Context.ConnectionId, nameOfGroup);
 
-            // add group to DB
-            await GroupToAdd(nameOfGroup);
+            // add group to DB + return group
+            var addedGroup = await GroupToAdd(nameOfGroup);
+
+            // Client receives this and can update their group
+            await Clients.Group(nameOfGroup).SendAsync("GroupUpdate", addedGroup);
 
             // get messages between users (curr user and user they are connecting to)
             var msgBetweenUsers = await _userMessageRepo.LoadMessageBetweenUsers(Context.User.GetUsername(), connectingToUser);
 
-            // send messages to group (signalR returns msg to all users in group, not specific api call)
-            await Clients.Group(nameOfGroup).SendAsync("LoadMessageBetweenUsers", msgBetweenUsers);
+            // send messages to caller -> caller is the user who connected to the hub --> So they get the message thread
+            await Clients.Caller.SendAsync("LoadMessageBetweenUsers", msgBetweenUsers);
         }
 
 
@@ -73,7 +77,10 @@ namespace API.SignalR
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             // remove user from group
-            await MsgGroupRemover();
+            var removeGroup = await MsgGroupRemover();
+
+            // Send the group we want to remove to our client -> can update group
+            await Clients.Group(removeGroup.Name).SendAsync("GroupUpdate", removeGroup);
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -132,9 +139,8 @@ namespace API.SignalR
                 if (userConnection != null)
                 {
                     // Since user is online, we can send them a notification (via SignalR) that they have a new message
-                    
-                    //FIXME: URL redirect erro rosmehwere here
-                    await _userPresenceHub.Clients.Clients(userConnection).SendAsync("ReceiveNewMessage", new {username = senderUser.UserName, knownAs = senderUser.KnownAs });
+
+                    await _userPresenceHub.Clients.Clients(userConnection).SendAsync("ReceiveNewMessage", new { username = senderUser.UserName, knownAs = senderUser.KnownAs });
                 }
             }
 
@@ -150,7 +156,7 @@ namespace API.SignalR
         }
 
         // Add group to DB
-        private async Task<bool> GroupToAdd(string nameOfGroup)
+        private async Task<SignalRGroup> GroupToAdd(string nameOfGroup)
         {
             // get message group from msg repo
             var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
@@ -172,32 +178,42 @@ namespace API.SignalR
                 // check if connection already exists
                 var connectionExists = msgGroup.GroupConnections.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
 
-                // if connection exists, return false
+                // if connection exists, return group 
                 if (connectionExists != null)
                 {
-                    return false;
+                    return msgGroup;
                 }
             }
 
             // Create new connection 
             msgGroup.GroupConnections.Add(newConnection);
 
-            // save changes (saveAll returns bool for method header)
-            return await _userMessageRepo.AsyncSaveAll();
+            // save changes (--> if successful, return group)
+            if (await _userMessageRepo.AsyncSaveAll())
+                return msgGroup;
+
+            else throw new HubException("Group failed to be added");
 
         }
 
         // Remove connection from DB (Have another method ^above to remove user from group once they disconnect from hub)
-        private async Task MsgGroupRemover()
+        private async Task<SignalRGroup> MsgGroupRemover()
         {
-            // get connection from repo
-            var connection = await _userMessageRepo.ConnectionGetter(Context.ConnectionId);
+            // get connection group using connection id
+            var groupConnected = await _userMessageRepo.GroupConnectionGetter(Context.ConnectionId);
+
+            // now we get connction of THIS specific group
+            var connect = groupConnected.GroupConnections.FirstOrDefault(c => c.ConnectionId == Context.ConnectionId);
 
             // remove connection from repo
-            _userMessageRepo.ConnectionRemove(connection);
+            _userMessageRepo.ConnectionRemove(connect);
 
             // save changes
-            await _userMessageRepo.AsyncSaveAll();
+            if (await _userMessageRepo.AsyncSaveAll())
+                return groupConnected;
+
+            else throw new HubException("Connection could not be removed from group");
+
         }
 
     }

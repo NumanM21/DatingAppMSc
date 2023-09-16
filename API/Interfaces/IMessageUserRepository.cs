@@ -23,5 +23,7 @@ namespace API.Interfaces
 
         Task<SignalRGroup> GroupMsgGetter(string groupName); // get group by name
 
+        Task<SignalRGroup> GroupConnectionGetter(string connectionId); // get group by connection id
+
     }
 }

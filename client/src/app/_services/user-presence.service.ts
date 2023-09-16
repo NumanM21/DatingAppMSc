@@ -34,31 +34,37 @@ export class UserPresenceService { // service to connect to web hub -> Listen to
 
     // listen to events (User online)
     this.connectionToHub.on('OnlineUser', username => {
-      // display toast message
-      this.serviceToast.info(username + ' is now online');
+      this.usersOnline$.pipe(take(1)).subscribe({
+        // observale contains array of users online, so we need to add new user to array -> Use spread operator to add new user to array (returns new array with new user added)
+        next: currUsersOnline => {
+          this.sourceUsersOnline.next([...currUsersOnline, username])
+        }
+      })
     })
 
     // listen to events (User offline)
     this.connectionToHub.on('OfflineUser', username => {
-      this.serviceToast.warning(username + ' is now offline');
+      this.usersOnline$.pipe(take(1)).subscribe({
+        next: currUsersOnline =>{
+          this.sourceUsersOnline.next(currUsersOnline.filter(f=> f !== username)) // .next to return new array and filter returns the array without the user that went offline)
+        }
+      })
     })
 
     // listen to events (Get users currently online)
     this.connectionToHub.on('GetUsersCurrentlyOnline', usernames => this.sourceUsersOnline.next(usernames)); // update users online array using .next() method
 
-    //FIXME: this url re-direct does not work--> takes me to message, but user is undefined
+
     // listen to events (Get users currently online)
     this.connectionToHub.on("ReceiveNewMessage", ({ username, knownAs }) => {
-      console.log(username);
+      // console.log(username); // Debugging
+      
       this.serviceToast.info('You have received a new message from ' + knownAs + '! Click to view message').onTap.pipe(take(1)).subscribe({
         next: () => {
           // redirect to sender user message page
           this.route.navigateByUrl('/members/' + username + '?tab=Messages')
         }
       })
-
-
-
     })
 
   }

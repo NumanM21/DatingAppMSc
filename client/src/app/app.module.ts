@@ -31,6 +31,8 @@ import { RoleOfUserDirective } from './_directives/role-of-user.directive';
 import { ManageUserComponent } from './admin/manage-user/manage-user.component';
 import { ManagePhotoComponent } from './admin/manage-photo/manage-photo.component';
 import { ModalForRolesComponent } from './modal/modal-for-roles/modal-for-roles.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { ReusingRoute } from './_services/ReusingRoutes';
 
 
 
@@ -74,6 +76,7 @@ import { ModalForRolesComponent } from './modal/modal-for-roles/modal-for-roles.
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: ReusingRoute} 
     ],
   bootstrap: [AppComponent]
 })

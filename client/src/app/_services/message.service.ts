@@ -6,6 +6,8 @@ import { MessageUser } from '../_models/MessageUser';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { User } from '../_models/User';
 import { BehaviorSubject, take } from 'rxjs';
+import { group } from '@angular/animations';
+import { SignalRGroup } from '../_models/SignalRGroup';
 
 @Injectable({
   providedIn: 'root'
@@ -80,10 +82,29 @@ export class MessageService {
           this.msgBetweenUsers.next([...msgArray, msg])
         }
       })
-
     }) 
 
 
+    // hub method to update group 
+    this.connectionToHub.on('GroupUpdate',(group:SignalRGroup) =>{
+      // once user joins, check if user has unread msg --> we mark as read (since they join group once they click on the message)
+      
+      // otherUser is user joining group 
+      if (group.connectionsInGroup.some(s=>s.username == otherUser)){
+        this.msgBetweenUsers$.pipe(take(1)).subscribe({
+          next: msg => {
+            msg.forEach(m=>{
+              // if message is not read, its null
+              if (!m.messageReadAt){
+                m.messageReadAt = new Date(Date.now());
+              }
+            })
+            // spread to update array of messages with new readAt date 
+            this.msgBetweenUsers.next([...msg]);
+          }
+        })
+      }
+    })
   }
 
 
