@@ -32,5 +32,9 @@ img{
   border: 1px solid black;
 }
 
+.navbar-brand.icon-size-app {
+  text-transform: none !important;
+}
+
 
 

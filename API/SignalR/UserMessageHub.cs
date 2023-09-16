@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -20,14 +21,16 @@ namespace API.SignalR
         private readonly IMessageUserRepository _userMessageRepo;
         private readonly IUserRepository _userRepo;
         private readonly IMapper _userMapper;
+        private readonly IHubContext<UserPresenceHub> _userPresenceHub;
 
-        public UserMessageHub(IMapper userMapper, IUserRepository userRepo, IMessageUserRepository userMessageRepo)
+        public UserMessageHub(IMapper userMapper, IUserRepository userRepo, IMessageUserRepository userMessageRepo, IHubContext<UserPresenceHub> userPresenceHub)
         {
+            _userPresenceHub = userPresenceHub; // can access other hubs from this hub (via injection)
             _userMapper = userMapper;
             _userRepo = userRepo;
             _userMessageRepo = userMessageRepo;
-
         }
+
 
         // Override methods from UserPresenceHub
 
@@ -53,7 +56,6 @@ namespace API.SignalR
 
             // send messages to group (signalR returns msg to all users in group, not specific api call)
             await Clients.Group(nameOfGroup).SendAsync("LoadMessageBetweenUsers", msgBetweenUsers);
-
         }
 
 
@@ -64,7 +66,6 @@ namespace API.SignalR
             // returns 0 if equal, -1 if first string is less than second string, 1 if first string is greater than second string
 
             return alphabeticalString ? $"{userCalling}-{otherUser}" : $"{otherUser}-{userCalling}";
-
         }
 
         // user disconnects from hub (all groups) when they click away from message page
@@ -118,9 +119,23 @@ namespace API.SignalR
             var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
 
             // check connection and see if our user matches the receiving user --> if so, set date read to now 
-            if (msgGroup.GroupConnections.Any(u=>u.Username == receivingUser.UserName))
+            if (msgGroup.GroupConnections.Any(u => u.Username == receivingUser.UserName))
             {
                 msg.messageReadAt = DateTime.UtcNow;
+            }
+            else // Not in the same message group as my sending user
+            {
+                // get connection from repo for receiving user
+                var userConnection = await UserPresenceTracker.UserConnectionsGetter(receivingUser.UserName);
+
+                // if user connection exists, will have a connection id
+                if (userConnection != null)
+                {
+                    // Since user is online, we can send them a notification (via SignalR) that they have a new message
+                    
+                    //FIXME: URL redirect erro rosmehwere here
+                    await _userPresenceHub.Clients.Clients(userConnection).SendAsync("ReceiveNewMessage", new {username = senderUser.UserName, knownAs = senderUser.KnownAs });
+                }
             }
 
             // add message to DB
@@ -183,7 +198,6 @@ namespace API.SignalR
 
             // save changes
             await _userMessageRepo.AsyncSaveAll();
-
         }
 
     }

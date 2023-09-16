@@ -59,7 +59,6 @@ namespace API.SignalR
 
 
         // Get all online users -> return a list of usernames -> Other users can see who is online
-
         public Task<string[]> GetUsersOnline()
         {
             string[] arrUsersOnline;
@@ -70,11 +69,26 @@ namespace API.SignalR
                 // Select -> Return the key (username) of each item in the dictionary
                 arrUsersOnline = UsersOnline.OrderBy(x=> x.Key).Select(x=>x.Key).ToArray();
             }
-
             // return the array of usernames
             return Task.FromResult(arrUsersOnline);
-
         }
+
+        // Get all connections for A user //TODO: Use Redis instead of Dictionary to store online users --> More scalable!
+        public static Task<List<string>> UserConnectionsGetter(string username)
+        {
+            // list to store the connections id (meaning our notification is sent to ALL their devices)
+            List<string> allUserConnectionsIds;
+
+            lock(UsersOnline)
+            {
+                // Return list of connection ids for this user
+                allUserConnectionsIds = UsersOnline.GetValueOrDefault(username); 
+            }
+
+            // return the list of connection ids
+            return Task.FromResult(allUserConnectionsIds);
+        }
+
 
     }
 }
