@@ -21,17 +21,19 @@ namespace API.Extensions
       services.AddCors();
       // Scoped to our HTTP request -> This makes these classes injectable to our user controller (.AddScoped means this service is created NEW for each HTTP request -> broken after the request is complete)
       services.AddScoped<ITokenService, TokenService>();
-      services.AddScoped<IUserRepository,UserRepository>();
+      //** services.AddScoped<IUserRepository,UserRepository>();
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
       services.Configure<SettingsCloudinary>(config.GetSection("SettingsCloudinary"));
       services.AddScoped<IPhotoService, ServicePhoto>(); 
-      services.AddScoped<ILikeRepository, LikeRepository>(); 
-      //Interface and then Implementation class of that service
+      //** services.AddScoped<ILikeRepository, LikeRepository>(); //Interface and then Implementation class of that service
       services.AddScoped<UserActiveLogger>();
-      services.AddScoped<IMessageUserRepository, MessageUserRepository>();
+      //** services.AddScoped<IMessageUserRepository, MessageUserRepository>(); // Logging repo into our controller -> now usingUnitOfWork to do this
       services.AddSignalR();
       // singleton -> only one instance of this class is created and used throughout the application
       services.AddSingleton<UserPresenceTracker>();
+      services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
       
       return services;
     }

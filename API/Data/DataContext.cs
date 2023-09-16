@@ -16,9 +16,7 @@ namespace API.Data
 
   {
     public DataContext(DbContextOptions options) : base(options)
-    {
-
-    }
+    {}
 
     // public DbSet<AppUser> Users { get; set; } // table name will be users |||| IDentityCore has this property already
 

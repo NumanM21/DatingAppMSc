@@ -14,7 +14,6 @@ namespace API.Interfaces
         Task<PaginationList<MessageUserDto>> LoadMessageForUser(ParameterMessage parameterMessage);        
         Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername);
 
-        Task<bool> AsyncSaveAll();
 
         // methods to track user connections to groups
         void GroupAdd(SignalRGroup groupSr); // add group to DB

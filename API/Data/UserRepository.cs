@@ -100,11 +100,11 @@ namespace API.Data
       .ToListAsync();
     }
 
-    public async Task<bool> AsyncSaveAll()
-    {
-      return await _context.SaveChangesAsync() > 0;
-      // if 0 (returns false, meaning no change)
-    }
+    // public async Task<bool> AsyncSaveAll() -> Read comment in IUserRepository.cs
+    // {
+    //   return await _context.SaveChangesAsync() > 0;
+    //   // if 0 (returns false, meaning no change)
+    // }
 
     public void Update(AppUser user)
     {

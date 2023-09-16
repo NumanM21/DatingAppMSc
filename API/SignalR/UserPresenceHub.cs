@@ -24,7 +24,7 @@ namespace API.SignalR
 
         // Override methods 
 
-        // When a user connects to the hub 
+        // When a user connects to the hub //TODO: When user connects -> return toastr to notify how many unread msgs they have and from who! 
         public override async Task OnConnectedAsync()
         {
             // Clients object -> invoke methods on clients connected to hub

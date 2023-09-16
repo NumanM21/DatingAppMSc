@@ -20,12 +20,6 @@ namespace API.Data
       _context = context;
     }
 
-
-    public async Task<bool> AsyncSaveAll()
-    {
-      return await _context.SaveChangesAsync() > 0; // if more than 0 changes, return true
-    }
-
     // Look interface for comments!
     public async Task<SRGroupConnection> ConnectionGetter(string connectionId)
     {
@@ -72,8 +66,8 @@ namespace API.Data
       || x.messageReceivingUsername == receivingUsername
       && x.messageSentDeleted == false && x.messageSenderUsername == currUsername)
       // order by message sent at (newest first)
-      .OrderBy(x => x.messageSentAt).ToListAsync();
-      // Now we have the entities
+      .OrderBy(x => x.messageSentAt).ToListAsync(); // Now we have the entities
+
 
       // mark unread messages as sent
       var messageUnread = msg.Where(x => x.messageReadAt == null && x.messageReceivingUsername == currUsername).ToList();
