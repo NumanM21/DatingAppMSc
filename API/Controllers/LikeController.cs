@@ -11,12 +11,10 @@ namespace API.Controllers
 {
   public class LikeController : BaseApiController
   {
-    private readonly ILikeRepository _likeRepo;
-    private readonly IUserRepository _userRepo;
-    public LikeController(IUserRepository userRepo, ILikeRepository likeRepo)
+    private readonly IUnitOfWork _unitOfWork;
+    public LikeController( IUnitOfWork unitOfWork)
     {
-      _userRepo = userRepo;
-      _likeRepo = likeRepo;
+      _unitOfWork = unitOfWork;
     }
 
     // Creating new resource for when a user likes another user (username of person they are GOING to like) -> Updating join table! 
@@ -27,8 +25,8 @@ namespace API.Controllers
       var sourceUserId = User.GetUserId();
 
       // user being liked
-      var userBeingLiked = await _userRepo.AsyncGetUserByUsername(username);
-      var sourceUser = await _likeRepo.GetUserWithLikes(sourceUserId);
+      var userBeingLiked = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
+      var sourceUser = await _unitOfWork.RepositoryLike.GetUserWithLikes(sourceUserId);
 
       // if user being liked does not exist
       if (userBeingLiked == null) return NotFound("User being liked does not exist");
@@ -37,7 +35,7 @@ namespace API.Controllers
       if (sourceUser.UserName == username) return BadRequest("Cannot like yourself"); // incase user uses 3rd party tool to send request (security)
 
       // check if user has already liked the user they are trying to like
-      var userLike = await _likeRepo.GetLikeUser(sourceUserId, userBeingLiked.Id);
+      var userLike = await _unitOfWork.RepositoryLike.GetLikeUser(sourceUserId, userBeingLiked.Id);
 
 
       if (userLike != null) return BadRequest("User already liked");
@@ -53,7 +51,7 @@ namespace API.Controllers
       // add like to db
       sourceUser.UsersLiked.Add(userLike);
 
-      if (await _userRepo.AsyncSaveAll()) return Ok();
+      if (await _unitOfWork.TransactionComplete()) return Ok();
 
       return BadRequest("Failed to save like");
     }
@@ -65,7 +63,7 @@ namespace API.Controllers
       paramLikes.userId = User.GetUserId(); // get current user id
 
       // get all users our user has liked
-      var users = await _likeRepo.GetUserLikes(paramLikes);
+      var users = await _unitOfWork.RepositoryLike.GetUserLikes(paramLikes);
 
       // add pagination headers to response
       Response.HeadPaginationAdd(new HeadPagination(users.currentPage, users.PageSize, users.totalCount, users.totalPage));

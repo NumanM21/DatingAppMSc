@@ -24,10 +24,10 @@ namespace API.ExternalHelpers
       var userID = contextRes.HttpContext.User.GetUserId();
 
       // get user from repo -> to update last active property
-      var repository = contextRes.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-      var user = await repository.AsyncGetUserByID(userID);
+      var unitOfWork = contextRes.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
+      var user = await unitOfWork.RepositoryUser.AsyncGetUserByID(userID);
       user.LastActive = DateTime.UtcNow; // set to current time
-      await repository.AsyncSaveAll();
+      await unitOfWork.TransactionComplete();
 
     }
   }

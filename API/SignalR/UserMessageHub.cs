@@ -19,17 +19,16 @@ namespace API.SignalR
     public class UserMessageHub : Hub
     {
         // Once user connects to message hub, want to return thread between users
-        private readonly IMessageUserRepository _userMessageRepo;
-        private readonly IUserRepository _userRepo;
         private readonly IMapper _userMapper;
         private readonly IHubContext<UserPresenceHub> _userPresenceHub;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserMessageHub(IMapper userMapper, IUserRepository userRepo, IMessageUserRepository userMessageRepo, IHubContext<UserPresenceHub> userPresenceHub)
+        public UserMessageHub(IMapper userMapper, IUnitOfWork unitOfWork, IHubContext<UserPresenceHub> userPresenceHub)
         {
+            _unitOfWork = unitOfWork;
             _userPresenceHub = userPresenceHub; // can access other hubs from this hub (via injection)
             _userMapper = userMapper;
-            _userRepo = userRepo;
-            _userMessageRepo = userMessageRepo;
+
         }
 
 
@@ -56,7 +55,11 @@ namespace API.SignalR
             await Clients.Group(nameOfGroup).SendAsync("GroupUpdate", addedGroup);
 
             // get messages between users (curr user and user they are connecting to)
-            var msgBetweenUsers = await _userMessageRepo.LoadMessageBetweenUsers(Context.User.GetUsername(), connectingToUser);
+            var msgBetweenUsers = await _unitOfWork.RepositoryMessageUser.LoadMessageBetweenUsers(Context.User.GetUsername(), connectingToUser);
+
+            // Check if there are changes (new message) --> if so, we save changes (to DB) --> Can now use unit of work to track changes made and save in oneplace
+
+            if (_unitOfWork.ContainsChanges()) await _unitOfWork.TransactionComplete(); 
 
             // send messages to caller -> caller is the user who connected to the hub --> So they get the message thread
             await Clients.Caller.SendAsync("LoadMessageBetweenUsers", msgBetweenUsers);
@@ -98,10 +101,10 @@ namespace API.SignalR
             }
 
             // get sender username
-            var senderUser = await _userRepo.AsyncGetUserByUsername(username);
+            var senderUser = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
 
             // get receiving user username
-            var receivingUser = await _userRepo.AsyncGetUserByUsername(msgCreateDto.messageReceivingUsername);
+            var receivingUser = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(msgCreateDto.messageReceivingUsername);
 
             // check if receiving user exists
             if (receivingUser == null)
@@ -123,7 +126,7 @@ namespace API.SignalR
             var nameOfGroup = GroupNameGetter(senderUser.UserName, receivingUser.UserName);
 
             // get group from repo
-            var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
+            var msgGroup = await _unitOfWork.RepositoryMessageUser.GroupMsgGetter(nameOfGroup);
 
             // check connection and see if our user matches the receiving user --> if so, set date read to now 
             if (msgGroup.GroupConnections.Any(u => u.Username == receivingUser.UserName))
@@ -145,10 +148,10 @@ namespace API.SignalR
             }
 
             // add message to DB
-            _userMessageRepo.MessageAdd(msg);
+            _unitOfWork.RepositoryMessageUser.MessageAdd(msg);
 
             // Save changes --> return new message to other users in group
-            if (await _userMessageRepo.AsyncSaveAll())
+            if (await _unitOfWork.TransactionComplete())
             {
                 // send message to group
                 await Clients.Group(nameOfGroup).SendAsync("SendNewMessage", _userMapper.Map<MessageUserDto>(msg));
@@ -159,7 +162,7 @@ namespace API.SignalR
         private async Task<SignalRGroup> GroupToAdd(string nameOfGroup)
         {
             // get message group from msg repo
-            var msgGroup = await _userMessageRepo.GroupMsgGetter(nameOfGroup);
+            var msgGroup = await _unitOfWork.RepositoryMessageUser.GroupMsgGetter(nameOfGroup);
 
             // Create new connection 
             var newConnection = new SRGroupConnection(Context.ConnectionId, Context.User.GetUsername());
@@ -171,7 +174,7 @@ namespace API.SignalR
                 msgGroup = new SignalRGroup(nameOfGroup);
 
                 // Add group to repo
-                _userMessageRepo.GroupAdd(msgGroup);
+                _unitOfWork.RepositoryMessageUser.GroupAdd(msgGroup);
             }
             else  //TODO: Change this to try catch (more efficient?)
             {
@@ -189,7 +192,7 @@ namespace API.SignalR
             msgGroup.GroupConnections.Add(newConnection);
 
             // save changes (--> if successful, return group)
-            if (await _userMessageRepo.AsyncSaveAll())
+            if (await _unitOfWork.TransactionComplete())
                 return msgGroup;
 
             else throw new HubException("Group failed to be added");
@@ -200,16 +203,16 @@ namespace API.SignalR
         private async Task<SignalRGroup> MsgGroupRemover()
         {
             // get connection group using connection id
-            var groupConnected = await _userMessageRepo.GroupConnectionGetter(Context.ConnectionId);
+            var groupConnected = await _unitOfWork.RepositoryMessageUser.GroupConnectionGetter(Context.ConnectionId);
 
             // now we get connction of THIS specific group
             var connect = groupConnected.GroupConnections.FirstOrDefault(c => c.ConnectionId == Context.ConnectionId);
 
             // remove connection from repo
-            _userMessageRepo.ConnectionRemove(connect);
+            _unitOfWork.RepositoryMessageUser.ConnectionRemove(connect);
 
             // save changes
-            if (await _userMessageRepo.AsyncSaveAll())
+            if (await _unitOfWork.TransactionComplete())
                 return groupConnected;
 
             else throw new HubException("Connection could not be removed from group");

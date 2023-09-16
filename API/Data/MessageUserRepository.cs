@@ -80,8 +80,9 @@ namespace API.Data
         {
           uMsg.messageReadAt = System.DateTime.UtcNow; // AutoMapper will map this to messageReadAt in date time
         }
-        // need to save changes to DB
-        await _context.SaveChangesAsync();
+
+        
+
       }
 
       // map our message to  message user dto

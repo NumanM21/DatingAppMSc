@@ -11,16 +11,14 @@ namespace API.Controllers
 {
   public class MessageUserController : BaseApiController
   {
-    private readonly IMessageUserRepository _repoMessageUser;
-    private readonly IUserRepository _repoUser;
+
     private readonly IMapper _map;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public MessageUserController(IUserRepository repoUser, IMessageUserRepository repoMessageUser, IMapper map)
+    public MessageUserController(IUnitOfWork unitOfWork, IMapper map)
     {
+      _unitOfWork = unitOfWork;
       _map = map;
-      _repoUser = repoUser;
-      _repoMessageUser = repoMessageUser;
-
     }
 
     // Create a message
@@ -38,10 +36,10 @@ namespace API.Controllers
       }
 
       // get username of sender
-      var senderUser = await _repoUser.AsyncGetUserByUsername(username);
+      var senderUser = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
 
       // get username of receiving user -> From client
-      var receivingUser = await _repoUser.AsyncGetUserByUsername(messageCreateDto.messageReceivingUsername);
+      var receivingUser = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(messageCreateDto.messageReceivingUsername);
 
       // check if receiving user exists
       if (receivingUser == null) return NotFound("User not found");
@@ -57,10 +55,10 @@ namespace API.Controllers
       };
 
       // add message to DB (need to use context .add so EF tracks our message)
-      _repoMessageUser.MessageAdd(msg);
+      _unitOfWork.RepositoryMessageUser.MessageAdd(msg);
 
 
-      if (await _repoMessageUser.AsyncSaveAll()) return Ok(_map.Map<MessageUserDto>(msg));
+      if (await _unitOfWork.TransactionComplete()) return Ok(_map.Map<MessageUserDto>(msg));
 
       return BadRequest("Message not sent");
     }
@@ -74,7 +72,7 @@ namespace API.Controllers
       parameterMessage.currUsername = User.GetUsername();
 
       // get messages for user
-      var msg = await _repoMessageUser.LoadMessageForUser(parameterMessage);
+      var msg = await _unitOfWork.RepositoryMessageUser.LoadMessageForUser(parameterMessage);
 
       // add pagination header to response
       Response.HeadPaginationAdd(new HeadPagination
@@ -89,17 +87,17 @@ namespace API.Controllers
       return msg;
     }
 
-    // Get message between two users
-    [HttpGet("message-between-users/{username}")]
-    public async Task<ActionResult<IEnumerable<MessageUserDto>>> LoadMessageBetweenUsers(string username)
-    {
-      // get curr username
-      var currUsername = User.GetUsername();
+    // Get message between two users -> Don't need API anymore
+    // [HttpGet("message-between-users/{username}")]
+    // public async Task<ActionResult<IEnumerable<MessageUserDto>>> LoadMessageBetweenUsers(string username)
+    // {
+    //   // get curr username
+    //   var currUsername = User.GetUsername();
 
-      // return messages between two users
-      return Ok(await _repoMessageUser.LoadMessageBetweenUsers(currUsername, username)); // username comes from route HttpGet
+    //   // return messages between two users
+    //   return Ok(await _unitOfWork.RepositoryMessageUser.LoadMessageBetweenUsers(currUsername, username)); // username comes from route HttpGet
 
-    }
+    // }
 
     // Delete message -> Only delete message once both users have deleted it
     [HttpDelete("{messageId}")]
@@ -109,7 +107,7 @@ namespace API.Controllers
       var username = User.GetUsername();
 
       // get message from repo
-      var msg = await _repoMessageUser.MessageGetter(messageId);
+      var msg = await _unitOfWork.RepositoryMessageUser.MessageGetter(messageId);
 
       if (msg == null)
       {
@@ -126,9 +124,9 @@ namespace API.Controllers
 
       // check if both users have deleted message
 
-      if (msg.messageSentDeleted && msg.messageReceivingDeleted) _repoMessageUser.MessageDelete(msg);
+      if (msg.messageSentDeleted && msg.messageReceivingDeleted) _unitOfWork.RepositoryMessageUser.MessageDelete(msg);
 
-      return await _repoMessageUser.AsyncSaveAll() ? Ok() : BadRequest("Message cannot be deleted");
+      return (await _unitOfWork.TransactionComplete()) ? Ok() : BadRequest("Message cannot be deleted");
 
     }
 
