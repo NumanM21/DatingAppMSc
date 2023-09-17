@@ -33,6 +33,7 @@ import { ManagePhotoComponent } from './admin/manage-photo/manage-photo.componen
 import { ModalForRolesComponent } from './modal/modal-for-roles/modal-for-roles.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { ReusingRoute } from './_services/ReusingRoutes';
+import { PopUpConfirmationComponent } from './modals/pop-up-confirmation/pop-up-confirmation.component';
 
 
 
@@ -62,6 +63,7 @@ import { ReusingRoute } from './_services/ReusingRoutes';
     ManageUserComponent,
     ManagePhotoComponent,
     ModalForRolesComponent,
+    PopUpConfirmationComponent,
   ],
   imports: [
     BrowserAnimationsModule,

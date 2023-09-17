@@ -1,0 +1,40 @@
+.btn-confirm {
+  background-color: black;
+  color: white;
+  margin-left: 10px; 
+}
+
+.btn-confirm:hover {
+  background-color: #5c5858;
+  color: white;
+}
+
+.btn-decline {
+  background-color: rgb(236, 75, 75);
+  color: white;
+}
+
+.btn-decline:hover {
+  background-color: #ec1313;
+  color: white;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding-bottom: 5px; 
+}
+
+.modal-header .fa-exclamation-triangle {
+  font-size: 28px; 
+  margin-right: 10px; 
+}
+
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px; 
+}
+

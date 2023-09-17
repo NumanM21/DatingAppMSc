@@ -46,31 +46,32 @@ namespace API.Data
       // build query (filter) based on paramteres from user
 
       // exclude current user from list we return
-      query = query.Where(x => x.UserName != parameterFromUser.currUsername); 
+      query = query.Where(x => x.UserName != parameterFromUser.currUsername);
 
       // Gender (default is opposite) 
-      query = query.Where(x => x.UserGender == parameterFromUser.gender); 
+      query = query.Where(x => x.UserGender == parameterFromUser.gender);
 
       // Age filter
 
       // minDob (earliest Year they can be born to be under maxAge)
-      var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.maxAge -1)); // date is today (so -1)
+      var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.maxAge - 1)); // date is today (so -1)
 
       // maxDob (latest Year they can be born to be over minAge)
-      var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.minAge)); 
+      var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameterFromUser.minAge));
 
 
-      query = query.Where(x=> x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+      query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
 
 
       // Order by filter (default is last active)
 
       query = parameterFromUser.orderByActive
-      switch{
+      switch
+      {
         // give newest users first (most recently created)
-        "created" => query.OrderByDescending(x=>x.UserCreated),
+        "created" => query.OrderByDescending(x => x.UserCreated),
         //default - last active (has to be _ others show error?)
-        _ => query.OrderByDescending(x=>x.LastActive)
+        _ => query.OrderByDescending(x => x.LastActive)
       };
 
       return await PaginationList<MemberDto>.AsyncCreate(
@@ -87,7 +88,7 @@ namespace API.Data
 
     public async Task<AppUser> AsyncGetUserByUsername(string username)
     {
-      
+
       return await _context.Users
       .Include(p => p.Photos)
       .SingleOrDefaultAsync(x => x.UserName == username);
@@ -98,6 +99,13 @@ namespace API.Data
       return await _context.Users
       .Include(p => p.Photos) // Eager-loading the entity (INCLUDE what else we want)
       .ToListAsync();
+    }
+
+    // get the users gender (single property -> meaning we don't have to query all field of user --> optimization for responsiveness + scalability)
+    public async Task<string> GenderOfUser(string username)
+    {
+      return await _context.Users.Where(x => x.UserName == username).Select(s => s.UserGender).FirstOrDefaultAsync();
+
     }
 
     // public async Task<bool> AsyncSaveAll() -> Read comment in IUserRepository.cs

@@ -30,10 +30,7 @@ namespace API.Controllers
       _unitOfWork = unitOfWork;
       _servicePhoto = servicePhoto;
       _autoMapper = autoMapper;
-
-
     }
-
 
 
 
@@ -41,17 +38,17 @@ namespace API.Controllers
     public async Task<ActionResult<PaginationList<MemberDto>>> GetUsers([FromQuery] ParameterFromUser parameterFromUser)
     // Ask client to sent this as query string hence we use [FromQuery] (since ParameterFromUser is a object)
     {
-      //get current user
-      var currUser = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(User.GetUsername());
+      //get current user's gender
+      var genderOfUser = await _unitOfWork.RepositoryUser.GenderOfUser(User.GetUsername());
 
-      // populate parameterFromUser with current user's username
-      parameterFromUser.currUsername = currUser.UserName;
+      // populate parameterFromUser with current user's username (from token)
+      parameterFromUser.currUsername = User.GetUsername();
 
       // Default member page to display is opposite gender (unless specified otherwise)
 
       if (string.IsNullOrEmpty(parameterFromUser.gender))
       { // setting parameter to DEFAULT value
-        parameterFromUser.gender = currUser.UserGender == "male" ? "female" : "male";
+        parameterFromUser.gender = genderOfUser == "male" ? "female" : "male";
       }
 
 

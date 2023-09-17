@@ -55,10 +55,8 @@ namespace API.Data
 
     public async Task<IEnumerable<MessageUserDto>> LoadMessageBetweenUsers(string currUsername, string receivingUsername)
     {
-      // get messages between two users (and their photos)
-      var msg = await _context.Message
-      .Include(x => x.SenderUser).ThenInclude(x => x.Photos)
-      .Include(x => x.ReceivingUser).ThenInclude(x => x.Photos)
+      // get messages between two users (and their photos) -> use projection 
+      var msgQuery =  _context.Message
       .Where(
         x => x.messageReceivingUsername == currUsername && x.messageReceivingDeleted == false &&
         x.messageSenderUsername == receivingUsername
@@ -66,11 +64,10 @@ namespace API.Data
       || x.messageReceivingUsername == receivingUsername
       && x.messageSentDeleted == false && x.messageSenderUsername == currUsername)
       // order by message sent at (newest first)
-      .OrderBy(x => x.messageSentAt).ToListAsync(); // Now we have the entities
-
+      .OrderBy(x => x.messageSentAt).AsQueryable();
 
       // mark unread messages as sent
-      var messageUnread = msg.Where(x => x.messageReadAt == null && x.messageReceivingUsername == currUsername).ToList();
+      var messageUnread = msgQuery.Where(x => x.messageReadAt == null && x.messageReceivingUsername == currUsername).ToList();
       // ToList since above already gets it from DB (hence no async)
 
       // if there are unread messages (mark them)
@@ -80,14 +77,10 @@ namespace API.Data
         {
           uMsg.messageReadAt = System.DateTime.UtcNow; // AutoMapper will map this to messageReadAt in date time
         }
-
-        
-
       }
 
-      // map our message to  message user dto
-
-      return _map.Map<IEnumerable<MessageUserDto>>(msg);
+      // return our query as a list of message user dto
+      return await msgQuery.ProjectTo<MessageUserDto>(_map.ConfigurationProvider).ToListAsync();
 
 
     }
