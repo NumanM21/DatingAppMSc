@@ -1,46 +1,51 @@
 <div class="card">
   <div class="card-body">
     <div *ngIf="(serviceMessage.msgBetweenUsers$ | async)?.length===0" class="empty-message">😞 Seems Empty... </div>
-    <ul *ngIf="(serviceMessage.msgBetweenUsers$ | async)!.length > 0" class="chat-card">
+
+    <!-- List of message -->
+    <ul *ngIf="(serviceMessage.msgBetweenUsers$ | async)!.length > 0" class="chat-card" #scroll
+      [scrollTop]="scroll.scrollHeight">
       <li *ngFor="let msg of (serviceMessage.msgBetweenUsers$ | async)" class="message-item">
         <div class="message-content">
           <div class="chat-body">
             <div class="chat-header">
               <small class="text-muted">
                 <span class="time-stamp">{{msg.messageSentAt | timeago}}</span>
-                <span class="text-danger unread-indicator" *ngIf="!msg.messageReadAt && msg.messageSenderUsername !== username"> Unread <i class="fa fa-exclamation-circle"></i></span>
-                <span class="text-success read-indicator" *ngIf="msg.messageReadAt && msg.messageSenderUsername !== username">Read {{msg.messageReadAt|timeago}}</span>
+                <span class="text-danger unread-indicator"
+                  *ngIf="!msg.messageReadAt && msg.messageSenderUsername !== username"> Unread <i
+                    class="fa fa-exclamation-circle"></i></span>
+                <span class="text-success read-indicator"
+                  *ngIf="msg.messageReadAt && msg.messageSenderUsername !== username">Read
+                  {{msg.messageReadAt|timeago}}</span>
               </small>
             </div>
             <p>{{msg.messageContent}}</p>
           </div>
-          <span class="chat-img"> 
-            <img class="rounded-circle user-icon" 
-            src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}" 
-            alt="User Img">
+          <span class="chat-img-container"> 
+            <img class="rounded-circle user-icon" src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}"
+              alt="User Img">
             <div class="username-label">{{msg.messageSenderUsername}}</div>
           </span>
+
         </div>
       </li>
     </ul>
   </div>
 
+  <!-- Scroll to bottom -->
+  <div class="scroll-button-container">
+    <button class="btn btn-scroll-bottom" (click)="scrollToBottom()">
+      <i class="fa fa-arrow-down"></i>
+    </button>
+  </div>
+
   <div class="card-footer">
-    <form #msgForm="ngForm" 
-    (ngSubmit)="messageSend()" 
-    autocomplete="off">
+    <form #msgForm="ngForm" (ngSubmit)="messageSend()" autocomplete="off">
       <div class="input-group">
-        <textarea 
-        name="msgContent"
-        required
-        [(ngModel)]="msgContent"
-        class="form-control input-sm message-input" placeholder="Send a message"
-        (keydown.enter)="$event.preventDefault(); messageSend()"></textarea>
+        <textarea name="msgContent" required [(ngModel)]="msgContent" class="form-control input-sm message-input"
+          placeholder="Send a message" (keydown.enter)="$event.preventDefault(); messageSend()"></textarea>
         <div class="input-group-append">
-          <button 
-          [disabled]="!msgForm.valid"
-          class="btn btn-custom-submit" 
-          type="submit">Submit</button>
+          <button [disabled]="!msgForm.valid" class="btn btn-custom-submit" type="submit">Submit</button>
         </div>
       </div>
     </form>

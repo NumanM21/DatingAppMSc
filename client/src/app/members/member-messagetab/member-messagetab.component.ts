@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TimeagoModule, TimeagoPipe } from 'ngx-timeago';
 import { MessageUser } from 'src/app/_models/MessageUser';
@@ -11,7 +11,8 @@ import { MessageService } from 'src/app/_services/message.service';
   templateUrl: './member-messagetab.component.html',
   styleUrls: ['./member-messagetab.component.css'],
   standalone: true,
-  imports: [CommonModule, TimeagoModule, FormsModule]
+  imports: [CommonModule, TimeagoModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush // removes console error we had
 })
 export class MemberMessagetabComponent implements OnInit {
   msgContent = '';
@@ -35,6 +36,13 @@ export class MemberMessagetabComponent implements OnInit {
         this.msgForm?.reset();
       })
 
+  }
+  
+  scrollToBottom() {
+    const chatCard = document.querySelector('.chat-card');
+    if (chatCard) {
+      chatCard.scrollTop = chatCard.scrollHeight;
+    }
   }
 
 

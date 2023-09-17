@@ -20,8 +20,16 @@
 .user-icon {
   width: 40px;
   height: 40px;
-  margin-left: 10px;
 }
+
+.chat-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; 
+}
+
 
 .username-label {
   font-size: 0.8em;
@@ -77,7 +85,6 @@
   border-color: black !important;
 }
 
-
 .btn-custom-submit {
   background-color: black;
   color: white;
@@ -87,4 +94,68 @@
 .btn-custom-submit:hover {
   background-color: #4d4b4b;
   color: white;
+}
+
+.chat-card{
+  overflow-y: scroll;
+  height: 450px;
+}
+
+
+.chat-card::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.chat-card::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+.chat-card::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 5px; 
+}
+
+.chat-card::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+.chat-card {
+  scrollbar-width: thin;
+  scrollbar-color: black #f1f1f1;
+}
+
+
+.scroll-button-container {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0px 0; 
+  margin-left: 1px;
+  margin-bottom: 1px;
+}
+
+.btn-scroll-bottom {
+  background-color: black;
+  color: white;
+  border-radius: 50%; 
+  width: 35px; 
+  height: 35px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease-in-out; 
+}
+
+.btn-scroll-bottom:hover {
+  background-color: #4d4b4b;
+}
+
+.btn-scroll-bottom i {
+  font-size: 16px; 
+}
+
+
+.card-footer {
+  padding-top: 5px; 
+  padding-bottom: 5px;
 }
