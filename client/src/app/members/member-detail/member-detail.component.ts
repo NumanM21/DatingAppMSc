@@ -62,7 +62,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   getImg() {
     if (this.member)
       for (const photo of this.member.photos) {
-        this.img.push(new ImageItem({ src: photo.url, thumb: photo.url }));
+        this.img.push(new ImageItem({ src: photo.photoURL, thumb: photo.photoURL }));
       }
     else return;
   }

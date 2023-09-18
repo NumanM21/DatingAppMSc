@@ -46,9 +46,9 @@ export class PhotoEditComponent implements OnInit {
       // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
       next: () => {
         if (this.user && this.member) {
-          this.user.photoURL = photo.url;
+          this.user.photoURL = photo.photoURL;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
-          this.member.photoUrl = photo.url;
+          this.member.photoUrl = photo.photoURL;
           this.member.photos.forEach(p => {
             if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
             else if (p.id === photo.id) p.isMainPhoto = true; // set new photo as main

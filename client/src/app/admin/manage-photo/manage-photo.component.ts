@@ -13,37 +13,44 @@ export class ManagePhotoComponent implements OnInit {
   constructor(private serviceAdmin: AdminService) { }
 
   ngOnInit(): void {
+    this.PhotosForApprovalGetter();
   }
 
   // Getting photos for approval
-  PhotosForApprovalGetter(){
+  PhotosForApprovalGetter() {
     this.serviceAdmin.PhotosForApprovalGetter().subscribe({
 
       // get all user photos that are not approved and assign them to photosToApprove array
-      next: p=>this.photosToApprove = p
+      next: p => {
+        this.photosToApprove = p;
+        console.log("Photos to approve:", this.photosToApprove);
+      },
+      error: err => console.error('Error fetching photos:', err)
     })
   }
 
   // Approving photos
-  PhotoApprover(photoId: number){
+  PhotoApprover(photoId: number) {
     this.serviceAdmin.PhotoApprover(photoId).subscribe({
 
       // once approved, remove (splice) photo from array
-      next: ()=>{
+      next: () => {
 
         // find index of photo in array which matches the photoId
-        this.photosToApprove.splice(this.photosToApprove.findIndex(p=>p.id === photoId),1)
-      }
+        this.photosToApprove.splice(this.photosToApprove.findIndex(p => p.id === photoId), 1)
+      },
+      error: err => console.error('Error fetching photos:', err)
     })
   }
 
   // Rejecting photos
-  PhotoUnapproved(photoId: number){
+  PhotoUnapproved(photoId: number) {
     this.serviceAdmin.PhotoUnapproved(photoId).subscribe({
       // same as approved except for rejected photos
-      next: () =>{
-        this.photosToApprove.splice(this.photosToApprove.findIndex(p=>p.id === photoId),1)
-      }
+      next: () => {
+        this.photosToApprove.splice(this.photosToApprove.findIndex(p => p.id === photoId), 1)
+      },
+      error: err => console.error('Error fetching photos:', err)
     })
   }
 
