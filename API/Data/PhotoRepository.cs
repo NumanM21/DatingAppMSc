@@ -19,9 +19,9 @@ namespace API.Data
         }
 
         // get single photo by id
-        public async Task<Photo> PhotoByIdGetter(int Id)
+        public async Task<Photo> PhotoByIdGetter(int photoId)
         {
-            return await _context.Photos.IgnoreQueryFilters().SingleOrDefaultAsync(s=>s.Id == Id);
+            return await _context.Photos.IgnoreQueryFilters().SingleOrDefaultAsync(s=>s.Id == photoId);
         }
 
         // remove photo from DB

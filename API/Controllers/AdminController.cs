@@ -46,7 +46,7 @@ namespace API.Controllers
 
 
         [Authorize(Policy = "ModeratorRoleRequired")]
-        [HttpGet("Moderate-Unapproved-Photos")]
+        [HttpGet("moderate-unapproved-photos")]
         public async Task<ActionResult> GetPhotoToModerate()
         {
             // Get all unapproved photos from repo
@@ -96,33 +96,45 @@ namespace API.Controllers
 
         [Authorize(Policy = "ModeratorRoleRequired")]
         [HttpPost("photo-approve/{photoId}")]
-        public async Task<ActionResult> PhotoApprove(int id)
+        public async Task<ActionResult> PhotoApprove(int photoId)
         {
             // fetch photo from repo using id
-            var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(id);
+            var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(photoId);
+
+            // Check if the photo exists 
+            if (photoToApprove == null)
+            {
+                return NotFound("Photo not found.");
+            }
 
             // change photo approved to true
             photoToApprove.IsPhotoApproved = true;
 
             // get user using photoId
-            var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(id);
+            var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(photoId);
+
+            // Check if the user exists
+            if (currUser == null)
+            {
+                return NotFound("User not found.");
+            }
 
             // if user has no main, set approved photo to main
-            if (currUser.Photos.Any(x=>x.IsMainPhoto)) photoToApprove.IsMainPhoto = true;
-        
+            if (currUser.Photos.Any(x => x.IsMainPhoto)) photoToApprove.IsMainPhoto = true;
+
             // save changes to DB
             await _unitOfWork.TransactionComplete();
 
             // return Ok
-            return Ok();
+            return Ok("Photo has been approved");
         }
 
         [Authorize(Policy = "ModeratorRoleRequired")]
         [HttpPost("photo-unapproved/{photoId}")]
-        public async Task<ActionResult> PhotoUnapproved(int id)
+        public async Task<ActionResult> PhotoUnapproved(int photoId) // parameter same as httpPost!! 
         {
             // fetch photo from repo using id
-            var photoToUnapprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(id);
+            var photoToUnapprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(photoId);
 
             // check if photo in cloud + DB or just DB
 
@@ -143,7 +155,7 @@ namespace API.Controllers
             // save changes to DB
             await _unitOfWork.TransactionComplete();
 
-            return Ok();
+            return Ok("Photo has been unapproved");
         }
 
 

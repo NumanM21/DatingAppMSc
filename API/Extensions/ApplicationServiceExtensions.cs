@@ -32,6 +32,8 @@ namespace API.Extensions
       // singleton -> only one instance of this class is created and used throughout the application
       services.AddSingleton<UserPresenceTracker>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<ServicePhoto>();
+
 
 
       
