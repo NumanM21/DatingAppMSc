@@ -1,6 +1,9 @@
 
 
+using API.DTOs;
 using API.Entities;
+using API.Interfaces;
+using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +13,15 @@ namespace API.Controllers
 {
     public class AdminController : BaseApiController
     {
-    private readonly UserManager<AppUser> _managerUser;
+        private readonly UserManager<AppUser> _managerUser;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ServicePhoto _servicePhoto;
 
-        public AdminController(UserManager<AppUser> managerUser)
+        public AdminController(UserManager<AppUser> managerUser, IUnitOfWork unitOfWork, ServicePhoto servicePhoto)
         {
-         _managerUser = managerUser;  
+            _servicePhoto = servicePhoto;
+            _unitOfWork = unitOfWork;
+            _managerUser = managerUser;
         }
 
         [Authorize(Policy = "AdminRoleRequired")]
@@ -23,24 +30,30 @@ namespace API.Controllers
         public async Task<ActionResult> GetAppUserWithRoles()
         {
             // Get all users (.Users table in database and order by username alphabetically)
-            var user = await _managerUser.Users.OrderBy(x=>x.UserName)
+            var user = await _managerUser.Users.OrderBy(x => x.UserName)
             // Want to get roles (Access user roles from user , then user roles to get roles)
             // FIXME: Array of role not showing up
-            .Select(x => new {
+            .Select(x => new
+            {
                 x.Id, //userID
                 Username = x.UserName,
                 Roles = x.AppUserRoles.Select(s => s.appRole.Name).ToList() // List of roles 
             }).ToListAsync();
 
-             // return list of users with their roles
+            // return list of users with their roles
             return Ok(user);
         }
 
+
         [Authorize(Policy = "ModeratorRoleRequired")]
-        [HttpGet("photos-to-moderate")]
-        public ActionResult GetPhotoToModerate()
+        [HttpGet("Moderate-Unapproved-Photos")]
+        public async Task<ActionResult> GetPhotoToModerate()
         {
-            return Ok("Admin or Moderator can see this");
+            // Get all unapproved photos from repo
+            var unapprovePhotos = await _unitOfWork.PhotoRepository.PhotosUnapprovedDtoGetter();
+
+            // return list of unapproved photos
+            return Ok(unapprovePhotos);
         }
 
         // Admin can edit roles
@@ -79,8 +92,60 @@ namespace API.Controllers
 
             // return list of roles for user (so we can update client)
             return Ok(await _managerUser.GetRolesAsync(currUser));
-
         }
+
+        [Authorize(Policy = "ModeratorRoleRequired")]
+        [HttpPost("photo-approve/{photoId}")]
+        public async Task<ActionResult> PhotoApprove(int id)
+        {
+            // fetch photo from repo using id
+            var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(id);
+
+            // change photo approved to true
+            photoToApprove.IsPhotoApproved = true;
+
+            // get user using photoId
+            var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(id);
+
+            // if user has no main, set approved photo to main
+            if (currUser.Photos.Any(x=>x.IsMainPhoto)) photoToApprove.IsMainPhoto = true;
         
+            // save changes to DB
+            await _unitOfWork.TransactionComplete();
+
+            // return Ok
+            return Ok();
+        }
+
+        [Authorize(Policy = "ModeratorRoleRequired")]
+        [HttpPost("photo-unapproved/{photoId}")]
+        public async Task<ActionResult> PhotoUnapproved(int id)
+        {
+            // fetch photo from repo using id
+            var photoToUnapprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(id);
+
+            // check if photo in cloud + DB or just DB
+
+            if (photoToUnapprove.PublicId != null) // stored in cloud
+            {
+                // remove from cloudinary -> photo service
+                var res = await _servicePhoto.AsyncDeletePhoto(photoToUnapprove.PublicId);
+
+                // check if success -> also need to remove photo from DB
+                if (res.Result == "ok") _unitOfWork.PhotoRepository.PhotoRemove(photoToUnapprove);
+            }
+            else // not stored in cloudinary
+            {
+                // remove from DB directly
+                _unitOfWork.PhotoRepository.PhotoRemove(photoToUnapprove);
+            }
+
+            // save changes to DB
+            await _unitOfWork.TransactionComplete();
+
+            return Ok();
+        }
+
+
     }
 }

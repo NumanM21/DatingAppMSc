@@ -46,6 +46,9 @@ namespace API.Data
         // Handle users
         user.UserName = user.UserName.ToLower();
 
+        // Approve first photo to TRUE for seeded users
+        user.Photos.First().IsPhotoApproved = true;
+
         // Creates user and hashes password and save to DB
         await appUserManager.CreateAsync(user, "Pa$$w0rd");
 

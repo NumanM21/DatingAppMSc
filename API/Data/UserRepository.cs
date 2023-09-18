@@ -24,12 +24,25 @@ namespace API.Data
 
     //TODO: Caching is how we make this FASTER! --> Query from Cache rather than DB (optimize at end) 
 
-    public async Task<MemberDto> AsyncGetMember(string username)
+    public async Task<MemberDto> AsyncGetMember(string username, bool currentUer) // ignore curr user so they can see their own unapproved photos
     {
-      return await _context.Users
-      .Where(x => x.UserName == username)
+      // This will retrieve users based on the provided username.
+      var query = _context.Users.Where(x => x.UserName == username)
+
+      // ProjectTo -> an  AutoMapper extension method that maps the result 
+      // from the source type (AppUser) to the destination type (MemberDto).
+      // essentially transforms the user data into the shape defined by MemberDto.
       .ProjectTo<MemberDto>(_autoMapper.ConfigurationProvider)
-      .SingleOrDefaultAsync();
+
+      // Convert result to an IQueryable. allows further operations 
+      // to be performed on the query before it's executed against the DB
+      .AsQueryable();
+
+      // if current user making request, we ignore global query filters -> Allows currUser to see their own unapproved photos
+      if (currentUer) query = query.IgnoreQueryFilters();
+
+      // mExecute the query against the DB and return the first result, else return null
+      return await query.FirstOrDefaultAsync();
     }
 
 
@@ -107,6 +120,26 @@ namespace API.Data
       return await _context.Users.Where(x => x.UserName == username).Select(s => s.UserGender).FirstOrDefaultAsync();
 
     }
+
+    public async Task<AppUser> UserFromPhotoIdGetter(int id)
+    {
+      // start query on user table in DB
+      return await _context.Users
+
+      // want related photos for each user
+      .Include(p => p.Photos)
+
+      // remove global query filters -> can see unapproved
+      .IgnoreQueryFilters()
+
+      // want user who has photo with id we are looking for
+      .Where(p => p.Photos.Any(p => p.Id == id))
+      
+      // get first user or null
+      .FirstOrDefaultAsync();
+    }
+
+
 
     // public async Task<bool> AsyncSaveAll() -> Read comment in IUserRepository.cs
     // {

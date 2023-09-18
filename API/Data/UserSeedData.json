@@ -11,10 +11,12 @@
     "UserInterests": "Cupidatat laborum dolore nostrud minim excepteur duis ex eiusmod dolore sit in excepteur ullamco cillum.",
     "City": "Herlong",
     "Country": "Niue",
+
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/women/32.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -33,7 +35,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/women/12.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -52,7 +55,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/women/80.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -71,7 +75,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/women/73.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -90,7 +95,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/women/18.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -109,7 +115,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/men/49.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -128,7 +135,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/men/78.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -147,7 +155,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/men/18.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -166,7 +175,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/men/37.jpg",
-        "IsMainPhoto": true
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   },
@@ -185,8 +195,8 @@
     "Photos": [
       {
         "Url": "https://randomuser.me/api/portraits/men/8.jpg",
-        "IsMainPhoto": true
-    
+        "IsMainPhoto": true,
+        "IsPhotoApproved": true
       }
     ]
   }

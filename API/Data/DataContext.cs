@@ -99,8 +99,6 @@ namespace API.Data
       modelBuilder.Entity<MessageUser>()
       .HasKey(k => k.messageId);
 
-
-
       modelBuilder.Entity<MessageUser>()
       .HasOne(x => x.ReceivingUser) // one user can receive many messages
       .WithMany(wm => wm.MessageReceived)
@@ -110,6 +108,13 @@ namespace API.Data
       .HasOne(x => x.SenderUser) // one user can send many messages
       .WithMany(wm => wm.MessageSent)
       .OnDelete(DeleteBehavior.Restrict);
+
+      // Photo Approved Config
+
+      // Only returns approved photos
+      modelBuilder.Entity<Photo>().HasQueryFilter(x=>x.IsPhotoApproved);
+
+
 
     }
 

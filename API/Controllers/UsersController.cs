@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using API.Data;
+using API.Data.Migrations;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -64,7 +65,12 @@ namespace API.Controllers
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username) // get individual user
     {
-      return await _unitOfWork.RepositoryUser.AsyncGetMember(username);
+      // get username of current user
+      var currUser = User.GetUsername();
+
+      // if currUser == username provided in client -> return true so we show user the unapprove photos -> else it remains hidden
+      return await _unitOfWork.RepositoryUser.AsyncGetMember(username, currUser == username);
+
     }
 
     [HttpPut]
@@ -95,14 +101,17 @@ namespace API.Controllers
     //TODO: 1. Separate this larger method into smaller methods -> can have logic of setting main Photo as a service layer or domain logic. 2. More specific error handling, have console logs for specific issues (easier to debug). 
     public async Task<ActionResult<PhotoDto>> photoAdd(IFormFile file)
     {
+      // get username from token
       var username = User.GetUsername();
+
       // Since we use our repo here, EF auto tracks the user
       var user = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
 
       if (user == null) return NotFound("User not found in photoAdd method!"); // check in-case we don't have user (HTTP 404 Err)
 
-      var imgUpload = await _servicePhoto.AsyncAddPhoto(file);
       // Can absolute uri is stored in our DB (we use this to track the image in cloudinary)
+      var imgUpload = await _servicePhoto.AsyncAddPhoto(file);
+
 
       // Check if we  have error with imgUpload
       if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); //HHTP 400 Err
@@ -113,12 +122,10 @@ namespace API.Controllers
         PublicId = imgUpload.PublicId
       };
 
-      // If first photo, have to set this to main 
-      if (user.Photos.Count == 0) img.IsMainPhoto = true;
-
-      //Now the EF will track this user in memory
+      // Add photo to user collection -> EF still tracking user 
       user.Photos.Add(img);
 
+      // save changes to DB 
       if (await _unitOfWork.TransactionComplete())
       {
         return CreatedAtAction(
@@ -127,12 +134,9 @@ namespace API.Controllers
         _autoMapper.Map<PhotoDto>(img));  // Pass object we have created back ->passing back photoDto, and we map FROM the img we created 
       }
 
-
       return BadRequest("Photo not mapped to DTO"); // HTTP 400 Err
-
-
-
     }
+
 
     [HttpPut("set-photo-main/{photoId}")] // Put for updating resource (selecting Main photo)
     public async Task<ActionResult> SetPhotoMain(int photoId) // EF Tracks these changes automatically --> So have to update DB at the end
@@ -163,32 +167,40 @@ namespace API.Controllers
 
     public async Task<ActionResult> PhotoDelete(int photoId)
     {
-      //User.GetUsername retrives username from user token (only possible if authenticated)
-      var user = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(User.GetUsername());
+      // User.GetUsername retrieves username from user token (only possible if authenticated)
+      var username = User.GetUsername();
+
+      // Get user from username
+      var user = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
 
       if (user == null) return NotFound("User not found to delete photo");
-      // if we use user. and get random methods (forgetten await --> this took a while!!)
-      var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
-      // root parameter we are passing up so need this to NOT be null
-      if (photo == null) return NotFound("User photo not found"); // HTTP 404
 
-      if (photo.IsMainPhoto) return BadRequest("This is main photo, cannot be deleted. Choose another main photo before deleting this one 😄");
+      // Get photo using its Id
+      var photoToDelete = await _unitOfWork.PhotoRepository.PhotoByIdGetter(photoId);
 
-      // img without id are in our DB (from seeding --> used for testing, not in cloudinary so user can't access these)
-      if (photo.PublicId != null)
+      // Check if the photo exists
+      if (photoToDelete == null) return NotFound("User photo not found");
+
+      // Check if the photo is the main photo
+      if (photoToDelete.IsMainPhoto) return BadRequest("This is main photo, cannot be deleted. Choose another main photo before deleting this one 😄");
+
+      // Images without id are in our DB (from seeding --> used for testing, not in cloudinary so user can't access these)
+      if (photoToDelete.PublicId != null)
       {
-        var res = await _servicePhoto.AsyncDeletePhoto(photo.PublicId);
+        var res = await _servicePhoto.AsyncDeletePhoto(photoToDelete.PublicId);
 
-        if (res.Error != null) BadRequest(res.Error.Message); // error msg from cloudinary
+        if (res.Error != null) return BadRequest(res.Error.Message); // Error msg from cloudinary
       }
 
-      user.Photos.Remove(photo); // EF auto updates DB
+      user.Photos.Remove(photoToDelete); // EF auto updates DB
 
       if (await _unitOfWork.TransactionComplete()) return Ok(); // HTTP 200
 
       return BadRequest("Photo cannot be deleted -> Debug time :D");
-
     }
+
+
+
 
   }
 }

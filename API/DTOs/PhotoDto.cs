@@ -8,6 +8,8 @@ namespace API.DTOs
 
     public bool IsMainPhoto { get; set; }
 
+    public bool IsPhotoApproved { get; set; }
+
     
   }
 }

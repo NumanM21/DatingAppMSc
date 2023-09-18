@@ -19,11 +19,14 @@ namespace API.Data
 
         }
         // returning our repositories ->  Creating a new instance of our repositories.
-        public IUserRepository RepositoryUser => new UserRepository(_contextData, _map); 
+        public IUserRepository RepositoryUser => new UserRepository(_contextData, _map);
 
         public IMessageUserRepository RepositoryMessageUser => new MessageUserRepository(_contextData, _map);
 
-        public ILikeRepository RepositoryLike => new  LikeRepository(_contextData);
+        public ILikeRepository RepositoryLike => new LikeRepository(_contextData);
+
+        public IPhotoRepository PhotoRepository => new
+        PhotoRepository(_contextData);
 
         public bool ContainsChanges()
         {

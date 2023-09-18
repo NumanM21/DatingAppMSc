@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Data;
 
 namespace API.Interfaces
 {
@@ -10,6 +11,8 @@ namespace API.Interfaces
         IUserRepository RepositoryUser { get; }
         IMessageUserRepository RepositoryMessageUser { get; }
         ILikeRepository RepositoryLike { get; }
+
+         IPhotoRepository PhotoRepository {get;} 
 
         bool ContainsChanges(); // UOW will check if there are any changes to entities -> if there are (tracked by EF), will save changes to DB
         Task<bool> TransactionComplete(); // UOW will save changes to DB and return true if successful -> If fail, will roll back changes and return false
