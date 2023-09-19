@@ -2,13 +2,13 @@
 
 <div class="row" *ngIf="member">
     <div class="col-2 mb-1" *ngFor="let photo of member.photos">
-        <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}">
+        <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.Id)}">
             <img src="{{photo.photoURL}}" alt="user photo" class="photo-thumbnail-size mb-1">
             <div class="text-center">
                 <button class="btn-main btn btn-sm"  [disabled]="photo.isMainPhoto" (click)="setPhotoMain(photo)"  [ngClass]="photo.isMainPhoto ? 'btn-main-true' : 'btn-main-false'"
                 (mouseover)="onHover(photo)" (mouseout)="hoverOut(photo)">Main
                 </button>
-                <button class="btn-delete btn btn-med btn-danger" (click)="photoDelete(photo.id)" [disabled]="photo.isMainPhoto">
+                <button class="btn-delete btn btn-med btn-danger" (click)="photoDelete(photo.Id)" [disabled]="photo.isMainPhoto">
                     <i class="fa fa-trash"></i>
                 </button>
             </div>

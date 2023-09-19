@@ -6,3 +6,23 @@ img.img-thumbnail {
   min-width: 175px !important;
   margin-bottom: 2px;
   }
+
+.btn-approve{
+  background-color: black;
+  color: white;
+}
+
+.btn-approve:hover{
+  background-color: rgb(85, 83, 83);
+  border-color: rgb(85, 83, 83);
+  color: white;
+}
+.btn-unapprove{
+  background-color: rgb(233, 70, 70);
+  color: white;
+}
+.btn-unapprove:hover{
+  background-color: rgb(233, 24, 24);
+  color: white;
+}
+

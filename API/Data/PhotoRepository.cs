@@ -41,7 +41,7 @@ namespace API.Data
             .Select(s=> new ApprovePhotoDto // select only the properties we want to return (which is shaped by ApprovePhotoDto)
             {
                 // we create NEW Dto and return a list of these Dtos
-                PhotoId = s.AppUser.Id,
+                Id = s.Id, // return photo ID,not userID!
                 PhotoURL = s.Url,
                 Username = s.AppUser.UserName,
                 IsPhotoApproved = s.IsPhotoApproved

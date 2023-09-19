@@ -42,7 +42,7 @@ export class PhotoEditComponent implements OnInit {
 
   // Similar to our method in member service 
   setPhotoMain(photo: Photo) {
-    this.serviceMember.setPhotoMain(photo.id).subscribe({
+    this.serviceMember.setPhotoMain(photo.Id).subscribe({
       // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
       next: () => {
         if (this.user && this.member) {
@@ -51,7 +51,7 @@ export class PhotoEditComponent implements OnInit {
           this.member.photoUrl = photo.photoURL;
           this.member.photos.forEach(p => {
             if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
-            else if (p.id === photo.id) p.isMainPhoto = true; // set new photo as main
+            else if (p.Id === photo.Id) p.isMainPhoto = true; // set new photo as main
           })
         }
       }
@@ -62,7 +62,7 @@ export class PhotoEditComponent implements OnInit {
     this.serviceMember.photoDelete(photoId).subscribe({
       next: () => {
         if (this.member) {
-          this.member.photos = this.member.photos.filter(x => x.id !== photoId); // Return all photos EXCPET the photo which matches this id we passed in argument above (.subscribe so we listen to the response from client)
+          this.member.photos = this.member.photos.filter(x => x.Id !== photoId); // Return all photos EXCPET the photo which matches this id we passed in argument above (.subscribe so we listen to the response from client)
         }
       }
     })
@@ -156,11 +156,11 @@ export class PhotoEditComponent implements OnInit {
 
   // Img hover when user goes over the 'main' button
   onHover(photo: Photo) {
-    this.hoveredStates.set(photo.id, true);
+    this.hoveredStates.set(photo.Id, true);
   }
 
   hoverOut(photo: Photo) {
-    this.hoveredStates.set(photo.id, false);
+    this.hoveredStates.set(photo.Id, false);
   }
 
 

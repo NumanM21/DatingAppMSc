@@ -7,8 +7,8 @@ namespace API.DTOs
 {
     public class ApprovePhotoDto
     {
-        public int  PhotoId { get; set; }
-        public string PhotoURL { get; set; }
+        public int  Id { get; set; }
+        public string PhotoURL { get; set; } 
 
         public string Username { get; set; }
         public bool IsPhotoApproved { get; set; }

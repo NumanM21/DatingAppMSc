@@ -95,11 +95,11 @@ namespace API.Controllers
         }
 
         [Authorize(Policy = "ModeratorRoleRequired")]
-        [HttpPost("photo-approve/{photoId}")]
-        public async Task<ActionResult> PhotoApprove(int photoId)
+        [HttpPost("photo-approve/{Id}")]
+        public async Task<ActionResult> PhotoApprove(int Id)
         {
             // fetch photo from repo using id
-            var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(photoId);
+            var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(Id);
 
             // Check if the photo exists 
             if (photoToApprove == null)
@@ -111,7 +111,7 @@ namespace API.Controllers
             photoToApprove.IsPhotoApproved = true;
 
             // get user using photoId
-            var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(photoId);
+            var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(Id);
 
             // Check if the user exists
             if (currUser == null)
@@ -126,15 +126,15 @@ namespace API.Controllers
             await _unitOfWork.TransactionComplete();
 
             // return Ok
-            return Ok("Photo has been approved");
+            return Ok();
         }
 
         [Authorize(Policy = "ModeratorRoleRequired")]
-        [HttpPost("photo-unapproved/{photoId}")]
-        public async Task<ActionResult> PhotoUnapproved(int photoId) // parameter same as httpPost!! 
+        [HttpPost("photo-unapproved/{Id}")]
+        public async Task<ActionResult> PhotoUnapproved(int Id) // parameter same as httpPost!! 
         {
             // fetch photo from repo using id
-            var photoToUnapprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(photoId);
+            var photoToUnapprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(Id);
 
             // check if photo in cloud + DB or just DB
 
@@ -155,7 +155,7 @@ namespace API.Controllers
             // save changes to DB
             await _unitOfWork.TransactionComplete();
 
-            return Ok("Photo has been unapproved");
+            return Ok();
         }
 
 

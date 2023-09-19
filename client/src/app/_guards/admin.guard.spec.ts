@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { AdminGuard } from './admin.guard';
 
 describe('AdminGuard', () => {
-  let guard: AdminGuard;
+  let guard: typeof AdminGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

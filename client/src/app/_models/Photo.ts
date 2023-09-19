@@ -1,7 +1,14 @@
-export interface Photo {
-  id: number;
-  photoURL: string;
-  isMainPhoto: boolean;
-  isPhotoApproved: boolean;
+export class Photo {
+  id: number = 0; 
+  photoURL: string = '';
+  isMainPhoto: boolean = false;
+  isPhotoApproved: boolean = false;
   username?: string;
+
+  get Id(): number {
+    return this.id;
+  }
 }
+
+
+
