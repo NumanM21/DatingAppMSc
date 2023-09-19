@@ -120,7 +120,7 @@ namespace API.Controllers
             }
 
             // if user has no main, set approved photo to main
-            if (currUser.Photos.Any(x => x.IsMainPhoto)) photoToApprove.IsMainPhoto = true;
+            if (!currUser.Photos.Any(x => x.IsMainPhoto)) photoToApprove.IsMainPhoto = true;
 
             // save changes to DB
             await _unitOfWork.TransactionComplete();
