@@ -59,7 +59,7 @@ namespace API.Controllers
       {
         Username = user.UserName,
         Token = await _tokenService.CreateToken(user),
-        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
+        photoUrl = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
         KnownAs = user.KnownAs,
         Gender = user.UserGender
       };
@@ -88,7 +88,7 @@ namespace API.Controllers
       {
         Username = user.UserName,
         Token = await _tokenService.CreateToken(user),
-        PhotoURL = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
+        photoUrl = user.Photos.FirstOrDefault(x => x.IsMainPhoto)?.Url,
         KnownAs = user.KnownAs,
         Gender = user.UserGender
       };

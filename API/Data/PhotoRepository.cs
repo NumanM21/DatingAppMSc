@@ -42,7 +42,7 @@ namespace API.Data
             {
                 // we create NEW Dto and return a list of these Dtos
                 Id = s.Id, // return photo ID,not userID!
-                PhotoURL = s.Url,
+                photoUrl = s.Url,
                 Username = s.AppUser.UserName,
                 IsPhotoApproved = s.IsPhotoApproved
             })

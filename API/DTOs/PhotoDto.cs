@@ -4,7 +4,7 @@ namespace API.DTOs
   {
     public int Id { get; set; }
 
-    public string PhotoURL { get; set; } 
+    public string photoUrl { get; set; } 
     
     public bool IsMainPhoto { get; set; }
 

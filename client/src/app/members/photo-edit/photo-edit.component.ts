@@ -51,9 +51,9 @@ export class PhotoEditComponent implements OnInit {
         console.log("photo set main id:" + photo.Id +
         "photo" + photo)
         if (this.user && this.member) {
-          this.user.photoURL = photo.photoURL;
+          this.user.photoUrl = photo.photoUrl;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
-          this.member.photoUrl = photo.photoURL;
+          this.member.photoUrl = photo.photoUrl;
           this.member.photos.forEach(p => {
             if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
             else if (p.Id === photo.Id) p.isMainPhoto = true; // set new photo as main
@@ -103,7 +103,7 @@ export class PhotoEditComponent implements OnInit {
 
         // Need to see if user has any photo, if not, uploaded photo auto becomes main photo (need to show this profile in navbar + member profile)
         if (photo.isMainPhoto && this.user && this.member) {
-          this.user.photoURL = photo.url;
+          this.user.photoUrl = photo.url;
           this.member.photoUrl = photo.url;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
         }

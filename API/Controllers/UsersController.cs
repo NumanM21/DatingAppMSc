@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 // These are all endpoints 
 
 namespace API.Controllers
@@ -67,6 +68,10 @@ namespace API.Controllers
     {
       // get username of current user
       var currUser = User.GetUsername();
+
+      var user = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
+      // Console.WriteLine($"Fetched user: {JsonConvert.SerializeObject(user)}");
+
 
       // if currUser == username provided in client -> return true so we show user the unapprove photos -> else it remains hidden
       return await _unitOfWork.RepositoryUser.AsyncGetMember(username, currUser == username);
