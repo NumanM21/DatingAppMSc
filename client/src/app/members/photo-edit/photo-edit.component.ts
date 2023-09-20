@@ -37,14 +37,19 @@ export class PhotoEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.member)
     this.initializeUploader();
   }
 
   // Similar to our method in member service 
   setPhotoMain(photo: Photo) {
-    this.serviceMember.setPhotoMain(photo.Id).subscribe({
+    console.log("photo set main id:" + photo.Id +
+    "photo" + photo)
+    this.serviceMember.setPhotoMain(photo.id).subscribe({
       // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
       next: () => {
+        console.log("photo set main id:" + photo.Id +
+        "photo" + photo)
         if (this.user && this.member) {
           this.user.photoURL = photo.photoURL;
           this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
@@ -58,11 +63,12 @@ export class PhotoEditComponent implements OnInit {
     })
   }
 
-  photoDelete(photoId: number) {
-    this.serviceMember.photoDelete(photoId).subscribe({
+  photoDelete(id: number) {
+    console.log("photo delete id:" + id);
+    this.serviceMember.photoDelete(id).subscribe({
       next: () => {
         if (this.member) {
-          this.member.photos = this.member.photos.filter(x => x.Id !== photoId); // Return all photos EXCPET the photo which matches this id we passed in argument above (.subscribe so we listen to the response from client)
+          this.member.photos = this.member.photos.filter(x => x.Id !== id); // Return all photos EXCPET the photo which matches this id we passed in argument above (.subscribe so we listen to the response from client)
         }
       }
     })
