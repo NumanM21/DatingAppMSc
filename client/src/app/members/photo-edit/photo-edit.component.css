@@ -88,3 +88,32 @@
   background-color: rgb(255, 125, 3);
   color: white;
 }
+
+img.photo-thumbnail-size {
+  height: 175px;
+  min-width: 175px !important;
+  margin-bottom: 2px;
+}
+
+.text-unapproved{
+  color: rgb(190, 35, 35);
+  font-weight: bolder;
+}
+
+.unapproved{
+  opacity: 0.3;
+}
+
+.image-container{
+  position: relative;
+}
+
+.text-img{
+  position: absolute;
+ left: 0;
+ right: 0;
+ margin-left: auto;
+ margin-right: auto;
+ bottom: 30%;
+}
+

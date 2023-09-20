@@ -9,6 +9,7 @@ import { parameterUser } from '../_models/parameterUser';
 import { AccountService } from './account.service';
 import { User } from '../_models/User';
 import { getHeadPagination, getResultPagination } from './HelperPagination';
+import { Photo } from '../_models/Photo';
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +83,7 @@ export class MembersService {
 
     else return; // can't return clog!
   }
+
 
 
   getMember(username: string) {

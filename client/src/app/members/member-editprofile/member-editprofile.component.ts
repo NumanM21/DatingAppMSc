@@ -31,6 +31,7 @@ export class MemberEditprofileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("memberedit " + this.member?.photos); // FIXME: THIS IS THE ISSUE -> UNDEFINED -> HENCE WE GET [object Object] OUTPUT IN PHOTO-EDIT COMPONENT!
     this.memberLoad();
   }
 
@@ -40,7 +41,11 @@ export class MemberEditprofileComponent implements OnInit {
       this.serviceMember.getMember(this.user.username).subscribe({
         next: member => this.member = member
       })
-    else return;
+    else 
+    {
+      console.log("user is null in memberload editprofile")
+      return;
+    }
   }
 
   memberUpdate() {
