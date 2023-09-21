@@ -1,14 +1,15 @@
- import { HttpClient, HttpHeaderResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaderResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/Member';
 import { MemberEditprofileComponent } from '../members/member-editprofile/member-editprofile.component';
-import { map, of, take } from 'rxjs';
+import { map, of, take, tap } from 'rxjs';
 import { ResultPaginated } from '../_models/Pagination';
 import { parameterUser } from '../_models/parameterUser';
 import { AccountService } from './account.service';
 import { User } from '../_models/User';
 import { getHeadPagination, getResultPagination } from './HelperPagination';
+import { createLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Injectable({
   providedIn: 'root'
@@ -85,19 +86,27 @@ export class MembersService {
 
 
 
-  getMember(username: string) {
+  getMember(username: string) {// KEY ! JS IS CASE SENSITIVE!!!!!!!!!!!!!!! FIXME::!!!!!
 
     const memberFromCache = [...this.cacheMember.values()] // get all the values from the cache (member objects)
 
       .reduce((preArr, currElement) => preArr.concat(currElement.result), []) // reduce to one array  [] -> Initial value 
 
-      .find((member: Member) => member.userName === username); // find the member with the username we want (take first instance)
+      .find((member: Member) => member.username === username); // find the member with the username we want (take first instance)
+      
 
-    if (memberFromCache) return of(memberFromCache); // if we have a value in the cache, so already seen this query, return it
-
-    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username)
-
+    if (memberFromCache) {
+      console.log("MemberService - Member from Cache:", memberFromCache);
+      return of(memberFromCache); // if we have a value in the cache, so already seen this query, return it
+    }
+    console.log("memberservice memberfromcache:" + memberFromCache)
+    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username).pipe(
+      tap(memberFromApi => {
+        console.log("MemberService - Member from API:", memberFromApi);
+      })
+    );
   }
+
 
   updateMember(member: Member) {
 

@@ -130,8 +130,8 @@ namespace API.Controllers
       // save changes to DB 
       if (await _unitOfWork.TransactionComplete())
       {
-        return CreatedAtRoute(
-        "GetUser", // Sending back a location header for client to get img created, they go through username endpoint (api/users/username)
+        return CreatedAtAction(
+        nameof(GetUser), // Sending back a location header for client to get img created, they go through username endpoint (api/users/username)
         new { username = user.UserName }, // new object, assign username of user to username variable -> This is the argument we pass to GetUser
         _autoMapper.Map<PhotoDto>(img));  // Pass object we have created back ->passing back photoDto, and we map FROM the img we created 
       }

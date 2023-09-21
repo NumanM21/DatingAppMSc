@@ -3,11 +3,11 @@
   <!-- TODO: Can use this *ngIf to display only users which have MATCHED (Rather than all!) -->
   
   <div class="card-img-wrapper"
-    [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.userName)">
+    [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.username)">
     <img src="{{member.photoUrl || './assets/DefaultUser.jpg'}}" alt="{{member.knownAs}}" class="card-img-top">
     <ul class="list-inline member-icon animate text-center">
       <li class="list-inline-item">
-        <button class="btn btn-dark" routerLink="/members/{{member.userName}}"> <i class="fas fa-user"
+        <button class="btn btn-dark" routerLink="/members/{{member.username}}"> <i class="fas fa-user"
             style="color: #ffffff;"></i>
         </button>
       </li>
@@ -18,7 +18,7 @@
       </li>
       <!-- message  -->
       <li class="list-inline-item">
-        <button routerLink="/members/{{member.userName}}" [queryParams]="{tab: 'Messages'}" class="btn btn-dark">
+        <button routerLink="/members/{{member.username}}" [queryParams]="{tab: 'Messages'}" class="btn btn-dark">
           <i class="fas fa-comment" style="color: #ffffff;"></i>
         </button>
       </li>
@@ -26,7 +26,7 @@
     <div class="card-body p-1">
       <div class="member-info">
         <h5 class="card-title text-left mb-1">
-          <span [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.userName)">
+          <span [class.user-is-online]="(serviceUserPresence.usersOnline$ | async)?.includes(member.username)">
             <i class="fas fa-user" style="color: #000000;"></i>
           </span>
 

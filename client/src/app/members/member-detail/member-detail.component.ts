@@ -68,8 +68,8 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   messageLoader() {
-    if (this.member?.userName) {
-      this.serviceMessage.messageLoaderBetweenUsers(this.member.userName).subscribe({
+    if (this.member?.username) {
+      this.serviceMessage.messageLoaderBetweenUsers(this.member.username).subscribe({
         next: msg => this.message = msg,
       })
     }
@@ -89,7 +89,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     if (this.tabActive.heading == 'Messages') {
       // Start connection to hub -> to retrieve messages between users
       if (this.currUser && this.member)
-      this.serviceMessage.startConnectionToHub(this.currUser, this.member.userName);
+      this.serviceMessage.startConnectionToHub(this.currUser, this.member.username);
 
       else 
       this.serviceMessage.stopConnectionToHub();

@@ -18,7 +18,7 @@ export class MemberDisplayComponent implements OnInit {
   }
 
   likeAdd(member: Member) {
-    this.serviceMember.likeAdd(member.userName).subscribe({
+    this.serviceMember.likeAdd(member.username).subscribe({
       next: res => {
         this.toast.success(member.knownAs + " has been liked");
       }

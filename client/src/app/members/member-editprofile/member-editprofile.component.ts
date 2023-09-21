@@ -6,6 +6,7 @@ import { Member } from 'src/app/_models/Member';
 import { User } from "src/app/_models/User";
 import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-member-editprofile',
@@ -21,9 +22,11 @@ export class MemberEditprofileComponent implements OnInit {
   }
   member: Member | undefined;
   user: User | null = null;
+  changeDetectorRef: ChangeDetectorRef;
 
 
-  constructor(private toastrService: ToastrService, private serviceAccount: AccountService, private serviceMember: MembersService) {
+  constructor(private toastrService: ToastrService, private serviceAccount: AccountService, private serviceMember: MembersService, changeDetectorRef: ChangeDetectorRef) {
+    this.changeDetectorRef = changeDetectorRef;
     this.serviceAccount.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
       // user retrieved from the currentUser observable ($), we take the first instance (user) then subscribe so we can assign our user field to user we get back from account service
@@ -31,22 +34,20 @@ export class MemberEditprofileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("memberedit " + this.member?.photos); // FIXME: THIS IS THE ISSUE -> UNDEFINED -> HENCE WE GET [object Object] OUTPUT IN PHOTO-EDIT COMPONENT!
     this.memberLoad();
   }
 
-
   memberLoad() {
-    if (this.user)
-      this.serviceMember.getMember(this.user.username).subscribe({
-        next: member => this.member = member
-      })
-    else 
-    {
-      console.log("user is null in memberload editprofile")
-      return;
+    if (this.user) {
+      this.serviceMember.getMember(this.user.username).subscribe(member => {
+        this.member = member;
+        console.log('MemberEditProfile - Member:', this.member);
+        this.changeDetectorRef.detectChanges();
+      });
     }
   }
+
+
 
   memberUpdate() {
     this.serviceMember.updateMember(this.formEdit?.value).subscribe({
@@ -56,9 +57,7 @@ export class MemberEditprofileComponent implements OnInit {
         this.formEdit?.reset(this.member);
       }
     })
-
   }
-
 
 
 }

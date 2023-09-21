@@ -14,8 +14,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./photo-edit.component.css']
 })
 export class PhotoEditComponent implements OnInit {
-  @Input() member: Member | undefined;
   //FIXME: Adding hovered property on the fly -> May need to change/ remove this in future
+  member: Member | undefined;
   hoveredStates = new Map<number, boolean>();
   uploader: FileUploader | undefined;
   hasBaseDropZoneOver = false;
@@ -38,9 +38,14 @@ export class PhotoEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("ngOnInit photo edit ->" + this.member?.photos)
+    this.serviceMember.getMember(this.user!.username).subscribe(member => {
+      this.member = member;
+      console.log("PhotoEditComponent - Member:", this.member);
+    });
+
     this.initializeUploader();
   }
+
 
 
   // Similar to our method in member service 
