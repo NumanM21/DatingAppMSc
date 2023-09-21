@@ -102,6 +102,7 @@ namespace API.Controllers
             var photoToApprove = await _unitOfWork.PhotoRepository.PhotoByIdGetter(Id);
 
             // Check if the photo exists 
+        
             if (photoToApprove == null)
             {
                 return NotFound("Photo not found.");
@@ -110,6 +111,7 @@ namespace API.Controllers
             // change photo approved to true
             photoToApprove.IsPhotoApproved = true;
 
+           
             // get user using photoId
             var currUser = await _unitOfWork.RepositoryUser.UserFromPhotoIdGetter(Id);
 

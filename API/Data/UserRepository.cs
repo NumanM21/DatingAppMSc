@@ -24,7 +24,7 @@ namespace API.Data
 
     //TODO: Caching is how we make this FASTER! --> Query from Cache rather than DB (optimize at end) 
 
-    public async Task<MemberDto> AsyncGetMember(string username, bool currentUer) // ignore curr user so they can see their own unapproved photos
+    public async Task<MemberDto> AsyncGetMember(string username, bool currentUser) // ignore curr user so they can see their own unapproved photos
     {
       // This will retrieve users based on the provided username.
       var query = _context.Users.Where(x => x.UserName == username)
@@ -39,7 +39,10 @@ namespace API.Data
       .AsQueryable();
 
       // if current user making request, we ignore global query filters -> Allows currUser to see their own unapproved photos
-      if (currentUer) query = query.IgnoreQueryFilters();
+      if (currentUser) 
+      {
+        query = query.IgnoreQueryFilters();
+      }
 
       // mExecute the query against the DB and return the first result, else return null
       return await query.FirstOrDefaultAsync();

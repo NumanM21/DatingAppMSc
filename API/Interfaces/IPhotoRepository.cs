@@ -11,7 +11,7 @@ namespace API.Interfaces
     {
         
         Task<IEnumerable<ApprovePhotoDto>> PhotosUnapprovedDtoGetter();
-        Task<Photo> PhotoByIdGetter(int id);
+        Task<Photo> PhotoByIdGetter(int Id);
         void PhotoRemove(Photo photo); 
     }
 }

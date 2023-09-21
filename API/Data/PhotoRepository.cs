@@ -19,9 +19,9 @@ namespace API.Data
         }
 
         // get single photo by id
-        public async Task<Photo> PhotoByIdGetter(int photoId)
+        public async Task<Photo> PhotoByIdGetter(int Id)
         {
-            return await _context.Photos.IgnoreQueryFilters().SingleOrDefaultAsync(s=>s.Id == photoId);
+            return await _context.Photos.IgnoreQueryFilters().SingleOrDefaultAsync(s=>s.Id == Id);
         }
 
         // remove photo from DB
@@ -42,8 +42,8 @@ namespace API.Data
             {
                 // we create NEW Dto and return a list of these Dtos
                 Id = s.Id, // return photo ID,not userID!
-                photoUrl = s.Url,
                 Username = s.AppUser.UserName,
+                photoUrl = s.Url,
                 IsPhotoApproved = s.IsPhotoApproved
             })
             .ToListAsync(); // execute query against DB and return list of ApprovePhotoDto

@@ -69,14 +69,11 @@ namespace API.Controllers
       // get username of current user
       var currUser = User.GetUsername();
 
-      var user = await _unitOfWork.RepositoryUser.AsyncGetUserByUsername(username);
-      // Console.WriteLine($"Fetched user: {JsonConvert.SerializeObject(user)}");
-
 
       // if currUser == username provided in client -> return true so we show user the unapprove photos -> else it remains hidden
-      return await _unitOfWork.RepositoryUser.AsyncGetMember(username, currUser == username);
-
+      return await _unitOfWork.RepositoryUser.AsyncGetMember(username , currentUser: currUser == username);
     }
+
 
     [HttpPut]
     public async Task<ActionResult> UserUpdate(UpdateMemberDto updateMemberDto)
@@ -119,7 +116,7 @@ namespace API.Controllers
 
 
       // Check if we  have error with imgUpload
-      if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); //HHTP 400 Err
+      if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); //HTTP 400 Err
 
       var img = new Photo
       {
@@ -133,8 +130,8 @@ namespace API.Controllers
       // save changes to DB 
       if (await _unitOfWork.TransactionComplete())
       {
-        return CreatedAtAction(
-        nameof(GetUser), // Sending back a location header for client to get img created, they go through username endpoint (api/users/username)
+        return CreatedAtRoute(
+        "GetUser", // Sending back a location header for client to get img created, they go through username endpoint (api/users/username)
         new { username = user.UserName }, // new object, assign username of user to username variable -> This is the argument we pass to GetUser
         _autoMapper.Map<PhotoDto>(img));  // Pass object we have created back ->passing back photoDto, and we map FROM the img we created 
       }

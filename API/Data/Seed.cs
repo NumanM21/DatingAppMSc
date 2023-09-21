@@ -43,11 +43,11 @@ namespace API.Data
       // Add each user to roles
       foreach (var user in users)
       {
-        // Handle users
-        user.UserName = user.UserName.ToLower();
-
         // Approve first photo to TRUE for seeded users
         user.Photos.First().IsPhotoApproved = true;
+
+        // Handle users
+        user.UserName = user.UserName.ToLower();
 
         // Creates user and hashes password and save to DB
         await appUserManager.CreateAsync(user, "Pa$$w0rd");
