@@ -41,7 +41,7 @@ export class PhotoEditComponent implements OnInit {
     this.serviceMember.getMember(this.user!.username).subscribe(member => {
       this.member = member;
       console.log("PhotoEditComponent - Member:", this.member);
-      console.log("photoedit -> photos array: " + this.member?.photos)
+      console.log("Fetched photos:", this.member?.photos);
     });
 
     this.initializeUploader();

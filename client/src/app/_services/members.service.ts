@@ -99,8 +99,6 @@ export class MembersService {
       console.log("MemberService - Member from Cache:", memberFromCache);
       return of(memberFromCache); // if we have a value in the cache, so already seen this query, return it
     }
-    
-    console.log("memberservice memberfromcache:" + memberFromCache)
 
     return this.httpClient.get<Member>(this.baseUrl + 'users/' + username).pipe(
       tap(memberFromApi => {

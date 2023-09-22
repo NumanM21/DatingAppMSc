@@ -26,9 +26,11 @@ namespace API.Controllers
     private readonly IMapper _autoMapper;
     private readonly IPhotoService _servicePhoto;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUnitOfWork unitOfWork, IMapper autoMapper, IPhotoService servicePhoto)
+    public UsersController(IUnitOfWork unitOfWork, IMapper autoMapper, IPhotoService servicePhoto, ILogger<UsersController> logger)
     {
+      _logger = logger;
       _unitOfWork = unitOfWork;
       _servicePhoto = servicePhoto;
       _autoMapper = autoMapper;
@@ -118,10 +120,14 @@ namespace API.Controllers
       // Check if we  have error with imgUpload
       if (imgUpload.Error != null) return BadRequest(imgUpload.Error.Message); //HTTP 400 Err
 
+      // Log the URL from Cloudinary
+      _logger.LogInformation($"Photo URL from Cloudinary: {imgUpload.SecureUrl.AbsoluteUri}");
+
+
       var img = new Photo
       {
         Url = imgUpload.SecureUrl.AbsoluteUri,
-        PublicId = imgUpload.PublicId
+        PublicId = imgUpload.PublicId,
       };
 
       // Add photo to user collection -> EF still tracking user 
