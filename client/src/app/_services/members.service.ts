@@ -93,6 +93,8 @@ export class MembersService {
       .reduce((preArr, currElement) => preArr.concat(currElement.result), []) // reduce to one array  [] -> Initial value 
 
       .find((member: Member) => member.username === username); // find the member with the username we want (take first instance)
+
+      console.log("memberservice - memberFromCache: " + memberFromCache + " cachemember: " + this.cacheMember + " cachemember values: " + this.cacheMember.values);
       
 
     if (memberFromCache) {
