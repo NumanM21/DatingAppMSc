@@ -95,6 +95,15 @@ img.photo-thumbnail-size {
   margin-bottom: 2px;
 }
 
+.photo-thumbnail-custom {
+  width: 70%; 
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 .text-unapproved{
   color: rgb(190, 35, 35);
   font-weight: bolder;
@@ -104,16 +113,20 @@ img.photo-thumbnail-size {
   opacity: 0.3;
 }
 
-.image-container{
+.img-container {
   position: relative;
 }
 
-.text-img{
+.text-img {
   position: absolute;
- left: 0;
- right: 0;
- margin-left: auto;
- margin-right: auto;
- bottom: 30%;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap; /* Prevents the text from wrapping */
+  width: 90%; /* Gives more space for the text */
+  text-align: center; /* Ensures the text is centered even if it's wider than the image */
 }
 
+.text-unapproved {
+  font-size: 0.9em; /* Adjust this value if the text is still too large */
+}

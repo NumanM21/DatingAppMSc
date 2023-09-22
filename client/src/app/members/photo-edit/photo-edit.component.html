@@ -1,27 +1,39 @@
-<!-- Child of editProfile component -->
 
+<!-- Child of editProfile component -->
 <div class="row" *ngIf="member">
     <div class="photo-container">
-        <div class="col-2 mb-1" *ngFor="let photo of member.photos">
-            <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}" *>
-                <img src="{{photo.photoUrl}}" alt="{{photo.photoUrl}}" class="photo-thumbnail-size mb-1" [class.unapproved]="!photo.isPhotoApproved">
-                <div class="text-center text-img" *ngIf="!photo.isPhotoApproved">
-                    <span class="text-unapproved">Awaiting approval</span>
-                </div>
-                <div class="text-center">
-                    <button class="btn-main btn btn-sm" [disabled]="photo.isMainPhoto || !photo.isPhotoApproved" (click)="setPhotoMain(photo)"
-                        [ngClass]="photo.isMainPhoto ? 'btn-main-true' : 'btn-main-false'" (mouseover)="onHover(photo)"
-                        (mouseout)="hoverOut(photo)">Main
-                    </button>
-                    <button class="btn-delete btn btn-med btn-danger" (click)="photoDelete(photo.id)"
-                        [disabled]="photo.isMainPhoto">
-                        <i class="fa fa-trash"></i>
-                    </button>
+        <!-- parent row for the photos -->
+        <div class="row">
+            <div class="col-md-3 mb-1" *ngFor="let photo of member.photos">
+                <!-- Photo Container -->
+                <div class="photo-box">
+                    <!-- Image -->
+                    <div class="img-container" [ngClass]="{'hovered': hoveredStates.get(photo.id)}">
+                        <img src="{{photo.photoUrl || './assets/DefaultUser.jpg'}}" class="photo-thumbnail-custom mb-1" [class.unapproved]="!photo.isPhotoApproved">
+                        <!-- Awaiting Approval Text -->
+                        <div class="text-center text-img" *ngIf="!photo.isPhotoApproved">
+                            <span class="text-unapproved">Waiting approval</span>
+                        </div>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="text-center mt-2">
+                        <button class="btn-main btn btn-sm" [disabled]="photo.isMainPhoto || !photo.isPhotoApproved" (click)="setPhotoMain(photo)"
+                            [ngClass]="photo.isMainPhoto ? 'btn-main-true' : 'btn-main-false'" (mouseover)="onHover(photo)"
+                            (mouseout)="hoverOut(photo)">Main
+                        </button>
+                        <button class="btn-delete btn btn-med btn-danger" (click)="photoDelete(photo.id)"
+                            [disabled]="photo.isMainPhoto">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <!-- img upload from ng2 TODO: Reference below! -->
 <div class="row">
