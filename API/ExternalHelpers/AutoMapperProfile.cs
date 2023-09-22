@@ -16,7 +16,12 @@ namespace API.ExternalHelpers
 
       .ForMember(dest => dest.photoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMainPhoto).Url));
 
-      CreateMap<Photo, PhotoDto>();
+      // CreateMap<Photo, PhotoDto>(); // FIXME: To have it like this,  have to update Url in photo to photoUrl to be consistent.
+
+      CreateMap<Photo, PhotoDto>()
+    .ForMember(dest => dest.photoUrl, opt => opt.MapFrom(src => src.Url)); // This allows us to keep Url in photo and photoUrl in PhotoDto
+
+
       // Update FROM UpdateMember dto -> App User
       CreateMap<UpdateMemberDto, AppUser>();
 
