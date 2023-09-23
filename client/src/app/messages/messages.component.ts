@@ -23,27 +23,43 @@ export class MessagesComponent implements OnInit {
   }
 
   messageLoader() {
-    this.pageLoad = true; // flag set to true
+
+    console.log('messageLoader called', this.pageNumber, this.pageSize, this.messageContainer);
+    this.pageLoad = true;
     this.serviceMessage.messageGetter(this.pageNumber, this.pageSize, this.messageContainer).subscribe({
       next: res => {
 
+        console.log('API Response:', res);
         this.message = res.result;
         this.pagination = res.pagination;
-        this.pageLoad = false; // flag set to false
+        this.pageLoad = false;
 
+
+        // Update currentPage only after a successful API call (to avoid infinite loop!!!!!)
+        if (this.pagination)
+          this.pagination.currentPage = this.pageNumber;
+      },
+      error: (error) => {
+        console.log('API Error:', error);
+        this.pageLoad = false;
       }
     });
   }
 
   pageChanged(event: any) {
-    this.pageNumber = event.page;
-    this.messageLoader();
+
+    console.log('pageChanged called', event.page);
+
+    if (this.pageNumber !== event.page) {
+      this.pageNumber = event.page;
+      this.messageLoader();
+    }
   }
 
   messageDelete(msgId: number) {
     this.serviceMessage.messageDelete(msgId).subscribe({
 
-      next: _ => this.message?.splice(this.message.findIndex(x => x.messageId === msgId), 1) 
+      next: _ => this.message?.splice(this.message.findIndex(x => x.messageId === msgId), 1)
       // remove the message from the array at specified index where the message id matches the id of the message we want to delete
     })
   }

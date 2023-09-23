@@ -36,7 +36,7 @@
         <th class="table-headers" *ngIf="messageContainer === 'Inbox'"> From </th>
         <th class="table-headers" *ngIf="messageContainer === 'Sent'"> To </th>
         <th class="table-headers" *ngIf="messageContainer === 'Unread'"> From </th>
-        <th class="table-headers"> 
+        <th class="table-headers">
           <span *ngIf="messageContainer === 'Inbox' || messageContainer === 'Unread'">Received At</span>
           <span *ngIf="messageContainer === 'Sent'">Sent At</span>
         </th>
@@ -44,37 +44,38 @@
       </tr>
     </thead>
     <tbody>
-      <tr [hidden]="pageLoad" *ngFor="let msg of message"
-      routerLink="{{messageContainer === 'Sent'? 
+      <tr [hidden]="pageLoad" *ngFor="let msg of message" routerLink="{{messageContainer === 'Sent'? 
       '/members/' + msg.messageReceivingUsername 
-      : '/members/' + msg.messageSenderUsername}}"
-      [queryParams]="{tab: 'Messages'}">
+      : '/members/' + msg.messageSenderUsername}}" [queryParams]="{tab: 'Messages'}">
         <td>{{msg.messageContent}}</td>
         <td>
-           <!-- I am sending (to) -->
-           <div *ngIf="messageContainer === 'Sent'">
-            <img class="img-circle"
-              src="{{msg.messageReceivingPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
+          <!-- I am sending (to) -->
+          <div *ngIf="messageContainer === 'Sent'">
+            <img class="img-circle" src="{{msg.messageReceivingPhotoURL || './assets/DefaultUser.jpg'}}"
+              alt="Receiving User Photo">
             <strong class="ms-1">{{msg.messageReceivingUsername | titlecase}}</strong>
           </div>
 
           <!-- I am receiving (from) -->
           <div *ngIf="messageContainer !== 'Sent'">
-            <img class="img-circle"
-              src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}" alt="Receiving User Photo">
+            <img class="img-circle" src="{{msg.messageSenderPhotoURL || './assets/DefaultUser.jpg'}}"
+              alt="Receiving User Photo">
             <strong class="ms-1">{{msg.messageSenderUsername | titlecase}}</strong>
           </div>
         </td>
         <td>{{msg.messageSentAt | timeago}}</td>
         <td>
-          <button (click)="$event.stopPropagation()" (click)="messageDelete(msg.messageId)" class="btn btn-delete">Delete Message</button></td>
+          <button (click)="$event.stopPropagation()" (click)="messageDelete(msg.messageId)"
+            class="btn btn-delete">Delete Message</button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <!-- Pagination  -->
-<div class="d-flex justify-content-center mt-3"  *ngIf="!pageLoad && pagination && message && message.length > 0">
+<div class="d-flex justify-content-center mt-3"
+  *ngIf="!pageLoad && pagination && pagination.totalItems > pagination.itemsPerPage">
   <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
     [maxSize]="5" [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
     nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">

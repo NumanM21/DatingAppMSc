@@ -29,6 +29,7 @@ export class NavComponent implements OnInit {
       next: () => {
         this.router.navigateByUrl('/members')
         this.toastr.success("Logged in!")
+        this.model = {}; // clearn the input fields to login again
       },
     })
   }
