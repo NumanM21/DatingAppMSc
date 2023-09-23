@@ -37,11 +37,18 @@ app.UseCors(builder => builder
 app.UseAuthentication(); // Checks for valid token
 app.UseAuthorization(); // Sees if this valid token is what we're looking for!
 
+app.UseDefaultFiles(); // looks for index.html in wwwroot folder (index default if file not found) 
+app.UseStaticFiles(); // looks for static files in wwwroot folder (css, js, etc)
+
 // endpoints for SignalR
 app.MapHub<UserPresenceHub>("hubs/user-presence");
 app.MapHub<UserMessageHub>("hubs/users-message");
 
 app.MapControllers();
+
+
+app.MapFallbackToController("Index", "FallBack"); // if we refresh and we are on a page that doesn't exist
+
 
 // How we actually seed data into our DB
 using var scope = app.Services.CreateScope();

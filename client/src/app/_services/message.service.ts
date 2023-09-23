@@ -25,8 +25,6 @@ export class MessageService {
 
   messageGetter(pageNumber: number, pageSize: number, messageContainer: string) {
 
-    //FIXME: For debugging
-
     // Log the parameters being used to construct the query string
     console.log('Query Parameters:', { pageNumber, pageSize, messageContainer });
 
@@ -38,10 +36,10 @@ export class MessageService {
 
     //FIXME: For debugging
      // Construct the query string
-     const url = `https://localhost:5001/api/messageUser?pageNumber=${pageNumber}&pageSize=${pageSize}&messageContainer=${messageContainer}`;
+    //  const url = `https://localhost:5001/api/messageUser?pageNumber=${pageNumber}&pageSize=${pageSize}&messageContainer=${messageContainer}`;
 
-     // Log the constructed URL
-     console.log('Constructed URL:', url);
+    //  // Log the constructed URL
+    //  console.log('Constructed URL:', url);
 
     // return the result of the query
     return getResultPagination<MessageUser[]>(this.baseURL + 'messageUser', parameter, this.httpClient);
