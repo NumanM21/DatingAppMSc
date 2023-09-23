@@ -72,26 +72,35 @@ export class PhotoEditComponent implements OnInit {
 
 
   // Similar to our method in member service 
-  setPhotoMain(photo: Photo) {
-    this.serviceMember.setPhotoMain(photo.id).subscribe({
-      // Need to update photo URL for User and the isMainPhoto flag for Member (next is what we do with reponse from API)
-      next: () => {
-        console.log("photo set main id:" + photo.Id +
-        "photo" + photo)
-        if (this.user && this.member) {
-          this.user.photoUrl = photo.photoUrl;
-          this.serviceAccount.setCurrentUser(this.user); // user observable listening to user will also be updated (nav-bar observable needs to also be updated)
-          this.member.photoUrl = photo.photoUrl;
-          this.member.photos.forEach(p => {
-            if (p.isMainPhoto) p.isMainPhoto = false; // remove old main
-            else if (p.Id === photo.Id) p.isMainPhoto = true; // set new photo as main
-          })
-        }
 
-        if (this.member) this.serviceMember.updateMemberState(this.member); // update the member state in the service
+  setPhotoMain(photo: Photo) {
+  // Log the state of the photos before setting the main photo
+  console.log('Before setting main photo:', this.member?.photos);
+
+  this.serviceMember.setPhotoMain(photo.id).subscribe({
+    next: () => {
+      console.log("photo set main id:" + photo.id + " photo" + photo);
+      
+      if (this.user && this.member) {
+        this.user.photoUrl = photo.photoUrl;
+        this.serviceAccount.setCurrentUser(this.user);
+        this.member.photoUrl = photo.photoUrl;
+        
+        //  only the selected photo is set as the main photo
+        this.member.photos.forEach(p => {
+          p.isMainPhoto = p.id === photo.id;
+        });
       }
-    })
-  }
+
+      if (this.member) this.serviceMember.updateMemberState(this.member);
+
+      // Log the state of the photos after setting the main photo
+      console.log('After setting main photo:', this.member?.photos);
+    }
+  });
+}
+
+  
 
   photoDelete(id: number) {
     console.log("photo delete id:" + id);
