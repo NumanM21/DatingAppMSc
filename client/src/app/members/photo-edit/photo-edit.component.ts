@@ -43,12 +43,12 @@ export class PhotoEditComponent implements OnInit {
       this.member = member;
       console.log("PhotoEditComponent - Member:", this.member);
       console.log("Fetched photos:", this.member?.photos);
-      
+
       // Update the member state in the service
       if (this.member)
-      this.serviceMember.updateMemberState(this.member);
+        this.serviceMember.updateMemberState(this.member);
     });
-  
+
     // Subscribe to member$ observable 
     this.serviceMember.member$
       .pipe(takeUntil(this.unsubscribe$))
@@ -59,7 +59,7 @@ export class PhotoEditComponent implements OnInit {
           }
         }
       });
-  
+
     this.initializeUploader();
   }
 
@@ -74,33 +74,33 @@ export class PhotoEditComponent implements OnInit {
   // Similar to our method in member service 
 
   setPhotoMain(photo: Photo) {
-  // Log the state of the photos before setting the main photo
-  console.log('Before setting main photo:', this.member?.photos);
+    // Log the state of the photos before setting the main photo
+    console.log('Before setting main photo:', this.member?.photos);
 
-  this.serviceMember.setPhotoMain(photo.id).subscribe({
-    next: () => {
-      console.log("photo set main id:" + photo.id + " photo" + photo);
-      
-      if (this.user && this.member) {
-        this.user.photoUrl = photo.photoUrl;
-        this.serviceAccount.setCurrentUser(this.user);
-        this.member.photoUrl = photo.photoUrl;
-        
-        //  only the selected photo is set as the main photo
-        this.member.photos.forEach(p => {
-          p.isMainPhoto = p.id === photo.id;
-        });
+    this.serviceMember.setPhotoMain(photo.id).subscribe({
+      next: () => {
+        console.log("photo set main id:" + photo.id + " photo" + photo);
+
+        if (this.user && this.member) {
+          this.user.photoUrl = photo.photoUrl;
+          this.serviceAccount.setCurrentUser(this.user);
+          this.member.photoUrl = photo.photoUrl;
+
+          //  only the selected photo is set as the main photo
+          this.member.photos.forEach(p => {
+            p.isMainPhoto = p.id === photo.id;
+          });
+        }
+
+        if (this.member) this.serviceMember.updateMemberState(this.member);
+
+        // Log the state of the photos after setting the main photo
+        console.log('After setting main photo:', this.member?.photos);
       }
+    });
+  }
 
-      if (this.member) this.serviceMember.updateMemberState(this.member);
 
-      // Log the state of the photos after setting the main photo
-      console.log('After setting main photo:', this.member?.photos);
-    }
-  });
-}
-
-  
 
   photoDelete(id: number) {
     console.log("photo delete id:" + id);
@@ -170,9 +170,23 @@ export class PhotoEditComponent implements OnInit {
   }
 
   // Remove single or multiple files from showing under button (when removed from queue)
+
   removeSingleItem(item: any): void {
+
+    // console.log('Item to be removed:', item);
+
+
     // functionality to remove the item
-    item.removeFromQueue();
+    // item.removeFromQueue(); Lib method-> not working
+
+    // Remove from queue (manually)
+    if (this.uploader) {
+      const index = this.uploader.queue.indexOf(item);
+      if (index > -1) {
+        this.uploader.queue.splice(index, 1);
+      }
+    }
+
 
     // Update UI
     if (item.file.name === this.selectedFileName) {
@@ -200,12 +214,12 @@ export class PhotoEditComponent implements OnInit {
 
 
   // Img hover when user goes over the 'main' button
-  
+
   onHover(photo: Photo) {
     // console.log('Hovering over photo ID:', photo.id);
     this.hoveredStates.set(photo.id, true);
   }
-  
+
   hoverOut(photo: Photo) {
     // console.log('Stopped hovering over photo ID:', photo.id); 
     this.hoveredStates.set(photo.id, false);
