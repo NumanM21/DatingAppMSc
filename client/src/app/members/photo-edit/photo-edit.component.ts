@@ -200,14 +200,16 @@ export class PhotoEditComponent implements OnInit {
 
 
   // Img hover when user goes over the 'main' button
+  
   onHover(photo: Photo) {
-    this.hoveredStates.set(photo.Id, true);
+    // console.log('Hovering over photo ID:', photo.id);
+    this.hoveredStates.set(photo.id, true);
   }
-
+  
   hoverOut(photo: Photo) {
-    this.hoveredStates.set(photo.Id, false);
+    // console.log('Stopped hovering over photo ID:', photo.id); 
+    this.hoveredStates.set(photo.id, false);
   }
-
 
 
 

@@ -9,11 +9,12 @@
   transition: box-shadow 0.3s;
 }
 
-.img-container.hovered .photo-thumbnail-size {
-  transform: scale(1.2);
-  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.8);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.img-container.hovered .photo-thumbnail-custom {
+  transform: scale(1.2) !important;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.8) !important;
+  transition: transform 0.3s ease-in-out !important; 
 }
+
 
 
 .btn-main {
@@ -122,11 +123,11 @@ img.photo-thumbnail-size {
   top: 95%;
   left: 50%;
   transform: translate(-50%, -50%);
-  white-space: nowrap; /* Prevents the text from wrapping */
-  width: 90%; /* Gives more space for the text */
-  text-align: center; /* Ensures the text is centered even if it's wider than the image */
+  white-space: nowrap; 
+  width: 90%;
+  text-align: center; 
 }
 
 .text-unapproved {
-  font-size: 0.9em; /* Adjust this value if the text is still too large */
+  font-size: 0.9em; 
 }
