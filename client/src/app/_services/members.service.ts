@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/Member';
 import { MemberEditprofileComponent } from '../members/member-editprofile/member-editprofile.component';
-import { map, of, take, tap } from 'rxjs';
+import { BehaviorSubject, map, of, take, tap } from 'rxjs';
 import { ResultPaginated } from '../_models/Pagination';
 import { parameterUser } from '../_models/parameterUser';
 import { AccountService } from './account.service';
@@ -22,6 +22,8 @@ export class MembersService {
   baseUrl = environment.apiUrl;
   user: User | undefined;
   parameterUser: parameterUser | undefined;
+  private sourceMember = new BehaviorSubject<Member | null>(null); // BS to hold current state of the member
+  member$ = this.sourceMember.asObservable(); // expose the BS as an observable
 
 
   constructor(private serviceAccount: AccountService, private httpClient: HttpClient) {
@@ -36,6 +38,11 @@ export class MembersService {
         }
       }
     })
+  }
+
+  // method to update the member in the BS
+  updateMemberState(member: Member){
+    this.sourceMember.next(member);
   }
 
   getMembers(parameterUser: parameterUser) {

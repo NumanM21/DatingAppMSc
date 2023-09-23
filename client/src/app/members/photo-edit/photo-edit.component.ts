@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Member } from 'src/app/_models/Member';
 import { Photo } from 'src/app/_models/Photo';
 import { User } from "src/app/_models/User";
@@ -24,6 +24,7 @@ export class PhotoEditComponent implements OnInit {
   // Input properties for select single of multiple files
   selectedFileName: string = ''; // single
   selectedFiles: File[] = []; // multiple
+  private unsubscribe$ = new Subject<void>();
 
 
 
@@ -42,9 +43,30 @@ export class PhotoEditComponent implements OnInit {
       this.member = member;
       console.log("PhotoEditComponent - Member:", this.member);
       console.log("Fetched photos:", this.member?.photos);
+      
+      // Update the member state in the service
+      if (this.member)
+      this.serviceMember.updateMemberState(this.member);
     });
-
+  
+    // Subscribe to member$ observable 
+    this.serviceMember.member$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: member => {
+          if (member) {
+            this.member = member;
+          }
+        }
+      });
+  
     this.initializeUploader();
+  }
+
+  ngOnDestroy(): void {
+    // Emits a value to complete the observable subscription
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 
@@ -65,6 +87,8 @@ export class PhotoEditComponent implements OnInit {
             else if (p.Id === photo.Id) p.isMainPhoto = true; // set new photo as main
           })
         }
+
+        if (this.member) this.serviceMember.updateMemberState(this.member); // update the member state in the service
       }
     })
   }
