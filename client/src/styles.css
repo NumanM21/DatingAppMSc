@@ -2,11 +2,6 @@
 /* This GLOBAL STYLES can be used to OVER-RIDE Angular imports! */
 
 
-/* FIXME: Change this up (need to change css style 
-  - Also have the tabs border show up briefly when I click on another tab (error which shouldn't be happening)
-  - Can also ask GPT to refactor this code slightly (help me come up with better variable names if needed (might help with good coding practice?)
-*/
-
 body {
   font-family: 'Roboto', sans-serif;
 }

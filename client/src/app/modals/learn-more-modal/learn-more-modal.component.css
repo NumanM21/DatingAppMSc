@@ -1,0 +1,7 @@
+#customCloseButton {
+  --bs-btn-close-color: black !important;
+}
+
+#customCloseButton:hover {
+  --bs-btn-close-color: grey !important;
+}

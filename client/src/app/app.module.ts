@@ -34,6 +34,9 @@ import { ModalForRolesComponent } from './modal/modal-for-roles/modal-for-roles.
 import { RouteReuseStrategy } from '@angular/router';
 import { ReusingRoute } from './_services/ReusingRoutes';
 import { PopUpConfirmationComponent } from './modals/pop-up-confirmation/pop-up-confirmation.component';
+import { LearnMoreModalComponent } from './modals/learn-more-modal/learn-more-modal.component';
+
+
 
 
 
@@ -64,6 +67,8 @@ import { PopUpConfirmationComponent } from './modals/pop-up-confirmation/pop-up-
     ManagePhotoComponent,
     ModalForRolesComponent,
     PopUpConfirmationComponent,
+    LearnMoreModalComponent,
+    
   ],
   imports: [
     BrowserAnimationsModule,
