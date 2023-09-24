@@ -1,6 +1,3 @@
-using System.Security.Claims;
-using API.Data;
-using API.Data.Migrations;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -9,15 +6,13 @@ using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 // These are all endpoints 
 
 namespace API.Controllers
 {
-  // Wherever we place this, need to authorize user to access all endpoints after it (our authorization is jwt token)
+    // Wherever we place this, need to authorize user to access all endpoints after it (our authorization is jwt token)
 
-  [Authorize]
+    [Authorize]
   public class UsersController : BaseApiController
   {
 

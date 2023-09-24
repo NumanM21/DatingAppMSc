@@ -15,7 +15,7 @@ namespace API.Extensions
       // Configures the DataContext to use SQLite with the connection string named "DefaultConnection" from the configuration.
       services.AddDbContext<DataContext>(opt =>
         {
-          opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+          opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
       // Cors helps with security and flexibility
       services.AddCors();

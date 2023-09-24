@@ -11,6 +11,16 @@ namespace API.Data
 {
   public class Seed
   {
+
+    //TODO: Can optimize this method 
+    public static async Task ConnectionsCleared(DataContext contextData)
+    {
+      contextData.GroupConnection.RemoveRange(contextData.GroupConnection);
+      await contextData.SaveChangesAsync();
+
+    }
+
+
     public static async Task SeedUsers(RoleManager<Roles> managerRoles, UserManager<AppUser> appUserManager)
     {
 
@@ -48,6 +58,10 @@ namespace API.Data
 
         // Handle users
         user.UserName = user.UserName.ToLower();
+
+        // Ensure the UserCreated and LastActive properties are set to UTC -> Issue when seeding in postgres
+        user.UserCreated = user.UserCreated.ToUniversalTime();
+        user.LastActive = user.LastActive.ToUniversalTime();
 
         // Creates user and hashes password and save to DB
         await appUserManager.CreateAsync(user, "Pa$$w0rd");
