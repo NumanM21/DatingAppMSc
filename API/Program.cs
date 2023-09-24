@@ -16,6 +16,38 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
+var connectionString = "";
+if (builder.Environment.IsDevelopment()) 
+
+// What we had before in applicationserviceextensions.cs
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    
+else // production
+{
+// Use connection string provided at runtime by Fly.io
+        var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+        // Parse connection URL to connection string for Npgsql
+        connUrl = connUrl.Replace("postgres://", string.Empty);
+        var pgUserPass = connUrl.Split("@")[0];
+        var pgHostPortDb = connUrl.Split("@")[1];
+        var pgHostPort = pgHostPortDb.Split("/")[0];
+        var pgDb = pgHostPortDb.Split("/")[1];
+        var pgUser = pgUserPass.Split(":")[0];
+        var pgPass = pgUserPass.Split(":")[1];
+        var pgHost = pgHostPort.Split(":")[0];
+        var pgPort = pgHostPort.Split(":")[1];
+
+        connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+}
+
+
+
+builder.Services.AddDbContext<DataContext>(opt =>
+{
+    opt.UseNpgsql(connectionString);
+});
+
 var app = builder.Build();
 
 
@@ -30,7 +62,7 @@ app.UseCors(builder => builder
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials() //need to allow credentials for SignalR
-.WithOrigins("https://localhost:4200"));
+.WithOrigins("https://localhost:4200", "http://localhost:8080"));
 
 // Middleware comes between the .UseCors and .MapController
 
@@ -74,8 +106,8 @@ try
 
   await Seed.SeedUsers(managerRoles, appUserManager);
 
-  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-  Console.WriteLine("Connection String: " + connectionString);
+  var conectString = builder.Configuration.GetConnectionString("DefaultConnection");
+  Console.WriteLine("Connection String: " + conectString);
 
 
 

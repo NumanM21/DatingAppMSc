@@ -13,10 +13,11 @@ namespace API.Extensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
       // Configures the DataContext to use SQLite with the connection string named "DefaultConnection" from the configuration.
-      services.AddDbContext<DataContext>(opt =>
-        {
-          opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        });
+      // services.AddDbContext<DataContext>(opt =>
+      //   {
+      //     //  Can use this for development (not prod-> need to access the DATABASE_URL from secrets) -> Have to use in program.cs 
+      //     opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+      //   });
       // Cors helps with security and flexibility
       services.AddCors();
       // Scoped to our HTTP request -> This makes these classes injectable to our user controller (.AddScoped means this service is created NEW for each HTTP request -> broken after the request is complete)

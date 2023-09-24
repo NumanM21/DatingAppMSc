@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for mscdatingapp on 2023-09-24T09:22:56+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "mscdatingapp"
+primary_region = "lhr"
+
+[build]
+  image = "numanm21/mscdatingapp:latest"
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  SettingsCloudinary__CloudName="dcxkoph7h"
+  SettingsCloudinary__APIKey="695792516472655"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
