@@ -8,6 +8,7 @@ import { User } from '../_models/User';
 import { BehaviorSubject, take } from 'rxjs';
 import { group } from '@angular/animations';
 import { SignalRGroup } from '../_models/SignalRGroup';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class MessageService {
   baseURL = environment.apiUrl;
   private connectionToHub?: HubConnection; // This is the connection to the SignalR hub
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private serviceLoading: LoadingService) { }
 
 
 
@@ -62,6 +63,10 @@ export class MessageService {
 
   // this is the method to start the connection to the hub
   startConnectionToHub(currUser: User, otherUser: string) {
+
+    this.serviceLoading.requestCount();
+
+
     // same query string as in the backend (in our API to get the other user's messages)
     this.connectionToHub = new HubConnectionBuilder().withUrl(this.hubURL + 'users-message?user=' + otherUser, {
       // need to authenticate the user to the hub
@@ -72,7 +77,8 @@ export class MessageService {
       .build(); // this will automatically reconnect if the connection is lost
 
     // start the connection
-    this.connectionToHub.start().catch(err => console.log(err));
+    this.connectionToHub.start().catch(err => console.log(err))
+    .finally(() => this.serviceLoading.idle()); //get loading spinner when we initially load the messages
 
     // Create all hub connection methods here (from UsersMessageHub)
 
@@ -122,7 +128,7 @@ export class MessageService {
   stopConnectionToHub() {
     // if we stop connection without having a connection -> will cause a crash
     if (this.connectionToHub)
-
+      this.msgBetweenUsers.next([]); // clear the messages when we stop the connection 
       this.connectionToHub?.stop().catch(err => console.log(err));
   }
 

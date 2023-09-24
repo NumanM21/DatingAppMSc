@@ -1,7 +1,15 @@
 .btn-color-register{
-  background-color: #df3859;
+  background-color: #e94364;
 }
+
+.btn-color-register:hover{
+  background-color: #df2345;
+}
+
 .btn-color-learn-more{
-  /* background-color: rgb(49, 194, 146); */
-  background-color: rgb(44, 115, 221);
+  background-color: rgb(76, 139, 233);
+}
+
+.btn-color-learn-more:hover{
+  background-color: rgb(45, 115, 221);
 }

@@ -62,7 +62,7 @@ app.UseCors(builder => builder
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials() //need to allow credentials for SignalR
-.WithOrigins("https://localhost:4200", "http://localhost:8080"));
+.WithOrigins("https://localhost:4200", "http://localhost:8080", "https://mscdatingapp.fly.dev"));
 
 // Middleware comes between the .UseCors and .MapController
 

@@ -18,6 +18,7 @@ export class MemberMessagetabComponent implements OnInit {
   msgContent = '';
   @Input() username: string | undefined;
   @ViewChild('msgForm') msgForm?: NgForm;
+  load = false;
 
 
   constructor(public serviceMessage: MessageService) { }
@@ -27,6 +28,7 @@ export class MemberMessagetabComponent implements OnInit {
 
   messageSend() {
     if (!this.username) return;
+    this.load = true;
     this.serviceMessage.messageSender(this.username, this.
       msgContent)
       // use .then() when we want to do something after the promise is resolved
@@ -35,6 +37,7 @@ export class MemberMessagetabComponent implements OnInit {
         // reset the form
         this.msgForm?.reset();
       })
+      .finally(() => this.load = false);
 
   }
   
