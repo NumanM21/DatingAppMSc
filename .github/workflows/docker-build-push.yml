@@ -4,6 +4,7 @@ name: docker-build-push
 on:
   workflow_dispatch:
     # Change to NOT push automatically -> want to create a branch and then merge after testing (will see this in github actions)
+    # This DEPLOYS commits STRAIGHT to main branch (production)
   push:
     branches:
       - 'main'
